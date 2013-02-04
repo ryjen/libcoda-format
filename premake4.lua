@@ -1,4 +1,4 @@
-project "format"
+project "arg3format"
     files {
         "format.h",
         "format.cpp",

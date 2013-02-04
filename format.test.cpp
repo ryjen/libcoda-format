@@ -13,11 +13,6 @@ using namespace igloo;
 
 using namespace arg3;
 
-int main()
-{
-    return TestRunner::RunAllTests();
-}
-
 class OStreamClass
 {
     friend ostream &operator<<(ostream &out, const OStreamClass &obj);
