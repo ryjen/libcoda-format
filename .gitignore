@@ -1,0 +1,6 @@
+format_test
+*.orig
+*.dSYM
+lib*.a
+test_format
+doc
