@@ -33,12 +33,12 @@ public:
     format& arg(const T& value) throw (invalid_argument) {
 
         // check if there isn't a specifier
-        if(mCurrent == mSpecifiers.end())
+        if(m_curSpecifier == m_specifiers.end())
         {
             throw invalid_argument("no specifier for argument");
         }
 
-        specifier &arg = *mCurrent++; // get specifier and advance
+        specifier &arg = *m_curSpecifier++; // get specifier and advance
 
         // get the argument value as a string
         ostringstream buf;
@@ -150,8 +150,8 @@ public:
     void print(ostream &out);
 private:
         // private constants
-        static const char open_tag = '{';
-        static const char close_tag = '}';
+        static const char s_open_tag = '{';
+        static const char s_close_tag = '}';
         
         // struct for a single specifier in the format
         typedef struct {
@@ -180,9 +180,9 @@ private:
     void unescape(ostream &buf, string::size_type start, string::size_type end);
 
     // private member variables
-    string mFormat; // the format
-    SpecifierList mSpecifiers; // the list of specifiers in the format
-    SpecifierList::iterator mCurrent; // the current specifier
+    string m_format; // the format
+    SpecifierList m_specifiers; // the list of specifiers in the format
+    SpecifierList::iterator m_curSpecifier; // the current specifier
 
     friend ostream &operator<<(ostream &out, format &f);
 };
