@@ -6,314 +6,360 @@
 #include <iomanip>
 #include "format.h"
 
-namespace arg3 {
-
-format::format(const string &str) : m_format(str), m_specifiers(), m_curSpecifier(m_specifiers.begin()) {
-    initialize();
-}
-
-format::~format()
+namespace arg3
 {
-    //m_specifiers.clear();
-}
 
-format::format(const format &other) : m_format(other.m_format), m_specifiers(), m_curSpecifier(m_specifiers.begin()) {
-
-    // copy specifiers
-    for(auto s : other.m_specifiers) {
-        m_specifiers.push_back(s);
+    format::format(const string &str) : m_format(str), m_specifiers(), m_curSpecifier(m_specifiers.begin())
+    {
+        initialize();
     }
 
-    // set current position to begining
-    m_curSpecifier = m_specifiers.begin();
-    // advance current position according to the other position
-    advance(m_curSpecifier, distance(other.m_specifiers.begin(), SpecifierList::const_iterator(other.m_curSpecifier)));
-}
+    format::~format()
+    {
+        //m_specifiers.clear();
+    }
 
-format& format::operator=(const format &rhs) {
-    if(this != &rhs) {
+    format::format(const format &other) : m_format(other.m_format), m_specifiers(), m_curSpecifier(m_specifiers.begin())
+    {
 
-        m_format = rhs.m_format; // copy the format
-
-        m_specifiers.clear(); // clear any specifiers already set
-
-        // copy other specifiers
-        for(auto s : rhs.m_specifiers) {
+        // copy specifiers
+        for (auto s : other.m_specifiers)
+        {
             m_specifiers.push_back(s);
         }
 
-        // set current position to begining
+          // set current position to begining
         m_curSpecifier = m_specifiers.begin();
         // advance current position according to the other position
-        advance(m_curSpecifier, distance(rhs.m_specifiers.begin(), SpecifierList::const_iterator(rhs.m_curSpecifier)));
+        advance(m_curSpecifier, distance(other.m_specifiers.begin(), SpecifierList::const_iterator(other.m_curSpecifier)));
     }
-    return *this;
-}
 
-/*!
- * returns the number of specifiers in the format string
- */
-size_t format::specifiers() const {
-    // the size of the specifier list minus any specifier arguments already added
-    return m_specifiers.size() - distance(m_specifiers.begin(), SpecifierList::const_iterator(m_curSpecifier));
-}
-
-/*!
- * adds a specifier to the list
- * @throws invalid_argument if specifier does not contain an index
- */
-void format::add_specifier(string::size_type start, string::size_type end) throw (invalid_argument) {
-
-    // get the string inside the delimiters
-    string temp = m_format.substr(start, end-start);
-
-    // the specifier to create
-    specifier spec;
-    spec.index = 0;
-    spec.prev = start-1; // exclude start tag
-    spec.next = end+1; // exclude end tag
-    spec.width = 0;
-    spec.type = '\0';
-
-    try {
-
-        // look for {0,10:f2}
-        auto divider = temp.find(':');
-
-        if(divider != string::npos)
+    format &format::operator=(const format &rhs)
+    {
+        if (this != &rhs)
         {
-            string format = temp.substr(divider+1);
 
-            spec.type = format[0];
+            m_format = rhs.m_format; // copy the format
 
-            spec.format = format.substr(1, format.length()-1);
+            m_specifiers.clear(); // clear any specifiers already set
 
-            temp = temp.substr(0, divider);
-        }
-
-        // look for {0,-10}
-        divider = temp.find(',');
-
-        if(divider != string::npos) {
-            spec.width = stoi(temp.substr(divider+1));
-
-            temp = temp.substr(0, divider);
-        }
-
-        spec.index = stoi(temp);
-
-    }  catch( ... ) {
-        throw invalid_argument("invalid specifier format");
-    }
-
-    m_specifiers.push_back( spec );
-
-}
-
-
-void format::initialize() throw (invalid_argument) {
-
-    auto len = m_format.length();
-
-    // find each open tag
-    for(auto pos = 0; pos < len; pos++) {
-
-        if(m_format[pos] != s_open_tag) {
-            continue;
-        }
-
-        if(++pos >= len) break;
-
-        // check if its an escape tag, ie  {{
-        if(pos < len && m_format[pos] == s_open_tag) {
-            continue;
-        }
-
-        // get the closing tag
-        auto end = m_format.find(s_close_tag, pos);
-
-        if(end == string::npos) {
-            throw invalid_argument("no specifier closing tag");
-        }
-
-        if(end+1 < len && m_format[end+1] == s_close_tag) {
-            continue;
-        }
-
-        // add the specifier
-        add_specifier(pos, end);
-    }
-
-    // short circuit if no specifiers found
-    if(m_specifiers.size() == 0) {
-        return;
-    }
-
-    // sort specifiers based on index
-    m_specifiers.sort([&](const specifier &first, const specifier &second)
-    {
-        return first.index < second.index;
-    });
-
-    // set the current position (note this is *after* sorting)
-    m_curSpecifier = m_specifiers.begin();
-
-    size_t index = 0;
-
-    // check if specifier indexes follow an incremental order
-    for(auto spec : m_specifiers) {
-        if(spec.index != index++) {
-            throw invalid_argument("specifier index not ordered");
-        }
-    }
-}
-
-void format::begin_manip(ostream &out, const specifier &arg) const throw (invalid_argument) {
-
-    if(arg.width != 0) {
-        out << setw(abs(arg.width));
-        if(arg.width < 0) {
-            out << left;
-        }
-    }
-
-    // short circuit if specifier has no format string
-    if(arg.type == '\0' ) {
-        return;
-    }
-
-    switch(arg.type) {
-        // printf styles
-        // TODO: define formats
-    case 'E':
-        out << uppercase;
-    case 'e':
-        out << scientific;
-    case 'f':
-        if(!arg.format.empty()) {
-            try {
-                int p = stoi(arg.format);
-                out << fixed << setprecision(p);
-            } catch(...) {
-                throw invalid_argument("invalid precision format for argument");
+            // copy other specifiers
+            for (auto s : rhs.m_specifiers)
+            {
+                m_specifiers.push_back(s);
             }
-        } else {
-            out << setprecision(9);
-        }
-        break;
 
-    case 'X':
-        out << uppercase;
-    case 'x':
-        out << hex << setfill('0');
-        if(arg.width == 0) {
-            out << setw(2);
+            // set current position to begining
+            m_curSpecifier = m_specifiers.begin();
+            // advance current position according to the other position
+            advance(m_curSpecifier, distance(rhs.m_specifiers.begin(), SpecifierList::const_iterator(rhs.m_curSpecifier)));
         }
-        break;
-    case 'o':
-        out << oct;
-        break;
+        return *this;
     }
-}
 
-void format::end_manip(ostream &out, const specifier &arg) {
-    // cleanup any stream manipulation
-
-    switch(arg.type)
+    /*!
+     * returns the number of specifiers in the format string
+     */
+    size_t format::specifiers() const
     {
-    case 'x':
-    case 'X':
-        out << dec;
-        break;
-    case 'n':
-        out << endl;
-        break;
+        // the size of the specifier list minus any specifier arguments already added
+        return m_specifiers.size() - distance(m_specifiers.begin(), SpecifierList::const_iterator(m_curSpecifier));
     }
-}
 
-void format::reset() throw (invalid_argument) {
-    m_specifiers.clear();
-    initialize();
-}
+    /*!
+     * adds a specifier to the list
+     * @throws invalid_argument if specifier does not contain an index
+     */
+    void format::add_specifier(string::size_type start, string::size_type end) throw (invalid_argument)
+    {
 
-void format::reset(const string &value) throw (invalid_argument)
-{
-    m_format = value;
-    reset();
-}
+        // get the string inside the delimiters
+        string temp = m_format.substr(start, end - start);
 
-string format::str() throw (invalid_argument) {
+        // the specifier to create
+        specifier spec;
+        spec.index = 0;
+        spec.prev = start - 1; // exclude start tag
+        spec.next = end + 1; // exclude end tag
+        spec.width = 0;
+        spec.type = '\0';
 
-    ostringstream buf;
+        try
+        {
 
-    print(buf);
+            // look for {0,10:f2}
+            auto divider = temp.find(':');
 
-    return buf.str();
-}
+            if (divider != string::npos)
+            {
+                string format = temp.substr(divider + 1);
 
-void format::unescape(ostream &buf, string::size_type start, string::size_type end)
-{
+                spec.type = format[0];
 
-    for(auto i = start; i < end; ++i) {
+                spec.format = format.substr(1, format.length() - 1);
 
-        char tag = m_format[i];
+                temp = temp.substr(0, divider);
+            }
 
-        if(tag != s_open_tag && tag != s_close_tag) {
+            // look for {0,-10}
+            divider = temp.find(',');
+
+            if (divider != string::npos)
+            {
+                spec.width = stoi(temp.substr(divider + 1));
+
+                temp = temp.substr(0, divider);
+            }
+
+            spec.index = stoi(temp);
+
+        }
+        catch ( ... )
+        {
+            throw invalid_argument("invalid specifier format");
+        }
+
+        m_specifiers.push_back( spec );
+
+    }
+
+
+    void format::initialize() throw (invalid_argument)
+    {
+
+        auto len = m_format.length();
+
+        // find each open tag
+        for (auto pos = 0; pos < len; pos++)
+        {
+
+            if (m_format[pos] != s_open_tag)
+            {
+                continue;
+            }
+
+            if (++pos >= len) break;
+
+            // check if its an escape tag, ie  {{
+            if (pos < len && m_format[pos] == s_open_tag)
+            {
+                continue;
+            }
+
+            // get the closing tag
+            auto end = m_format.find(s_close_tag, pos);
+
+            if (end == string::npos)
+            {
+                throw invalid_argument("no specifier closing tag");
+            }
+
+            if (end + 1 < len && m_format[end + 1] == s_close_tag)
+            {
+                continue;
+            }
+
+            // add the specifier
+            add_specifier(pos, end);
+        }
+
+        // short circuit if no specifiers found
+        if (m_specifiers.size() == 0)
+        {
+            return;
+        }
+
+        // sort specifiers based on index
+        m_specifiers.sort([&](const specifier & first, const specifier & second)
+        {
+            return first.index < second.index;
+        });
+
+        // set the current position (note this is *after* sorting)
+        m_curSpecifier = m_specifiers.begin();
+
+        size_t index = 0;
+
+        // check if specifier indexes follow an incremental order
+        for (auto spec : m_specifiers)
+        {
+            if (spec.index != index++)
+            {
+                throw invalid_argument("specifier index not ordered");
+            }
+        }
+    }
+
+    void format::begin_manip(ostream &out, const specifier &arg) const throw (invalid_argument)
+    {
+
+        if (arg.width != 0)
+        {
+            out << setw(abs(arg.width));
+            if (arg.width < 0)
+            {
+                out << left;
+            }
+        }
+
+        // short circuit if specifier has no format string
+        if (arg.type == '\0' )
+        {
+            return;
+        }
+
+        switch (arg.type)
+        {
+            // printf styles
+            // TODO: define formats
+        case 'E':
+            out << uppercase;
+        case 'e':
+            out << scientific;
+        case 'f':
+            if (!arg.format.empty())
+            {
+                try
+                {
+                    int p = stoi(arg.format);
+                    out << fixed << setprecision(p);
+                }
+                catch (...)
+                {
+                    throw invalid_argument("invalid precision format for argument");
+                }
+            }
+            else
+            {
+                out << setprecision(9);
+            }
+            break;
+
+        case 'X':
+            out << uppercase;
+        case 'x':
+            out << hex << setfill('0');
+            if (arg.width == 0)
+            {
+                out << setw(2);
+            }
+            break;
+        case 'o':
+            out << oct;
+            break;
+        }
+    }
+
+    void format::end_manip(ostream &out, const specifier &arg)
+    {
+        // cleanup any stream manipulation
+
+        switch (arg.type)
+        {
+        case 'x':
+        case 'X':
+            out << dec;
+            break;
+        case 'n':
+            out << endl;
+            break;
+        }
+    }
+
+    void format::reset() throw (invalid_argument)
+    {
+        m_specifiers.clear();
+        initialize();
+    }
+
+    void format::reset(const string &value) throw (invalid_argument)
+    {
+        m_format = value;
+        reset();
+    }
+
+    string format::str() throw (invalid_argument)
+    {
+
+        ostringstream buf;
+
+        print(buf);
+
+        return buf.str();
+    }
+
+    void format::unescape(ostream &buf, string::size_type start, string::size_type end)
+    {
+
+        for (auto i = start; i < end; ++i)
+        {
+
+            char tag = m_format[i];
+
+            if (tag != s_open_tag && tag != s_close_tag)
+            {
+                buf << tag;
+                continue;
+            }
+
+            if (i + 1 < end && m_format[i + 1] == tag)
+            {
+                i++;
+            }
+
             buf << tag;
-            continue;
         }
-
-        if(i+1 < end && m_format[i+1] == tag) {
-            i++;
-        }
-
-        buf << tag;
     }
-}
 
-void format::print(ostream &buf) {
-
-    // short circuit if no specifiers
-    if(m_specifiers.size() == 0)
+    void format::print(ostream &buf)
     {
-        unescape(buf, 0, m_format.length());
-        return;
-    }
-    // sort based on position
-    m_specifiers.sort([&](const specifier& first, const specifier &second)
-    {
-        return first.prev < second.prev;
-    });
 
-    size_t last = 0;
+        // short circuit if no specifiers
+        if (m_specifiers.size() == 0)
+        {
+            unescape(buf, 0, m_format.length());
+            return;
+        }
+        // sort based on position
+        m_specifiers.sort([&](const specifier & first, const specifier & second)
+        {
+            return first.prev < second.prev;
+        });
 
-    // loop through all added arguments
-    for(auto spec = m_specifiers.begin(); spec != m_curSpecifier; ++spec ) {
-        if(spec->prev != 0) {
-            // add filler between specifiers
-            unescape(buf, last, spec->prev);
+        size_t last = 0;
+
+        // loop through all added arguments
+        for (auto spec = m_specifiers.begin(); spec != m_curSpecifier; ++spec )
+        {
+            if (spec->prev != 0)
+            {
+                // add filler between specifiers
+                unescape(buf, last, spec->prev);
+            }
+
+            // append replacement
+            buf << spec->replacement;
+
+            last = spec->next;
         }
 
-        // append replacement
-        buf << spec->replacement;
-
-        last = spec->next;
+        // add ending
+        if (last < m_format.length())
+        {
+            unescape(buf, last, m_format.length());
+        }
     }
 
-    // add ending
-    if(last < m_format.length()) {
-        unescape(buf, last, m_format.length());
+    format::operator string() throw (invalid_argument)
+    {
+        return str();
     }
-}
-
-format::operator string() throw (invalid_argument) {
-    return str();
-}
 
 
-ostream &operator<<(ostream &out, format &f) {
-    f.print(out);
-    return out;
-}
+    ostream &operator<<(ostream &out, format &f)
+    {
+        f.print(out);
+        return out;
+    }
 
 }

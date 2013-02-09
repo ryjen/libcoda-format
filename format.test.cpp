@@ -20,19 +20,23 @@ private:
     int data;
     string name;
 public:
-    OStreamClass(const string &name, int data) : data(data), name(name) {
+    OStreamClass(const string &name, int data) : data(data), name(name)
+    {
 
     }
 };
 
-ostream &operator<<(ostream &out, const OStreamClass &obj) {
+ostream &operator<<(ostream &out, const OStreamClass &obj)
+{
     out << obj.name << ":" << obj.data;
     return out;
 }
 
-Context(FormatTest) {
+Context(FormatTest)
+{
 
-    Spec(knownNumberOfSpecifiers) {
+    Spec(knownNumberOfSpecifiers)
+    {
         format f("this is a {0}");
 
         Assert::That(f.specifiers(), Equals(1));
@@ -43,7 +47,8 @@ Context(FormatTest) {
 
     }
 
-    Spec(multiArgConstructor) {
+    Spec(multiArgConstructor)
+    {
         // construct and replace with arguments
         format f("{1} is a {0}, {2} eh?", "test", "this", "cool");
 
@@ -53,7 +58,8 @@ Context(FormatTest) {
         Assert::That(f.str(), Equals("this is a test, cool eh?"));
     }
 
-    Spec(CopyConstructor) {
+    Spec(CopyConstructor)
+    {
         format f1("{0} is a {1}, {2} eh?");
 
         format f2(f1);
@@ -69,7 +75,8 @@ Context(FormatTest) {
         Assert::That(f2.str(), Equals("this is a {1}, {2} eh?"));
     }
 
-    Spec(AssignmentOperator) {
+    Spec(AssignmentOperator)
+    {
 
         format f1("{0} is a {1}, {2} eh?");
 
@@ -87,13 +94,15 @@ Context(FormatTest) {
 
     }
 
-    Spec(handleNoConversion) {
+    Spec(handleNoConversion)
+    {
         format f("this has no specifiers");
 
         Assert::That(f.str(), Equals("this has no specifiers"));
     }
 
-    Spec(addingArguments) {
+    Spec(addingArguments)
+    {
 
         format f("{0} is a {1}, {2} eh?");
 
@@ -117,7 +126,8 @@ Context(FormatTest) {
 
     }
 
-    Spec(addingMultipleArguments) {
+    Spec(addingMultipleArguments)
+    {
         format f("{0} is a {1}, {2} eh?");
 
         f.arg("this", "test", "cool");
@@ -134,7 +144,8 @@ Context(FormatTest) {
         Assert::That(str, Equals("cast to a string"));
     }
 
-    Spec(leftShiftOperator) {
+    Spec(leftShiftOperator)
+    {
 
         format f("{0} {1}");
 
@@ -147,20 +158,23 @@ Context(FormatTest) {
         Assert::That(f2.str(), Equals("something else"));
     }
 
-    Spec(hasExceptions) {
+    Spec(hasExceptions)
+    {
         AssertThrows(invalid_argument, format("{0} {2}"));
 
         AssertThrows(invalid_argument, (format("{0}") << "test" << "two"));
     }
 
-    Spec(argumentsFollowSpecifierOrder) {
+    Spec(argumentsFollowSpecifierOrder)
+    {
 
         format f("{2} and {1} and {0}", 1, 2, 3);
 
         Assert::That(f.str(), Equals("3 and 2 and 1"));
     }
 
-    Spec(floatingPointSpecialization) {
+    Spec(floatingPointSpecialization)
+    {
 
         format f("{0:f2}", 1243.4533889798);
 
@@ -168,13 +182,15 @@ Context(FormatTest) {
 
     }
 
-    Spec(hexidecimalSpecialization) {
+    Spec(hexidecimalSpecialization)
+    {
         format f("{0:X}", 10);
 
         Assert::That(f.str(), Equals("0A"));
     }
 
-    Spec(canResetFormat) {
+    Spec(canResetFormat)
+    {
         format f("{0:f}", 123.56789);
 
         Assert::That(f.str(), Equals("123.56789"));
@@ -196,7 +212,8 @@ Context(FormatTest) {
         Assert::That(f.str(), Equals("Hello, World!"));
     }
 
-    Spec(customArgumentTypes) {
+    Spec(customArgumentTypes)
+    {
 
         OStreamClass test("custom", 42);
 
@@ -206,7 +223,8 @@ Context(FormatTest) {
 
     }
 
-    Spec(printingToSuppliedStream) {
+    Spec(printingToSuppliedStream)
+    {
 
         stringstream buf;
 
@@ -217,7 +235,8 @@ Context(FormatTest) {
         Assert::That(buf.str(), Equals("format is so cool!"));
     }
 
-    Spec(leftShiftingToStream) {
+    Spec(leftShiftingToStream)
+    {
 
         format f("{0} is so {1}!", "format", "cool");
 
@@ -228,7 +247,8 @@ Context(FormatTest) {
         Assert::That(buf.str(), Equals("format is so cool!"));
     }
 
-    Spec(canEscapeSpecifierTags) {
+    Spec(canEscapeSpecifierTags)
+    {
 
         format f("{0} is {{0}}", "this");
 
@@ -242,7 +262,8 @@ Context(FormatTest) {
 
     }
 
-    Spec(canFormatWidth) {
+    Spec(canFormatWidth)
+    {
         format f("{0,-12} one", "test");
 
         Assert::That(f.str(), Equals("test         one"));

@@ -83,11 +83,12 @@ format plays nice with streams:
 
 requirements
 ============
-- c++11
+- a c++11 compiler that supports variadic templates
 
 optional
 ========
 - [igloo](http://igloo-testing.org) unit testing headers
+- [premake](http://industriousone.com/premake) build configuration
 
 compiling
 =========
@@ -102,7 +103,7 @@ formatting
 
 I borrowed the feel of [composite formating](http://msdn.microsoft.com/en-us/library/txafckwd.aspx) from c#.
 
-basic structure is:
+basic structure I use here is:
 
 ```
 
@@ -120,14 +121,6 @@ basic structure is:
 
 ```
 
-some examples are:
-
-```
-{0,-8}  // left align value with a width of 8
-{1,4:X} // align right a hexidecmal value with a width of 4
-{2:E}   // scientific floating point
-```
-
 format types
 ============
 
@@ -137,6 +130,14 @@ format types
 - **f**: floating point values
 - **e**: scientific floating point
 - **E**: uppercase scientific floating point
+
+some examples are:
+
+```
+{0,-8}  // left align value with a width of 8
+{1,4:X} // align right a hexidecmal value with a width of 4
+{2:E}   // scientific floating point
+```
 
 licensing
 =========
