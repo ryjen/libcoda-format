@@ -23,12 +23,12 @@ namespace arg3
     {
 
         // copy specifiers
-        for (auto s : other.m_specifiers)
+for (auto s : other.m_specifiers)
         {
             m_specifiers.push_back(s);
         }
 
-          // set current position to begining
+        // set current position to begining
         m_curSpecifier = m_specifiers.begin();
         // advance current position according to the other position
         advance(m_curSpecifier, distance(other.m_specifiers.begin(), SpecifierList::const_iterator(other.m_curSpecifier)));
@@ -44,7 +44,7 @@ namespace arg3
             m_specifiers.clear(); // clear any specifiers already set
 
             // copy other specifiers
-            for (auto s : rhs.m_specifiers)
+for (auto s : rhs.m_specifiers)
             {
                 m_specifiers.push_back(s);
             }
@@ -181,7 +181,7 @@ namespace arg3
         size_t index = 0;
 
         // check if specifier indexes follow an incremental order
-        for (auto spec : m_specifiers)
+for (auto spec : m_specifiers)
         {
             if (spec.index != index++)
             {
