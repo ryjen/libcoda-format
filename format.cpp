@@ -9,29 +9,29 @@
 namespace arg3
 {
 
-    format::format(const string &str) : m_format(str), m_specifiers(), m_curSpecifier(m_specifiers.begin())
+    format::format(const string &str) : value_(str), specifiers_(), currentSpecifier_(specifiers_.begin())
     {
         initialize();
     }
 
     format::~format()
     {
-        //m_specifiers.clear();
+        //specifiers_.clear();
     }
 
-    format::format(const format &other) : m_format(other.m_format), m_specifiers(), m_curSpecifier(m_specifiers.begin())
+    format::format(const format &other) : value_(other.value_), specifiers_(), currentSpecifier_(specifiers_.begin())
     {
 
         // copy specifiers
-for (auto s : other.m_specifiers)
+for (auto s : other.specifiers_)
         {
-            m_specifiers.push_back(s);
+            specifiers_.push_back(s);
         }
 
         // set current position to begining
-        m_curSpecifier = m_specifiers.begin();
+        currentSpecifier_ = specifiers_.begin();
         // advance current position according to the other position
-        advance(m_curSpecifier, distance(other.m_specifiers.begin(), SpecifierList::const_iterator(other.m_curSpecifier)));
+        advance(currentSpecifier_, distance(other.specifiers_.begin(), SpecifierList::const_iterator(other.currentSpecifier_)));
     }
 
     format &format::operator=(const format &rhs)
@@ -39,20 +39,20 @@ for (auto s : other.m_specifiers)
         if (this != &rhs)
         {
 
-            m_format = rhs.m_format; // copy the format
+            value_ = rhs.value_; // copy the format
 
-            m_specifiers.clear(); // clear any specifiers already set
+            specifiers_.clear(); // clear any specifiers already set
 
             // copy other specifiers
-for (auto s : rhs.m_specifiers)
+for (auto s : rhs.specifiers_)
             {
-                m_specifiers.push_back(s);
+                specifiers_.push_back(s);
             }
 
             // set current position to begining
-            m_curSpecifier = m_specifiers.begin();
+            currentSpecifier_ = specifiers_.begin();
             // advance current position according to the other position
-            advance(m_curSpecifier, distance(rhs.m_specifiers.begin(), SpecifierList::const_iterator(rhs.m_curSpecifier)));
+            advance(currentSpecifier_, distance(rhs.specifiers_.begin(), SpecifierList::const_iterator(rhs.currentSpecifier_)));
         }
         return *this;
     }
@@ -63,7 +63,7 @@ for (auto s : rhs.m_specifiers)
     size_t format::specifiers() const
     {
         // the size of the specifier list minus any specifier arguments already added
-        return m_specifiers.size() - distance(m_specifiers.begin(), SpecifierList::const_iterator(m_curSpecifier));
+        return specifiers_.size() - distance(specifiers_.begin(), SpecifierList::const_iterator(currentSpecifier_));
     }
 
     /*!
@@ -74,7 +74,7 @@ for (auto s : rhs.m_specifiers)
     {
 
         // get the string inside the delimiters
-        string temp = m_format.substr(start, end - start);
+        string temp = value_.substr(start, end - start);
 
         // the specifier to create
         specifier spec;
@@ -119,7 +119,7 @@ for (auto s : rhs.m_specifiers)
             throw invalid_argument("invalid specifier format");
         }
 
-        m_specifiers.push_back( spec );
+        specifiers_.push_back( spec );
 
     }
 
@@ -127,13 +127,13 @@ for (auto s : rhs.m_specifiers)
     void format::initialize() throw (invalid_argument)
     {
 
-        auto len = m_format.length();
+        auto len = value_.length();
 
         // find each open tag
         for (auto pos = 0; pos < len; pos++)
         {
 
-            if (m_format[pos] != s_open_tag)
+            if (value_[pos] != s_open_tag)
             {
                 continue;
             }
@@ -141,20 +141,20 @@ for (auto s : rhs.m_specifiers)
             if (++pos >= len) break;
 
             // check if its an escape tag, ie  {{
-            if (pos < len && m_format[pos] == s_open_tag)
+            if (pos < len && value_[pos] == s_open_tag)
             {
                 continue;
             }
 
             // get the closing tag
-            auto end = m_format.find(s_close_tag, pos);
+            auto end = value_.find(s_close_tag, pos);
 
             if (end == string::npos)
             {
                 throw invalid_argument("no specifier closing tag");
             }
 
-            if (end + 1 < len && m_format[end + 1] == s_close_tag)
+            if (end + 1 < len && value_[end + 1] == s_close_tag)
             {
                 continue;
             }
@@ -164,24 +164,24 @@ for (auto s : rhs.m_specifiers)
         }
 
         // short circuit if no specifiers found
-        if (m_specifiers.size() == 0)
+        if (specifiers_.size() == 0)
         {
             return;
         }
 
         // sort specifiers based on index
-        m_specifiers.sort([&](const specifier & first, const specifier & second)
+        specifiers_.sort([&](const specifier & first, const specifier & second)
         {
             return first.index < second.index;
         });
 
         // set the current position (note this is *after* sorting)
-        m_curSpecifier = m_specifiers.begin();
+        currentSpecifier_ = specifiers_.begin();
 
         size_t index = 0;
 
         // check if specifier indexes follow an incremental order
-for (auto spec : m_specifiers)
+for (auto spec : specifiers_)
         {
             if (spec.index != index++)
             {
@@ -268,13 +268,13 @@ for (auto spec : m_specifiers)
 
     void format::reset() throw (invalid_argument)
     {
-        m_specifiers.clear();
+        specifiers_.clear();
         initialize();
     }
 
     void format::reset(const string &value) throw (invalid_argument)
     {
-        m_format = value;
+        value_ = value;
         reset();
     }
 
@@ -294,7 +294,7 @@ for (auto spec : m_specifiers)
         for (auto i = start; i < end; ++i)
         {
 
-            char tag = m_format[i];
+            char tag = value_[i];
 
             if (tag != s_open_tag && tag != s_close_tag)
             {
@@ -302,7 +302,7 @@ for (auto spec : m_specifiers)
                 continue;
             }
 
-            if (i + 1 < end && m_format[i + 1] == tag)
+            if (i + 1 < end && value_[i + 1] == tag)
             {
                 i++;
             }
@@ -315,13 +315,13 @@ for (auto spec : m_specifiers)
     {
 
         // short circuit if no specifiers
-        if (m_specifiers.size() == 0)
+        if (specifiers_.size() == 0)
         {
-            unescape(buf, 0, m_format.length());
+            unescape(buf, 0, value_.length());
             return;
         }
         // sort based on position
-        m_specifiers.sort([&](const specifier & first, const specifier & second)
+        specifiers_.sort([&](const specifier & first, const specifier & second)
         {
             return first.prev < second.prev;
         });
@@ -329,7 +329,7 @@ for (auto spec : m_specifiers)
         size_t last = 0;
 
         // loop through all added arguments
-        for (auto spec = m_specifiers.begin(); spec != m_curSpecifier; ++spec )
+        for (auto spec = specifiers_.begin(); spec != currentSpecifier_; ++spec )
         {
             if (spec->prev != 0)
             {
@@ -344,9 +344,9 @@ for (auto spec : m_specifiers)
         }
 
         // add ending
-        if (last < m_format.length())
+        if (last < value_.length())
         {
-            unescape(buf, last, m_format.length());
+            unescape(buf, last, value_.length());
         }
     }
 

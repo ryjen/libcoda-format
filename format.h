@@ -31,16 +31,16 @@ namespace arg3
          * @throws invalid_argument if there is no specifier for the argument
          */
         template<typename T>
-        format& arg(const T& value) throw (invalid_argument)
+        format &arg(const T &value) throw (invalid_argument)
         {
 
             // check if there isn't a specifier
-            if(m_curSpecifier == m_specifiers.end())
+            if (currentSpecifier_ == specifiers_.end())
             {
                 throw invalid_argument("no specifier for argument");
             }
 
-            specifier &arg = *m_curSpecifier++; // get specifier and advance
+            specifier &arg = *currentSpecifier_++; // get specifier and advance
 
             // get the argument value as a string
             ostringstream buf;
@@ -59,7 +59,7 @@ namespace arg3
          * @throws invalid_argument if there is no specifier for an argument
          */
         template<typename T, typename... Args>
-        format &arg(const T& value, const Args&... args) throw (invalid_argument)
+        format &arg(const T &value, const Args &... args) throw (invalid_argument)
         {
             arg(value); // add argument
             arg(args...); // add remaining arguments (recursive)
@@ -73,7 +73,7 @@ namespace arg3
          * @throws invalid_argument if there isn't a specifier for an argument
          */
         template<typename T, typename... Args>
-        format(const string &str, const T& value, const Args&... args) throw (invalid_argument) : format(str)
+        format(const string &str, const T &value, const Args &... args) throw (invalid_argument) : format(str)
         {
             arg(value); // add argument
             arg(args...); // add remaining arguments
@@ -83,7 +83,7 @@ namespace arg3
          * single form of the variadic template constructor
          */
         template<typename T>
-        format(const string &str, const T& value) throw (invalid_argument) : format(str)
+        format(const string &str, const T &value) throw (invalid_argument) : format(str)
         {
             arg(value); // add argument
         }
@@ -108,7 +108,7 @@ namespace arg3
         /*!
          * assigns a format to this instance
          */
-        format& operator=(const format &rhs);
+        format &operator=(const format &rhs);
 
         /*!
          * converts the format with the given args and returns the string
@@ -122,7 +122,7 @@ namespace arg3
          * @throws invalid_argument if there is no specifier for the value
          */
         template<typename T>
-        format &operator<< (const T& value) throw (invalid_argument)
+        format &operator<< (const T &value) throw (invalid_argument)
         {
 
             return arg(value);
@@ -185,9 +185,9 @@ namespace arg3
         void unescape(ostream &buf, string::size_type start, string::size_type end);
 
         // private member variables
-        string m_format; // the format
-        SpecifierList m_specifiers; // the list of specifiers in the format
-        SpecifierList::iterator m_curSpecifier; // the current specifier
+        string value_; // the format
+        SpecifierList specifiers_; // the list of specifiers in the format
+        SpecifierList::iterator currentSpecifier_; // the current specifier
 
         friend ostream &operator<<(ostream &out, format &f);
     };
