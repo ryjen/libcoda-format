@@ -23,7 +23,7 @@ namespace arg3
     {
 
         // copy specifiers
-for (auto s : other.specifiers_)
+        for (auto s : other.specifiers_)
         {
             specifiers_.push_back(s);
         }
@@ -44,7 +44,7 @@ for (auto s : other.specifiers_)
             specifiers_.clear(); // clear any specifiers already set
 
             // copy other specifiers
-for (auto s : rhs.specifiers_)
+            for (auto s : rhs.specifiers_)
             {
                 specifiers_.push_back(s);
             }
@@ -181,7 +181,7 @@ for (auto s : rhs.specifiers_)
         size_t index = 0;
 
         // check if specifier indexes follow an incremental order
-for (auto spec : specifiers_)
+        for (auto spec : specifiers_)
         {
             if (spec.index != index++)
             {
