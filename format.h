@@ -132,9 +132,8 @@ namespace arg3
 
         /*!
          * converts the format with the given args and returns the string
-         * @throws invalid_argument if there was a formatting error
          */
-        string str() throw (invalid_argument);
+        string str();
 
         /*!
          * @return the number of specifiers in the format

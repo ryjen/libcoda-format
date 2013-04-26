@@ -30,6 +30,7 @@ namespace arg3
 
         // set current position to begining
         currentSpecifier_ = specifiers_.begin();
+
         // advance current position according to the other position
         advance(currentSpecifier_, distance(other.specifiers_.begin(), SpecifierList::const_iterator(other.currentSpecifier_)));
     }
@@ -278,7 +279,7 @@ namespace arg3
         reset();
     }
 
-    string format::str() throw (invalid_argument)
+    string format::str()
     {
 
         ostringstream buf;
