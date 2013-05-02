@@ -1,7 +1,7 @@
-format
-======
+libarg3format
+=============
 
-A typesafe c++11 class for formatting strings using composite based formats and specifiers.
+A c++11 class for formatting strings.
 
 basic usage is:
 
