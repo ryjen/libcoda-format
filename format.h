@@ -95,6 +95,8 @@ namespace arg3
          */
         format(const format &other);
 
+        format(format &&other);
+
         /*!
          * default constructor needs a format string
          */
@@ -109,6 +111,8 @@ namespace arg3
          * assigns a format to this instance
          */
         format &operator=(const format &rhs);
+
+        format &operator=(format &&rhs);
 
         /*!
          * converts the format with the given args and returns the string

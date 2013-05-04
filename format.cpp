@@ -35,6 +35,11 @@ namespace arg3
         advance(currentSpecifier_, distance(other.specifiers_.begin(), SpecifierList::const_iterator(other.currentSpecifier_)));
     }
 
+    format::format(format &&other) : value_(std::move(other.value_)), specifiers_(std::move(other.specifiers_)), 
+            currentSpecifier_(std::move(other.currentSpecifier_))
+    {
+    }
+
     format &format::operator=(const format &rhs)
     {
         if (this != &rhs)
@@ -58,6 +63,20 @@ namespace arg3
         return *this;
     }
 
+    format &format::operator=(format &&rhs)
+    {
+        if (this != &rhs)
+        {
+
+            value_ = std::move(rhs.value_); // copy the format
+
+            specifiers_ = std::move(rhs.specifiers_);
+
+            // set current position to begining
+            currentSpecifier_ = std::move(rhs.currentSpecifier_);
+        }
+        return *this;
+    }
     /*!
      * returns the number of specifiers in the format string
      */
