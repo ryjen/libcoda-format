@@ -139,8 +139,3 @@ some examples are:
 {2:E}   // scientific floating point
 ```
 
-licensing
-=========
-
-copyrighted under the Lesser GNU Public License
-
