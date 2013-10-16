@@ -112,6 +112,8 @@ solution "arg3"
             "**.test.cpp"
         }
 
+	includedirs { "vendor" }
+
         links { "arg3format" }
 
         configuration "Debug"
