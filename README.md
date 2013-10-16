@@ -61,7 +61,7 @@ format f("{0}", "test", "two"); // throws an exception. missing specifier
 ```
 
 
-format plays nice with streams:
+format tries to play nice with streams:
 
 ```c++
 
