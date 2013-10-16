@@ -35,8 +35,8 @@ namespace arg3
         advance(currentSpecifier_, distance(other.specifiers_.begin(), SpecifierList::const_iterator(other.currentSpecifier_)));
     }
 
-    format::format(format &&other) : value_(std::move(other.value_)), specifiers_(std::move(other.specifiers_)), 
-            currentSpecifier_(std::move(other.currentSpecifier_))
+    format::format(format &&other) : value_(std::move(other.value_)), specifiers_(std::move(other.specifiers_)),
+        currentSpecifier_(std::move(other.currentSpecifier_))
     {
     }
 
