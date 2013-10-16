@@ -12,41 +12,33 @@ newaction {
     description = "Install headers and lib",
     execute = function()
 
-      if not _ARGS[1] or not os.isdir(_ARGS[1]) then
-        error("You must specify an install location")
-      end
+    if not _ARGS[1] or not os.isdir(_ARGS[1]) then
+      error("You must specify an install location")
+    end
 
-      if not os.isdir("bin/release") then
-        error("You must make a release build first")
-      end
+    if not os.isdir("bin/release") then
+      error("You must make a release build first")
+    end
 
-      bindir = _ARGS[1].."/lib"
-      headerdir = _ARGS[1].."/include/arg3/#{package}"
+    bindir = _ARGS[1].."/lib/"
+    headerdir = _ARGS[1].."/include/arg3/format/"
 
-      if not os.isdir(bindir) then
-        os.mkdir(bindir)
-      end
+    if not os.isdir(bindir) then
+      os.mkdir(bindir)
+    end
 
-      if not os.isdir(headerdir) then
-        os.mkdir(headerdir)
-      end
-        libraries = { "libarg3#{package}.a" }
-        folders = { package }
+    if not os.isdir(headerdir) then
+      os.mkdir(headerdir)
+    end
 
-      for l=1, #libraries do
-        if os.isfile("bin/release/"..libraries[l]) then
-            os.copyfile("bin/release/"..libraries[l], bindir)
-        end
-      end
+    if os.isfile("bin/release/libarg3format.a") then
+        os.copyfile("bin/release/libarg3format.a", bindir);
+    end
 
-      for f=1, #folders do 
-          headers = os.matchfiles(folders[f].."/**.h")
-          tempdir = headerdir.."/"..folders[f]
-          os.mkdir(tempdir)
-          for i=1, #headers do
-            os.copyfile(headers[i], tempdir)
-          end
-      end
+    headers = os.matchfiles("**.h")
+
+    for i=1, #headers do
+      os.copyfile(headers[i], headerdir);
     end
 }
 newaction {
