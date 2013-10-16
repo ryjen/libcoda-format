@@ -40,6 +40,7 @@ newaction {
     for i=1, #headers do
       os.copyfile(headers[i], headerdir);
     end
+  end
 }
 newaction {
     trigger   = "release",
