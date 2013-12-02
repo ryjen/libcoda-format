@@ -1,4 +1,7 @@
 package = "format"
+local prefix = _OPTIONS["prefix"] or "./dist/libarg3"..package
+
+local projectname = "arg3"..package
 
 newaction {
    trigger     = "indent",
@@ -12,16 +15,12 @@ newaction {
     description = "Install headers and lib",
     execute = function()
 
-    if not _ARGS[1] or not os.isdir(_ARGS[1]) then
-      error("You must specify an install location")
-    end
-
     if not os.isdir("bin/release") then
       error("You must make a release build first")
     end
 
-    bindir = _ARGS[1].."/lib/"
-    headerdir = _ARGS[1].."/include/arg3/format/"
+    bindir = prefix.."/lib"
+    headerdir = prefix.."/include/arg3/"..package
 
     if not os.isdir(bindir) then
       os.mkdir(bindir)
@@ -31,16 +30,40 @@ newaction {
       os.mkdir(headerdir)
     end
 
-    if os.isfile("bin/release/libarg3format.a") then
-        os.copyfile("bin/release/libarg3format.a", bindir);
+    if os.isfile("bin/release/libarg3"..package..".a") then
+        os.copyfile("bin/release/libarg3"..package..".a", bindir);
     end
 
-    headers = os.matchfiles("**.h")
+    headers = os.matchfiles("*.h")
 
     for i=1, #headers do
-      os.copyfile(headers[i], headerdir);
+      if not string.endswith(headers[i], ".test.h") then
+        os.copyfile(headers[i], headerdir);
+      end
+    end
+
+    extra = os.matchdirs("*")
+
+    for i=1, #extra do
+      if not string.endswith(extra[i], "vendor") then
+        headers = os.matchfiles(extra[i].."/*.h")
+        for j=1, #headers do
+          if not string.endswith(headers[j], ".test.h") then
+            tempdir = headerdir.."/"..extra[i]
+            if not os.isdir(tempdir) then
+              os.mkdir(tempdir)
+            end
+            os.copyfile(headers[j], tempdir)
+          end
+        end
+      end
     end
   end
+}
+
+newoption {
+   trigger     = "prefix",
+   description = "Specify prefix for installs"
 }
 newaction {
     trigger   = "release",
@@ -55,7 +78,7 @@ newaction {
        else
          version = "1.0"
        end
-       os.execute("tar --exclude=libarg3#{package}_"..version..".tar.gz -czf libarg3#{package}_"..version..".tar.gz .");
+       os.execute("tar --exclude=libarg3"..package.."_"..version..".tar.gz -czf libarg3"..package.."_"..version..".tar.gz .");
     end
 }
 newoption {
@@ -92,12 +115,13 @@ solution "arg3"
         targetdir "bin/release"
         buildoptions { "-O" }
 
-    project "arg3format"
-    	if not _OPTIONS["shared"] then
-        	kind "StaticLib"
-    	else
+    project ("arg3"..package)
+
+      if not _OPTIONS["shared"] then
+          kind "StaticLib"
+      else
             kind "SharedLib"
-   		 end
+       end
             files {
                 "**.cpp",
                 "**.h"
@@ -112,7 +136,9 @@ solution "arg3"
             "**.test.cpp"
         }
 
-        links { "arg3format" }
+        includedirs { "vendor" }
+
+        links { "arg3"..package }
 
         configuration "Debug"
         postbuildcommands {
