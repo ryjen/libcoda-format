@@ -63,7 +63,7 @@ namespace arg3
         return *this;
     }
 
-    format &format::operator=(format &&rhs)
+    format &format::operator=(format && rhs)
     {
         if (this != &rhs)
         {

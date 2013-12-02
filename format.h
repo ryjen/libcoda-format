@@ -112,7 +112,7 @@ namespace arg3
          */
         format &operator=(const format &rhs);
 
-        format &operator=(format &&rhs);
+        format &operator=(format && rhs);
 
         /*!
          * converts the format with the given args and returns the string
