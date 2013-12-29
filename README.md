@@ -8,23 +8,23 @@ Examples
 
 ```c++
 
-cout << format("A bear walked up {0} miles and saw {1}.", 20, "an eagle");
+cout << format("{0} walked up {1} miles and saw {2}.", "A bear", 20, "an eagle");
 
 ```
 
-you can arrange the arguments how you want:
+using argument methods in different order
 
 ```c++
 format f("{2} saw {0} {1}!");
 
-f.arg(20, "eagles");
+f.arg(20, "eagles"); // inserts {0} and {1}
 
-f.arg("A bear");
+f.arg("A bear"); // inserts {2}
 
 string str = f; // will equal "A bear saw 20 eagles!"
 ```
 
-you can specify type formatting:
+specify type formatting:
 
 ```c++
 format f("{0:f2}", 123.45278);
