@@ -3,7 +3,8 @@ libarg3format
 
 A c++11 class for formatting strings.
 
-basic usage is:
+Examples
+========
 
 ```c++
 
@@ -11,7 +12,7 @@ cout << format("A bear walked up {0} miles and saw {1}.", 20, "an eagle");
 
 ```
 
-you can also do this:
+you can arrange the arguments how you want:
 
 ```c++
 format f("{2} saw {0} {1}!");
@@ -23,7 +24,7 @@ f.arg("A bear");
 string str = f; // will equal "A bear saw 20 eagles!"
 ```
 
-you can also specify type formatting:
+you can specify type formatting:
 
 ```c++
 format f("{0:f2}", 123.45278);
@@ -60,42 +61,35 @@ format f("{0}", "test", "two"); // throws an exception. missing specifier
 
 ```
 
+Building
+========
 
-format tries to play nice with streams:
+*OSX:*
 
-```c++
+[Download](http://brew.sh) and install homebrew.
 
-  ofstream myfile;
-  myfile.open ("test.txt");
+```bash
+brew install premake
 
-  format f("a bear {0} for a {1}");
+premake4 gmake
 
-  f.arg("went", "walk");
-
-  // myfile << f;
-
-  f.print(myfile); // does the same as above
-
-  // myfile will contain "a bear went for a walk"
-  myfile.close();
-
+make
 ```
 
-requirements
+*Windows:*
+
+- [Download](http://industriousone.com/premake/download) premake.
+- run <code>premake4 vs2010</code>.
+- Open the generated project file in Visual Studio.
+
+
+Coding Style
 ============
-- a c++11 compiler that supports variadic templates
 
-optional
-========
-- [igloo](http://igloo-testing.org) unit testing headers
-- [premake](http://industriousone.com/premake) build configuration
-
-compiling
-=========
-
-here's what I used for testing:
-
-clang++ -g -std=c++11 -stdlib=libc++ -o format_test format.cpp format_test.cpp; ./format_test
+- class/struct/method names are all lower case with underscores separating words
+- non public members are camel case with and underscore at end of the name
+- macros, enums and constants are all upper case with underscores seperating words
+- braces on a new line
 
 
 formatting
