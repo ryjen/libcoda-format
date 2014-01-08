@@ -21,3 +21,4 @@ obj/
 *.lai
 *.la
 *.a
+*.log
