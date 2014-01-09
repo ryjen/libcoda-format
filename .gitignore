@@ -22,3 +22,8 @@ obj/
 *.la
 *.a
 *.log
+*.cache
+libtool
+.deps
+stamp-h1
+.libs
