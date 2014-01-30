@@ -27,3 +27,6 @@ libtool
 .deps
 stamp-h1
 .libs
+arg3fmt_test
+*.status
+config.h
