@@ -84,7 +84,8 @@ DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(srcdir)/config.h.in $(top_srcdir)/depcomp \
 	$(pkginclude_HEADERS)
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/gcov.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -121,12 +122,16 @@ am__uninstall_files_from_dir = { \
 am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgincludedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libarg3fmt_0_2_la_LIBADD =
-am_libarg3fmt_0_2_la_OBJECTS = format.lo
+am_libarg3fmt_0_2_la_OBJECTS = libarg3fmt_0_2_la-format.lo
 libarg3fmt_0_2_la_OBJECTS = $(am_libarg3fmt_0_2_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
+libarg3fmt_0_2_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
+	$(libarg3fmt_0_2_la_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -202,6 +207,9 @@ AWK = @AWK@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
+COVERAGE_CFLAGS = @COVERAGE_CFLAGS@
+COVERAGE_CXXFLAGS = @COVERAGE_CXXFLAGS@
+COVERAGE_LDFLAGS = @COVERAGE_LDFLAGS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
@@ -220,12 +228,14 @@ ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
+GENHTML = @GENHTML@
 GREP = @GREP@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+LCOV = @LCOV@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
@@ -255,6 +265,7 @@ RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
+SHTOOL = @SHTOOL@
 STRIP = @STRIP@
 VERSION = @VERSION@
 abs_builddir = @abs_builddir@
@@ -312,6 +323,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 lib_LTLIBRARIES = libarg3fmt-0.2.la
 libarg3fmt_0_2_la_SOURCES = format.cpp
+libarg3fmt_0_2_la_CXXFLAGS = $(LIBARG3FMT_0_2_LA_CXXFLAGS) $(COVERAGE_CFLAGS)
 pkginclude_HEADERS = format.h
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -400,7 +412,7 @@ clean-libLTLIBRARIES:
 	}
 
 libarg3fmt-0.2.la: $(libarg3fmt_0_2_la_OBJECTS) $(libarg3fmt_0_2_la_DEPENDENCIES) $(EXTRA_libarg3fmt_0_2_la_DEPENDENCIES) 
-	$(AM_V_CXXLD)$(CXXLINK) -rpath $(libdir) $(libarg3fmt_0_2_la_OBJECTS) $(libarg3fmt_0_2_la_LIBADD) $(LIBS)
+	$(AM_V_CXXLD)$(libarg3fmt_0_2_la_LINK) -rpath $(libdir) $(libarg3fmt_0_2_la_OBJECTS) $(libarg3fmt_0_2_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -408,7 +420,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/format.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libarg3fmt_0_2_la-format.Plo@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -430,6 +442,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LTCXXCOMPILE) -c -o $@ $<
+
+libarg3fmt_0_2_la-format.lo: format.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libarg3fmt_0_2_la_CXXFLAGS) $(CXXFLAGS) -MT libarg3fmt_0_2_la-format.lo -MD -MP -MF $(DEPDIR)/libarg3fmt_0_2_la-format.Tpo -c -o libarg3fmt_0_2_la-format.lo `test -f 'format.cpp' || echo '$(srcdir)/'`format.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libarg3fmt_0_2_la-format.Tpo $(DEPDIR)/libarg3fmt_0_2_la-format.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='format.cpp' object='libarg3fmt_0_2_la-format.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libarg3fmt_0_2_la_CXXFLAGS) $(CXXFLAGS) -c -o libarg3fmt_0_2_la-format.lo `test -f 'format.cpp' || echo '$(srcdir)/'`format.cpp
 
 mostlyclean-libtool:
 	-rm -f *.lo

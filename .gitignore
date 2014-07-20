@@ -30,3 +30,5 @@ stamp-h1
 *.status
 config.h
 arg3fmt_test
+coverage.info
+*.gcno

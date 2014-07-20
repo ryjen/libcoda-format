@@ -13,6 +13,8 @@
 # PARTICULAR PURPOSE.
 
 @SET_MAKE@
+
+# Coverage targets
 VPATH = @srcdir@
 am__is_gnu_make = test -n '$(MAKEFILE_LIST)' && test -n '$(MAKELEVEL)'
 am__make_running_with_option = \
@@ -77,13 +79,14 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-subdir = .
-DIST_COMMON = INSTALL NEWS README AUTHORS ChangeLog \
-	$(srcdir)/Makefile.in $(srcdir)/Makefile.am \
+DIST_COMMON = $(top_srcdir)/Makefile.am.coverage INSTALL NEWS README \
+	AUTHORS ChangeLog $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/configure $(am__configure_deps) COPYING compile \
 	config.guess config.sub depcomp install-sh missing ltmain.sh
+subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/gcov.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
@@ -202,6 +205,9 @@ AWK = @AWK@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
+COVERAGE_CFLAGS = @COVERAGE_CFLAGS@
+COVERAGE_CXXFLAGS = @COVERAGE_CXXFLAGS@
+COVERAGE_LDFLAGS = @COVERAGE_LDFLAGS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
@@ -220,12 +226,14 @@ ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
+GENHTML = @GENHTML@
 GREP = @GREP@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+LCOV = @LCOV@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
@@ -255,6 +263,7 @@ RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
+SHTOOL = @SHTOOL@
 STRIP = @STRIP@
 VERSION = @VERSION@
 abs_builddir = @abs_builddir@
@@ -316,7 +325,7 @@ all: all-recursive
 .SUFFIXES:
 am--refresh: Makefile
 	@:
-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(top_srcdir)/Makefile.am.coverage $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -339,6 +348,7 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe)'; \
 	    cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe);; \
 	esac;
+$(top_srcdir)/Makefile.am.coverage:
 
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	$(SHELL) ./config.status --recheck
@@ -687,9 +697,10 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+@HAVE_GCOV_FALSE@clean-local:
 clean: clean-recursive
 
-clean-am: clean-generic clean-libtool mostlyclean-am
+clean-am: clean-generic clean-libtool clean-local mostlyclean-am
 
 distclean: distclean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
@@ -761,20 +772,42 @@ uninstall-am:
 
 .PHONY: $(am__recursive_targets) CTAGS GTAGS TAGS all all-am \
 	am--refresh check check-am clean clean-cscope clean-generic \
-	clean-libtool cscope cscopelist-am ctags ctags-am dist \
-	dist-all dist-bzip2 dist-gzip dist-lzip dist-shar dist-tarZ \
-	dist-xz dist-zip distcheck distclean distclean-generic \
-	distclean-libtool distclean-tags distcleancheck distdir \
-	distuninstallcheck dvi dvi-am html html-am info info-am \
-	install install-am install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am install-man \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	installdirs-am maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-generic mostlyclean-libtool pdf pdf-am \
-	ps ps-am tags tags-am uninstall uninstall-am
+	clean-libtool clean-local cscope cscopelist-am ctags ctags-am \
+	dist dist-all dist-bzip2 dist-gzip dist-lzip dist-shar \
+	dist-tarZ dist-xz dist-zip distcheck distclean \
+	distclean-generic distclean-libtool distclean-tags \
+	distcleancheck distdir distuninstallcheck dvi dvi-am html \
+	html-am info info-am install install-am install-data \
+	install-data-am install-dvi install-dvi-am install-exec \
+	install-exec-am install-html install-html-am install-info \
+	install-info-am install-man install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installdirs installdirs-am maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-am uninstall \
+	uninstall-am
 
+
+@HAVE_GCOV_TRUE@.PHONY: clean-gcda
+@HAVE_GCOV_TRUE@clean-gcda:
+@HAVE_GCOV_TRUE@	@echo Removing old coverage results
+@HAVE_GCOV_TRUE@	-find $(top_builddir) -name '*.gcda' -print | xargs rm
+
+@HAVE_GCOV_TRUE@.PHONY: coverage-html generate-coverage-html clean-coverage-html
+@HAVE_GCOV_TRUE@coverage-html: clean-gcda
+@HAVE_GCOV_TRUE@	-$(MAKE) $(AM_MAKEFLAGS) -k check
+@HAVE_GCOV_TRUE@	$(MAKE) $(AM_MAKEFLAGS) generate-coverage-html
+
+@HAVE_GCOV_TRUE@generate-coverage-html:
+@HAVE_GCOV_TRUE@	@echo Collecting coverage data
+@HAVE_GCOV_TRUE@	$(LCOV) --directory $(top_builddir) --capture --output-file coverage.info --no-checksum --compat-libtool --gcov-tool /usr/local/bin/gcov-4.2 --no-external
+@HAVE_GCOV_TRUE@	$(GENHTML) --output-directory coverage --title "Code Coverage" --legend --show-details coverage.info
+
+@HAVE_GCOV_TRUE@clean-coverage-html: clean-gcda
+@HAVE_GCOV_TRUE@	-$(LCOV) --directory $(top_builddir) -z
+@HAVE_GCOV_TRUE@	-rm -rf coverage.info
+
+@HAVE_GCOV_TRUE@clean-local: clean-coverage-html
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

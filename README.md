@@ -3,6 +3,8 @@ libarg3format
 
 A c++11 class for formatting strings.
 
+[View Testing Code Coverage](http://htmlpreview.github.com/?https://github.com/c0der78/arg3format/blob/master/coverage/index.html)
+
 Examples
 ========
 
