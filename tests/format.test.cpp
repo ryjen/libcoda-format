@@ -74,7 +74,22 @@ Context(FormatTest)
 
         Assert::That(f2.str(), Equals("this is a {1}, {2} eh?"));
     }
+    Spec(MoveConstructor)
+    {
+        format f1("{0} is a {1}, {2} eh?");
 
+        format f2(std::move(f1));
+
+        Assert::That(f2.specifiers(), Equals(3));
+
+        f2 << "this";
+
+        format f3(std::move(f2));
+
+        Assert::That(f2.specifiers(), Equals(0));
+
+        Assert::That(f3.str(), Equals("this is a {1}, {2} eh?"));
+    }
     Spec(AssignmentOperator)
     {
 
@@ -86,14 +101,35 @@ Context(FormatTest)
 
         f2 << "this";
 
-        format f3 = f2;
+        format f3("test");
+
+        f3 = f2;
 
         Assert::That(f2.specifiers(), Equals(2));
 
         Assert::That(f2.str(), Equals("this is a {1}, {2} eh?"));
 
     }
+    Spec(MoveAssignmentOperator)
+    {
 
+        format f1("{0} is a {1}, {2} eh?");
+
+        format f2 = std::move(f1);
+
+        Assert::That(f2.specifiers(), Equals(3));
+
+        f2 << "this";
+
+        format f3("test");
+
+        f3 = std::move(f2);
+
+        Assert::That(f2.specifiers(), Equals(0));
+
+        Assert::That(f3.str(), Equals("this is a {1}, {2} eh?"));
+
+    }
     Spec(handleNoConversion)
     {
         format f("this has no specifiers");
@@ -162,7 +198,11 @@ Context(FormatTest)
     {
         AssertThrows(invalid_argument, format("{0} {2}"));
 
+        AssertThrows(invalid_argument, format("{0} {2"));
+
         AssertThrows(invalid_argument, (format("{0}") << "test" << "two"));
+
+        AssertThrows(invalid_argument, format("{0:} {1,asdfasdf}"))
     }
 
     Spec(argumentsFollowSpecifierOrder)
@@ -180,20 +220,46 @@ Context(FormatTest)
 
         Assert::That(f.str(), Equals("1243.45"));
 
-    }
+        f.reset("{0:Fasdfasdf}");
 
+        AssertThrows(invalid_argument, f.arg("1123.123123"));
+
+    }
+    Spec(scientificSpecialization)
+    {
+
+        format f("{0:e5}", 3.1415926534);
+
+        Assert::That(f.str(), Equals("3.14159e+00"));
+
+        f.reset("{0:E}");
+
+        f.arg(1.0e-10);
+
+        Assert::That(f.str(), Equals("1.000000000E-10"));
+
+        f.reset("{0:Fasdfasdf}");
+
+        AssertThrows(invalid_argument, f.arg("123.123-10"));
+
+    }
     Spec(hexidecimalSpecialization)
     {
         format f("{0:X}", 10);
 
         Assert::That(f.str(), Equals("0A"));
     }
+    Spec(octalSpecialization)
+    {
+        format f("{0:O}", 10);
 
+        Assert::That(f.str(), Equals("12"));
+    }
     Spec(canResetFormat)
     {
         format f("{0:f}", 123.56789);
 
-        Assert::That(f.str(), Equals("123.56789"));
+        Assert::That(f.str(), Equals("123.567890000"));
 
         f.reset();
 
@@ -260,6 +326,15 @@ Context(FormatTest)
 
         Assert::That(f.str(), Equals("{{0}}"));
 
+        f.reset("{0}}}");
+        f.arg("yup");
+
+        Assert::That(f.str(), Equals("yup}"));
+
+        f.reset("{{0}");
+
+        Assert::That(f.str(), Equals("{0}"));
+
     }
 
     Spec(canFormatWidth)
@@ -273,5 +348,18 @@ Context(FormatTest)
         f << "test";
 
         Assert::That(f.str(), Equals("        test one"));
+
+        f.reset("{0:f2,12}");
+
+        f << 123.1234123;
+
+        Assert::That(f.str(), Equals("      123.12"));
+    }
+
+    Spec(easterEggTest)
+    {
+        format f("{0:n}", "hello");
+
+        Assert::That(f.str(), Equals("hello\n"));
     }
 };

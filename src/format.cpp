@@ -38,43 +38,42 @@ namespace arg3
     format::format(format &&other) : value_(std::move(other.value_)), specifiers_(std::move(other.specifiers_)),
         currentSpecifier_(std::move(other.currentSpecifier_))
     {
+        other.specifiers_.clear();
+        other.currentSpecifier_ = other.specifiers_.begin();
     }
 
     format &format::operator=(const format &rhs)
     {
-        if (this != &rhs)
+        value_ = rhs.value_; // copy the format
+
+        specifiers_.clear(); // clear any specifiers already set
+
+        // copy other specifiers
+        for (auto s : rhs.specifiers_)
         {
-
-            value_ = rhs.value_; // copy the format
-
-            specifiers_.clear(); // clear any specifiers already set
-
-            // copy other specifiers
-            for (auto s : rhs.specifiers_)
-            {
-                specifiers_.push_back(s);
-            }
-
-            // set current position to begining
-            currentSpecifier_ = specifiers_.begin();
-            // advance current position according to the other position
-            advance(currentSpecifier_, distance(rhs.specifiers_.begin(), SpecifierList::const_iterator(rhs.currentSpecifier_)));
+            specifiers_.push_back(s);
         }
+
+        // set current position to begining
+        currentSpecifier_ = specifiers_.begin();
+        // advance current position according to the other position
+        advance(currentSpecifier_, distance(rhs.specifiers_.begin(), SpecifierList::const_iterator(rhs.currentSpecifier_)));
+
         return *this;
     }
 
     format &format::operator=(format && rhs)
     {
-        if (this != &rhs)
-        {
+        value_ = std::move(rhs.value_); // copy the format
 
-            value_ = std::move(rhs.value_); // copy the format
+        specifiers_ = std::move(rhs.specifiers_);
 
-            specifiers_ = std::move(rhs.specifiers_);
+        // set current position to begining
+        currentSpecifier_ = std::move(rhs.currentSpecifier_);
 
-            // set current position to begining
-            currentSpecifier_ = std::move(rhs.currentSpecifier_);
-        }
+        rhs.specifiers_.clear();
+        rhs.currentSpecifier_ = rhs.specifiers_.begin();
+
         return *this;
     }
     /*!
@@ -116,20 +115,35 @@ namespace arg3
 
                 spec.type = format[0];
 
-                spec.format = format.substr(1, format.length() - 1);
+                auto comma = temp.find(',', divider);
+
+                if (comma != string::npos)
+                {
+                    spec.format = format.substr(1, comma);
+
+                    spec.width = stoi(temp.substr(comma + 1));
+
+                }
+                else
+                {
+                    spec.format = format.substr(1, format.length() - 1);
+                }
 
                 temp = temp.substr(0, divider);
             }
-
-            // look for {0,-10}
-            divider = temp.find(',');
-
-            if (divider != string::npos)
+            else
             {
-                spec.width = stoi(temp.substr(divider + 1));
+                // look for {0,-10}
+                divider = temp.find(',');
 
-                temp = temp.substr(0, divider);
+                if (divider != string::npos)
+                {
+                    spec.width = stoi(temp.substr(divider + 1));
+
+                    temp = temp.substr(0, divider);
+                }
             }
+
 
             spec.index = stoi(temp);
 
@@ -172,11 +186,6 @@ namespace arg3
             if (end == string::npos)
             {
                 throw invalid_argument("no specifier closing tag");
-            }
-
-            if (end + 1 < len && value_[end + 1] == s_close_tag)
-            {
-                continue;
             }
 
             // add the specifier
@@ -235,14 +244,12 @@ namespace arg3
         case 'E':
             out << uppercase;
         case 'e':
-            out << scientific;
-        case 'f':
             if (!arg.format.empty())
             {
                 try
                 {
                     int p = stoi(arg.format);
-                    out << fixed << setprecision(p);
+                    out << setprecision(p);
                 }
                 catch (...)
                 {
@@ -253,6 +260,27 @@ namespace arg3
             {
                 out << setprecision(9);
             }
+            out << scientific;
+            break;
+        case 'F':
+        case 'f':
+            if (!arg.format.empty())
+            {
+                try
+                {
+                    int p = stoi(arg.format);
+                    out << setprecision(p);
+                }
+                catch (...)
+                {
+                    throw invalid_argument("invalid precision format for argument");
+                }
+            }
+            else
+            {
+                out << setprecision(9);
+            }
+            out << fixed;
             break;
 
         case 'X':
@@ -264,6 +292,7 @@ namespace arg3
                 out << setw(2);
             }
             break;
+        case 'O':
         case 'o':
             out << oct;
             break;

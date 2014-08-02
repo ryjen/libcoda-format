@@ -31,18 +31,18 @@
             <td class="headerValue">Code Coverage</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">129</td>
-            <td class="headerCovTableEntry">162</td>
-            <td class="headerCovTableEntryMed">79.6 %</td>
+            <td class="headerCovTableEntry">170</td>
+            <td class="headerCovTableEntry">174</td>
+            <td class="headerCovTableEntryHi">97.7 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2014-07-19</td>
+            <td class="headerValue">2014-08-02</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">20</td>
+            <td class="headerCovTableEntry">24</td>
             <td class="headerCovTableEntry">27</td>
-            <td class="headerCovTableEntryLo">74.1 %</td>
+            <td class="headerCovTableEntryMed">88.9 %</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -79,380 +79,409 @@
 <span class="lineNum">       9 </span>            : namespace arg3
 <a name="10"><span class="lineNum">      10 </span>            : {</a>
 <span class="lineNum">      11 </span>            : 
-<span class="lineNum">      12 </span><span class="lineCov">         22 :     format::format(const string &amp;str) : value_(str), specifiers_(), currentSpecifier_(specifiers_.begin())</span>
-<span class="lineNum">      13 </span><span class="lineCov">         22 :     {</span>
-<span class="lineNum">      14 </span><span class="lineCov">         22 :         initialize();</span>
-<a name="15"><span class="lineNum">      15 </span><span class="lineCov">         44 :     }</span></a>
+<span class="lineNum">      12 </span><span class="lineCov">         31 :     format::format(const string &amp;str) : value_(str), specifiers_(), currentSpecifier_(specifiers_.begin())</span>
+<span class="lineNum">      13 </span><span class="lineCov">         31 :     {</span>
+<span class="lineNum">      14 </span><span class="lineCov">         31 :         initialize();</span>
+<a name="15"><span class="lineNum">      15 </span><span class="lineCov">         62 :     }</span></a>
 <span class="lineNum">      16 </span>            : 
 <span class="lineNum">      17 </span>            :     format::~format()
-<span class="lineNum">      18 </span><span class="lineCov">         52 :     {</span>
+<span class="lineNum">      18 </span><span class="lineCov">         70 :     {</span>
 <span class="lineNum">      19 </span>            :         //specifiers_.clear();
-<a name="20"><span class="lineNum">      20 </span><span class="lineCov">         52 :     }</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">         70 :     }</span></a>
 <span class="lineNum">      21 </span>            : 
-<span class="lineNum">      22 </span><span class="lineCov">          5 :     format::format(const format &amp;other) : value_(other.value_), specifiers_(), currentSpecifier_(specifiers_.begin())</span>
-<span class="lineNum">      23 </span><span class="lineCov">          5 :     {</span>
+<span class="lineNum">      22 </span><span class="lineCov">          4 :     format::format(const format &amp;other) : value_(other.value_), specifiers_(), currentSpecifier_(specifiers_.begin())</span>
+<span class="lineNum">      23 </span><span class="lineCov">          4 :     {</span>
 <span class="lineNum">      24 </span>            : 
 <span class="lineNum">      25 </span>            :         // copy specifiers
-<span class="lineNum">      26 </span><span class="lineCov">         93 :         for (auto s : other.specifiers_)</span>
+<span class="lineNum">      26 </span><span class="lineCov">         72 :         for (auto s : other.specifiers_)</span>
 <span class="lineNum">      27 </span>            :         {
-<span class="lineNum">      28 </span><span class="lineCov">         13 :             specifiers_.push_back(s);</span>
-<span class="lineNum">      29 </span><span class="lineCov">         13 :         }</span>
+<span class="lineNum">      28 </span><span class="lineCov">         10 :             specifiers_.push_back(s);</span>
+<span class="lineNum">      29 </span><span class="lineCov">         10 :         }</span>
 <span class="lineNum">      30 </span>            : 
 <span class="lineNum">      31 </span>            :         // set current position to begining
-<span class="lineNum">      32 </span><span class="lineCov">          5 :         currentSpecifier_ = specifiers_.begin();</span>
+<span class="lineNum">      32 </span><span class="lineCov">          4 :         currentSpecifier_ = specifiers_.begin();</span>
 <span class="lineNum">      33 </span>            : 
 <span class="lineNum">      34 </span>            :         // advance current position according to the other position
-<span class="lineNum">      35 </span><span class="lineCov">         10 :         advance(currentSpecifier_, distance(other.specifiers_.begin(), SpecifierList::const_iterator(other.currentSpecifier_)));</span>
-<a name="36"><span class="lineNum">      36 </span><span class="lineCov">         10 :     }</span></a>
+<span class="lineNum">      35 </span><span class="lineCov">          8 :         advance(currentSpecifier_, distance(other.specifiers_.begin(), SpecifierList::const_iterator(other.currentSpecifier_)));</span>
+<a name="36"><span class="lineNum">      36 </span><span class="lineCov">          8 :     }</span></a>
 <span class="lineNum">      37 </span>            : 
-<span class="lineNum">      38 </span><span class="lineNoCov">          0 :     format::format(format &amp;&amp;other) : value_(std::move(other.value_)), specifiers_(std::move(other.specifiers_)),</span>
-<span class="lineNum">      39 </span><span class="lineNoCov">          0 :         currentSpecifier_(std::move(other.currentSpecifier_))</span>
-<span class="lineNum">      40 </span><span class="lineNoCov">          0 :     {</span>
-<a name="41"><span class="lineNum">      41 </span><span class="lineNoCov">          0 :     }</span></a>
-<span class="lineNum">      42 </span>            : 
-<span class="lineNum">      43 </span>            :     format &amp;format::operator=(const format &amp;rhs)
-<span class="lineNum">      44 </span>            :     {
-<span class="lineNum">      45 </span><span class="lineNoCov">          0 :         if (this != &amp;rhs)</span>
-<span class="lineNum">      46 </span>            :         {
-<span class="lineNum">      47 </span>            : 
-<span class="lineNum">      48 </span><span class="lineNoCov">          0 :             value_ = rhs.value_; // copy the format</span>
-<span class="lineNum">      49 </span>            : 
-<span class="lineNum">      50 </span><span class="lineNoCov">          0 :             specifiers_.clear(); // clear any specifiers already set</span>
-<span class="lineNum">      51 </span>            : 
-<span class="lineNum">      52 </span>            :             // copy other specifiers
-<span class="lineNum">      53 </span><span class="lineNoCov">          0 :             for (auto s : rhs.specifiers_)</span>
-<span class="lineNum">      54 </span>            :             {
-<span class="lineNum">      55 </span><span class="lineNoCov">          0 :                 specifiers_.push_back(s);</span>
-<span class="lineNum">      56 </span><span class="lineNoCov">          0 :             }</span>
-<span class="lineNum">      57 </span>            : 
-<span class="lineNum">      58 </span>            :             // set current position to begining
-<span class="lineNum">      59 </span><span class="lineNoCov">          0 :             currentSpecifier_ = specifiers_.begin();</span>
-<span class="lineNum">      60 </span>            :             // advance current position according to the other position
-<span class="lineNum">      61 </span><span class="lineNoCov">          0 :             advance(currentSpecifier_, distance(rhs.specifiers_.begin(), SpecifierList::const_iterator(rhs.currentSpecifier_)));</span>
-<span class="lineNum">      62 </span><span class="lineNoCov">          0 :         }</span>
-<span class="lineNum">      63 </span><span class="lineNoCov">          0 :         return *this;</span>
-<a name="64"><span class="lineNum">      64 </span><span class="lineNoCov">          0 :     }</span></a>
-<span class="lineNum">      65 </span>            : 
-<span class="lineNum">      66 </span>            :     format &amp;format::operator=(format &amp;&amp; rhs)
-<span class="lineNum">      67 </span>            :     {
-<span class="lineNum">      68 </span><span class="lineNoCov">          0 :         if (this != &amp;rhs)</span>
-<span class="lineNum">      69 </span>            :         {
+<span class="lineNum">      38 </span><span class="lineCov">          6 :     format::format(format &amp;&amp;other) : value_(std::move(other.value_)), specifiers_(std::move(other.specifiers_)),</span>
+<span class="lineNum">      39 </span><span class="lineCov">          3 :         currentSpecifier_(std::move(other.currentSpecifier_))</span>
+<span class="lineNum">      40 </span><span class="lineCov">          9 :     {</span>
+<span class="lineNum">      41 </span><span class="lineCov">          3 :         other.specifiers_.clear();</span>
+<span class="lineNum">      42 </span><span class="lineCov">          3 :         other.currentSpecifier_ = other.specifiers_.begin();</span>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">          6 :     }</span></a>
+<span class="lineNum">      44 </span>            : 
+<span class="lineNum">      45 </span>            :     format &amp;format::operator=(const format &amp;rhs)
+<span class="lineNum">      46 </span>            :     {
+<span class="lineNum">      47 </span><span class="lineCov">          1 :         value_ = rhs.value_; // copy the format</span>
+<span class="lineNum">      48 </span>            : 
+<span class="lineNum">      49 </span><span class="lineCov">          1 :         specifiers_.clear(); // clear any specifiers already set</span>
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span>            :         // copy other specifiers
+<span class="lineNum">      52 </span><span class="lineCov">         11 :         for (auto s : rhs.specifiers_)</span>
+<span class="lineNum">      53 </span>            :         {
+<span class="lineNum">      54 </span><span class="lineCov">          3 :             specifiers_.push_back(s);</span>
+<span class="lineNum">      55 </span><span class="lineCov">          3 :         }</span>
+<span class="lineNum">      56 </span>            : 
+<span class="lineNum">      57 </span>            :         // set current position to begining
+<span class="lineNum">      58 </span><span class="lineCov">          1 :         currentSpecifier_ = specifiers_.begin();</span>
+<span class="lineNum">      59 </span>            :         // advance current position according to the other position
+<span class="lineNum">      60 </span><span class="lineCov">          1 :         advance(currentSpecifier_, distance(rhs.specifiers_.begin(), SpecifierList::const_iterator(rhs.currentSpecifier_)));</span>
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span><span class="lineCov">          1 :         return *this;</span>
+<a name="63"><span class="lineNum">      63 </span><span class="lineNoCov">          0 :     }</span></a>
+<span class="lineNum">      64 </span>            : 
+<span class="lineNum">      65 </span>            :     format &amp;format::operator=(format &amp;&amp; rhs)
+<span class="lineNum">      66 </span>            :     {
+<span class="lineNum">      67 </span><span class="lineCov">          1 :         value_ = std::move(rhs.value_); // copy the format</span>
+<span class="lineNum">      68 </span>            : 
+<span class="lineNum">      69 </span><span class="lineCov">          1 :         specifiers_ = std::move(rhs.specifiers_);</span>
 <span class="lineNum">      70 </span>            : 
-<span class="lineNum">      71 </span><span class="lineNoCov">          0 :             value_ = std::move(rhs.value_); // copy the format</span>
-<span class="lineNum">      72 </span>            : 
-<span class="lineNum">      73 </span><span class="lineNoCov">          0 :             specifiers_ = std::move(rhs.specifiers_);</span>
-<span class="lineNum">      74 </span>            : 
-<span class="lineNum">      75 </span>            :             // set current position to begining
-<span class="lineNum">      76 </span><span class="lineNoCov">          0 :             currentSpecifier_ = std::move(rhs.currentSpecifier_);</span>
-<span class="lineNum">      77 </span><span class="lineNoCov">          0 :         }</span>
-<span class="lineNum">      78 </span><span class="lineNoCov">          0 :         return *this;</span>
-<span class="lineNum">      79 </span>            :     }
-<span class="lineNum">      80 </span>            :     /*!
-<a name="81"><span class="lineNum">      81 </span>            :      * returns the number of specifiers in the format string</a>
-<span class="lineNum">      82 </span>            :      */
-<span class="lineNum">      83 </span>            :     size_t format::specifiers() const
-<span class="lineNum">      84 </span>            :     {
-<span class="lineNum">      85 </span>            :         // the size of the specifier list minus any specifier arguments already added
-<span class="lineNum">      86 </span><span class="lineCov">         14 :         return specifiers_.size() - distance(specifiers_.begin(), SpecifierList::const_iterator(currentSpecifier_));</span>
-<span class="lineNum">      87 </span>            :     }
-<span class="lineNum">      88 </span>            : 
-<span class="lineNum">      89 </span>            :     /*!
-<span class="lineNum">      90 </span>            :      * adds a specifier to the list
-<a name="91"><span class="lineNum">      91 </span>            :      * @throws invalid_argument if specifier does not contain an index</a>
-<span class="lineNum">      92 </span>            :      */
-<span class="lineNum">      93 </span>            :     void format::add_specifier(string::size_type start, string::size_type end) throw (invalid_argument)
-<span class="lineNum">      94 </span>            :     {
-<span class="lineNum">      95 </span>            : 
-<span class="lineNum">      96 </span>            :         // get the string inside the delimiters
-<span class="lineNum">      97 </span><span class="lineCov">         43 :         string temp = value_.substr(start, end - start);</span>
-<span class="lineNum">      98 </span>            : 
-<span class="lineNum">      99 </span>            :         // the specifier to create
-<span class="lineNum">     100 </span><span class="lineCov">         43 :         specifier spec;</span>
-<span class="lineNum">     101 </span><span class="lineCov">         43 :         spec.index = 0;</span>
-<span class="lineNum">     102 </span><span class="lineCov">         43 :         spec.prev = start - 1; // exclude start tag</span>
-<span class="lineNum">     103 </span><span class="lineCov">         43 :         spec.next = end + 1; // exclude end tag</span>
-<span class="lineNum">     104 </span><span class="lineCov">         43 :         spec.width = 0;</span>
-<span class="lineNum">     105 </span><span class="lineCov">         43 :         spec.type = '\0';</span>
-<span class="lineNum">     106 </span>            : 
-<span class="lineNum">     107 </span>            :         try
-<span class="lineNum">     108 </span>            :         {
-<span class="lineNum">     109 </span>            : 
-<span class="lineNum">     110 </span>            :             // look for {0,10:f2}
-<span class="lineNum">     111 </span><span class="lineCov">         43 :             auto divider = temp.find(':');</span>
-<span class="lineNum">     112 </span>            : 
-<span class="lineNum">     113 </span><span class="lineCov">         43 :             if (divider != string::npos)</span>
-<span class="lineNum">     114 </span>            :             {
-<span class="lineNum">     115 </span><span class="lineCov">          4 :                 string format = temp.substr(divider + 1);</span>
-<span class="lineNum">     116 </span>            : 
-<span class="lineNum">     117 </span><span class="lineCov">          8 :                 spec.type = format[0];</span>
-<span class="lineNum">     118 </span>            : 
-<span class="lineNum">     119 </span><span class="lineCov">          8 :                 spec.format = format.substr(1, format.length() - 1);</span>
-<span class="lineNum">     120 </span>            : 
-<a name="121"><span class="lineNum">     121 </span><span class="lineCov">          8 :                 temp = temp.substr(0, divider);</span></a>
-<span class="lineNum">     122 </span><span class="lineCov">          4 :             }</span>
+<span class="lineNum">      71 </span>            :         // set current position to begining
+<span class="lineNum">      72 </span><span class="lineCov">          1 :         currentSpecifier_ = std::move(rhs.currentSpecifier_);</span>
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span><span class="lineCov">          1 :         rhs.specifiers_.clear();</span>
+<span class="lineNum">      75 </span><span class="lineCov">          1 :         rhs.currentSpecifier_ = rhs.specifiers_.begin();</span>
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span><span class="lineCov">          1 :         return *this;</span>
+<span class="lineNum">      78 </span>            :     }
+<span class="lineNum">      79 </span>            :     /*!
+<a name="80"><span class="lineNum">      80 </span>            :      * returns the number of specifiers in the format string</a>
+<span class="lineNum">      81 </span>            :      */
+<span class="lineNum">      82 </span>            :     size_t format::specifiers() const
+<span class="lineNum">      83 </span>            :     {
+<span class="lineNum">      84 </span>            :         // the size of the specifier list minus any specifier arguments already added
+<span class="lineNum">      85 </span><span class="lineCov">         18 :         return specifiers_.size() - distance(specifiers_.begin(), SpecifierList::const_iterator(currentSpecifier_));</span>
+<span class="lineNum">      86 </span>            :     }
+<span class="lineNum">      87 </span>            : 
+<span class="lineNum">      88 </span>            :     /*!
+<span class="lineNum">      89 </span>            :      * adds a specifier to the list
+<a name="90"><span class="lineNum">      90 </span>            :      * @throws invalid_argument if specifier does not contain an index</a>
+<span class="lineNum">      91 </span>            :      */
+<span class="lineNum">      92 </span>            :     void format::add_specifier(string::size_type start, string::size_type end) throw (invalid_argument)
+<span class="lineNum">      93 </span>            :     {
+<span class="lineNum">      94 </span>            : 
+<span class="lineNum">      95 </span>            :         // get the string inside the delimiters
+<span class="lineNum">      96 </span><span class="lineCov">         59 :         string temp = value_.substr(start, end - start);</span>
+<span class="lineNum">      97 </span>            : 
+<span class="lineNum">      98 </span>            :         // the specifier to create
+<span class="lineNum">      99 </span><span class="lineCov">         59 :         specifier spec;</span>
+<span class="lineNum">     100 </span><span class="lineCov">         59 :         spec.index = 0;</span>
+<span class="lineNum">     101 </span><span class="lineCov">         59 :         spec.prev = start - 1; // exclude start tag</span>
+<span class="lineNum">     102 </span><span class="lineCov">         59 :         spec.next = end + 1; // exclude end tag</span>
+<span class="lineNum">     103 </span><span class="lineCov">         59 :         spec.width = 0;</span>
+<span class="lineNum">     104 </span><span class="lineCov">         59 :         spec.type = '\0';</span>
+<span class="lineNum">     105 </span>            : 
+<span class="lineNum">     106 </span>            :         try
+<span class="lineNum">     107 </span>            :         {
+<span class="lineNum">     108 </span>            : 
+<span class="lineNum">     109 </span>            :             // look for {0,10:f2}
+<span class="lineNum">     110 </span><span class="lineCov">         59 :             auto divider = temp.find(':');</span>
+<span class="lineNum">     111 </span>            : 
+<span class="lineNum">     112 </span><span class="lineCov">         59 :             if (divider != string::npos)</span>
+<span class="lineNum">     113 </span>            :             {
+<span class="lineNum">     114 </span><span class="lineCov">         12 :                 string format = temp.substr(divider + 1);</span>
+<span class="lineNum">     115 </span>            : 
+<span class="lineNum">     116 </span><span class="lineCov">         24 :                 spec.type = format[0];</span>
+<span class="lineNum">     117 </span>            : 
+<span class="lineNum">     118 </span><span class="lineCov">         12 :                 auto comma = temp.find(',', divider);</span>
+<span class="lineNum">     119 </span>            : 
+<span class="lineNum">     120 </span><span class="lineCov">         12 :                 if (comma != string::npos)</span>
+<a name="121"><span class="lineNum">     121 </span>            :                 {</a>
+<span class="lineNum">     122 </span><span class="lineCov">          2 :                     spec.format = format.substr(1, comma);</span>
 <span class="lineNum">     123 </span><span class="lineNoCov">          0 : </span>
-<span class="lineNum">     124 </span>            :             // look for {0,-10}
-<span class="lineNum">     125 </span><span class="lineCov">         43 :             divider = temp.find(',');</span>
-<span class="lineNum">     126 </span>            : 
-<span class="lineNum">     127 </span><span class="lineCov">         43 :             if (divider != string::npos)</span>
-<span class="lineNum">     128 </span>            :             {
-<span class="lineNum">     129 </span><span class="lineCov">          6 :                 spec.width = stoi(temp.substr(divider + 1));</span>
-<span class="lineNum">     130 </span>            : 
-<span class="lineNum">     131 </span><span class="lineCov">          4 :                 temp = temp.substr(0, divider);</span>
-<span class="lineNum">     132 </span><span class="lineCov">          2 :             }</span>
-<span class="lineNum">     133 </span>            : 
-<span class="lineNum">     134 </span><span class="lineCov">         86 :             spec.index = stoi(temp);</span>
-<span class="lineNum">     135 </span>            : 
-<span class="lineNum">     136 </span><span class="lineCov">         43 :         }</span>
-<span class="lineNum">     137 </span>            :         catch ( ... )
-<span class="lineNum">     138 </span>            :         {
-<span class="lineNum">     139 </span><span class="lineNoCov">          0 :             throw invalid_argument(&quot;invalid specifier format&quot;);</span>
-<span class="lineNum">     140 </span>            :         }
-<span class="lineNum">     141 </span>            : 
-<span class="lineNum">     142 </span><span class="lineCov">         43 :         specifiers_.push_back( spec );</span>
-<span class="lineNum">     143 </span>            : 
-<span class="lineNum">     144 </span><span class="lineCov">         43 :     }</span>
-<a name="145"><span class="lineNum">     145 </span>            : </a>
+<span class="lineNum">     124 </span><span class="lineCov">          3 :                     spec.width = stoi(temp.substr(comma + 1));</span>
+<span class="lineNum">     125 </span>            : 
+<span class="lineNum">     126 </span><span class="lineCov">          1 :                 }</span>
+<span class="lineNum">     127 </span>            :                 else
+<span class="lineNum">     128 </span>            :                 {
+<span class="lineNum">     129 </span><span class="lineCov">         21 :                     spec.format = format.substr(1, format.length() - 1);</span>
+<span class="lineNum">     130 </span>            :                 }
+<span class="lineNum">     131 </span>            : 
+<span class="lineNum">     132 </span><span class="lineCov">         22 :                 temp = temp.substr(0, divider);</span>
+<span class="lineNum">     133 </span><span class="lineCov">         11 :             }</span>
+<span class="lineNum">     134 </span>            :             else
+<span class="lineNum">     135 </span>            :             {
+<span class="lineNum">     136 </span>            :                 // look for {0,-10}
+<span class="lineNum">     137 </span><span class="lineCov">         47 :                 divider = temp.find(',');</span>
+<span class="lineNum">     138 </span>            : 
+<span class="lineNum">     139 </span><span class="lineCov">         47 :                 if (divider != string::npos)</span>
+<span class="lineNum">     140 </span>            :                 {
+<span class="lineNum">     141 </span><span class="lineCov">          6 :                     spec.width = stoi(temp.substr(divider + 1));</span>
+<span class="lineNum">     142 </span>            : 
+<span class="lineNum">     143 </span><span class="lineCov">          4 :                     temp = temp.substr(0, divider);</span>
+<span class="lineNum">     144 </span><span class="lineCov">          2 :                 }</span>
+<span class="lineNum">     145 </span>            :             }
 <span class="lineNum">     146 </span>            : 
-<span class="lineNum">     147 </span>            :     void format::initialize() throw (invalid_argument)
-<span class="lineNum">     148 </span>            :     {
+<span class="lineNum">     147 </span>            : 
+<span class="lineNum">     148 </span><span class="lineCov">        116 :             spec.index = stoi(temp);</span>
 <span class="lineNum">     149 </span>            : 
-<span class="lineNum">     150 </span><span class="lineCov">         26 :         auto len = value_.length();</span>
-<span class="lineNum">     151 </span>            : 
-<span class="lineNum">     152 </span>            :         // find each open tag
-<span class="lineNum">     153 </span><span class="lineCov">        612 :         for (auto pos = 0; pos &lt; len; pos++)</span>
-<span class="lineNum">     154 </span>            :         {
+<span class="lineNum">     150 </span><span class="lineCov">         59 :         }</span>
+<span class="lineNum">     151 </span>            :         catch ( ... )
+<span class="lineNum">     152 </span>            :         {
+<span class="lineNum">     153 </span><span class="lineCov">          2 :             throw invalid_argument(&quot;invalid specifier format&quot;);</span>
+<span class="lineNum">     154 </span>            :         }
 <span class="lineNum">     155 </span>            : 
-<span class="lineNum">     156 </span><span class="lineCov">        560 :             if (value_[pos] != s_open_tag)</span>
-<span class="lineNum">     157 </span>            :             {
-<span class="lineNum">     158 </span><span class="lineCov">        234 :                 continue;</span>
-<span class="lineNum">     159 </span>            :             }
+<span class="lineNum">     156 </span><span class="lineCov">         58 :         specifiers_.push_back( spec );</span>
+<span class="lineNum">     157 </span>            : 
+<span class="lineNum">     158 </span><span class="lineCov">         65 :     }</span>
+<a name="159"><span class="lineNum">     159 </span>            : </a>
 <span class="lineNum">     160 </span>            : 
-<span class="lineNum">     161 </span><span class="lineCov">         46 :             if (++pos &gt;= len) break;</span>
-<span class="lineNum">     162 </span>            : 
-<span class="lineNum">     163 </span>            :             // check if its an escape tag, ie  {{
-<span class="lineNum">     164 </span><span class="lineCov">        138 :             if (pos &lt; len &amp;&amp; value_[pos] == s_open_tag)</span>
-<span class="lineNum">     165 </span>            :             {
-<span class="lineNum">     166 </span><span class="lineCov">          3 :                 continue;</span>
-<span class="lineNum">     167 </span>            :             }
-<span class="lineNum">     168 </span>            : 
-<span class="lineNum">     169 </span>            :             // get the closing tag
-<span class="lineNum">     170 </span><span class="lineCov">         43 :             auto end = value_.find(s_close_tag, pos);</span>
-<span class="lineNum">     171 </span>            : 
-<span class="lineNum">     172 </span><span class="lineCov">         43 :             if (end == string::npos)</span>
-<span class="lineNum">     173 </span>            :             {
-<span class="lineNum">     174 </span><span class="lineNoCov">          0 :                 throw invalid_argument(&quot;no specifier closing tag&quot;);</span>
-<span class="lineNum">     175 </span>            :             }
+<span class="lineNum">     161 </span>            :     void format::initialize() throw (invalid_argument)
+<span class="lineNum">     162 </span>            :     {
+<span class="lineNum">     163 </span>            : 
+<span class="lineNum">     164 </span><span class="lineCov">         41 :         auto len = value_.length();</span>
+<span class="lineNum">     165 </span>            : 
+<span class="lineNum">     166 </span>            :         // find each open tag
+<span class="lineNum">     167 </span><span class="lineCov">        848 :         for (auto pos = 0; pos &lt; len; pos++)</span>
+<span class="lineNum">     168 </span>            :         {
+<span class="lineNum">     169 </span>            : 
+<span class="lineNum">     170 </span><span class="lineCov">        770 :             if (value_[pos] != s_open_tag)</span>
+<span class="lineNum">     171 </span>            :             {
+<span class="lineNum">     172 </span><span class="lineCov">        321 :                 continue;</span>
+<span class="lineNum">     173 </span>            :             }
+<span class="lineNum">     174 </span>            : 
+<span class="lineNum">     175 </span><span class="lineCov">         64 :             if (++pos &gt;= len) break;</span>
 <span class="lineNum">     176 </span>            : 
-<span class="lineNum">     177 </span><span class="lineCov">        105 :             if (end + 1 &lt; len &amp;&amp; value_[end + 1] == s_close_tag)</span>
-<span class="lineNum">     178 </span>            :             {
-<span class="lineNum">     179 </span><span class="lineNoCov">          0 :                 continue;</span>
-<span class="lineNum">     180 </span>            :             }
-<span class="lineNum">     181 </span>            : 
-<span class="lineNum">     182 </span>            :             // add the specifier
-<span class="lineNum">     183 </span><span class="lineCov">         43 :             add_specifier(pos, end);</span>
-<span class="lineNum">     184 </span><span class="lineCov">         43 :         }</span>
+<span class="lineNum">     177 </span>            :             // check if its an escape tag, ie  {{
+<span class="lineNum">     178 </span><span class="lineCov">        192 :             if (pos &lt; len &amp;&amp; value_[pos] == s_open_tag)</span>
+<span class="lineNum">     179 </span>            :             {
+<span class="lineNum">     180 </span><span class="lineCov">          4 :                 continue;</span>
+<span class="lineNum">     181 </span>            :             }
+<span class="lineNum">     182 </span>            : 
+<span class="lineNum">     183 </span>            :             // get the closing tag
+<span class="lineNum">     184 </span><span class="lineCov">         60 :             auto end = value_.find(s_close_tag, pos);</span>
 <span class="lineNum">     185 </span>            : 
-<span class="lineNum">     186 </span>            :         // short circuit if no specifiers found
-<span class="lineNum">     187 </span><span class="lineCov">         26 :         if (specifiers_.size() == 0)</span>
-<span class="lineNum">     188 </span>            :         {
-<span class="lineNum">     189 </span><span class="lineCov">          2 :             return;</span>
-<span class="lineNum">     190 </span>            :         }
-<a name="191"><span class="lineNum">     191 </span>            : </a>
-<span class="lineNum">     192 </span>            :         // sort specifiers based on index
-<span class="lineNum">     193 </span><span class="lineCov">         24 :         specifiers_.sort([&amp;](const specifier &amp; first, const specifier &amp; second)</span>
-<span class="lineNum">     194 </span>            :         {
-<span class="lineNum">     195 </span><span class="lineCov">         21 :             return first.index &lt; second.index;</span>
-<span class="lineNum">     196 </span>            :         });
-<span class="lineNum">     197 </span>            : 
-<span class="lineNum">     198 </span>            :         // set the current position (note this is *after* sorting)
-<span class="lineNum">     199 </span><span class="lineCov">         24 :         currentSpecifier_ = specifiers_.begin();</span>
-<span class="lineNum">     200 </span>            : 
-<span class="lineNum">     201 </span><span class="lineCov">         24 :         size_t index = 0;</span>
-<span class="lineNum">     202 </span>            : 
-<span class="lineNum">     203 </span>            :         // check if specifier indexes follow an incremental order
-<span class="lineNum">     204 </span><span class="lineCov">        326 :         for (auto spec : specifiers_)</span>
-<span class="lineNum">     205 </span>            :         {
-<span class="lineNum">     206 </span><span class="lineCov">         43 :             if (spec.index != index++)</span>
-<span class="lineNum">     207 </span>            :             {
-<span class="lineNum">     208 </span><span class="lineCov">          2 :                 throw invalid_argument(&quot;specifier index not ordered&quot;);</span>
-<span class="lineNum">     209 </span>            :             }
-<span class="lineNum">     210 </span><span class="lineCov">         42 :         }</span>
-<a name="211"><span class="lineNum">     211 </span><span class="lineCov">         28 :     }</span></a>
-<span class="lineNum">     212 </span>            : 
-<span class="lineNum">     213 </span>            :     void format::begin_manip(ostream &amp;out, const specifier &amp;arg) const throw (invalid_argument)
-<span class="lineNum">     214 </span>            :     {
-<span class="lineNum">     215 </span>            : 
-<span class="lineNum">     216 </span><span class="lineCov">         33 :         if (arg.width != 0)</span>
-<span class="lineNum">     217 </span>            :         {
-<span class="lineNum">     218 </span><span class="lineCov">          4 :             out &lt;&lt; setw(abs(arg.width));</span>
-<span class="lineNum">     219 </span><span class="lineCov">          2 :             if (arg.width &lt; 0)</span>
-<span class="lineNum">     220 </span>            :             {
-<span class="lineNum">     221 </span><span class="lineCov">          1 :                 out &lt;&lt; left;</span>
-<span class="lineNum">     222 </span><span class="lineCov">          1 :             }</span>
-<span class="lineNum">     223 </span><span class="lineCov">          2 :         }</span>
+<span class="lineNum">     186 </span><span class="lineCov">         60 :             if (end == string::npos)</span>
+<span class="lineNum">     187 </span>            :             {
+<span class="lineNum">     188 </span><span class="lineCov">          1 :                 throw invalid_argument(&quot;no specifier closing tag&quot;);</span>
+<span class="lineNum">     189 </span>            :             }
+<span class="lineNum">     190 </span>            : 
+<span class="lineNum">     191 </span>            :             // add the specifier
+<span class="lineNum">     192 </span><span class="lineCov">         58 :             add_specifier(pos, end);</span>
+<span class="lineNum">     193 </span><span class="lineCov">         58 :         }</span>
+<span class="lineNum">     194 </span>            : 
+<span class="lineNum">     195 </span>            :         // short circuit if no specifiers found
+<span class="lineNum">     196 </span><span class="lineCov">         39 :         if (specifiers_.size() == 0)</span>
+<span class="lineNum">     197 </span>            :         {
+<span class="lineNum">     198 </span><span class="lineCov">          5 :             return;</span>
+<span class="lineNum">     199 </span>            :         }
+<a name="200"><span class="lineNum">     200 </span>            : </a>
+<span class="lineNum">     201 </span>            :         // sort specifiers based on index
+<span class="lineNum">     202 </span><span class="lineCov">         34 :         specifiers_.sort([&amp;](const specifier &amp; first, const specifier &amp; second)</span>
+<span class="lineNum">     203 </span>            :         {
+<span class="lineNum">     204 </span><span class="lineCov">         25 :             return first.index &lt; second.index;</span>
+<span class="lineNum">     205 </span>            :         });
+<span class="lineNum">     206 </span>            : 
+<span class="lineNum">     207 </span>            :         // set the current position (note this is *after* sorting)
+<span class="lineNum">     208 </span><span class="lineCov">         34 :         currentSpecifier_ = specifiers_.begin();</span>
+<span class="lineNum">     209 </span>            : 
+<span class="lineNum">     210 </span><span class="lineCov">         34 :         size_t index = 0;</span>
+<span class="lineNum">     211 </span>            : 
+<span class="lineNum">     212 </span>            :         // check if specifier indexes follow an incremental order
+<span class="lineNum">     213 </span><span class="lineCov">        440 :         for (auto spec : specifiers_)</span>
+<span class="lineNum">     214 </span>            :         {
+<span class="lineNum">     215 </span><span class="lineCov">         57 :             if (spec.index != index++)</span>
+<span class="lineNum">     216 </span>            :             {
+<span class="lineNum">     217 </span><span class="lineCov">          2 :                 throw invalid_argument(&quot;specifier index not ordered&quot;);</span>
+<span class="lineNum">     218 </span>            :             }
+<span class="lineNum">     219 </span><span class="lineCov">         56 :         }</span>
+<a name="220"><span class="lineNum">     220 </span><span class="lineCov">         41 :     }</span></a>
+<span class="lineNum">     221 </span>            : 
+<span class="lineNum">     222 </span>            :     void format::begin_manip(ostream &amp;out, const specifier &amp;arg) const throw (invalid_argument)
+<span class="lineNum">     223 </span>            :     {
 <span class="lineNum">     224 </span>            : 
-<span class="lineNum">     225 </span>            :         // short circuit if specifier has no format string
-<span class="lineNum">     226 </span><span class="lineCov">         33 :         if (arg.type == '\0' )</span>
-<span class="lineNum">     227 </span>            :         {
-<span class="lineNum">     228 </span><span class="lineCov">         29 :             return;</span>
-<span class="lineNum">     229 </span>            :         }
-<span class="lineNum">     230 </span>            : 
-<span class="lineNum">     231 </span><span class="lineCov">          4 :         switch (arg.type)</span>
-<span class="lineNum">     232 </span>            :         {
-<span class="lineNum">     233 </span>            :             // printf styles
-<span class="lineNum">     234 </span>            :             // TODO: define formats
-<span class="lineNum">     235 </span>            :         case 'E':
-<span class="lineNum">     236 </span><span class="lineNoCov">          0 :             out &lt;&lt; uppercase;</span>
-<span class="lineNum">     237 </span>            :         case 'e':
-<span class="lineNum">     238 </span><span class="lineNoCov">          0 :             out &lt;&lt; scientific;</span>
-<span class="lineNum">     239 </span>            :         case 'f':
-<span class="lineNum">     240 </span><span class="lineCov">          3 :             if (!arg.format.empty())</span>
-<span class="lineNum">     241 </span>            :             {
-<span class="lineNum">     242 </span>            :                 try
-<span class="lineNum">     243 </span>            :                 {
-<span class="lineNum">     244 </span><span class="lineCov">          2 :                     int p = stoi(arg.format);</span>
-<span class="lineNum">     245 </span><span class="lineCov">          3 :                     out &lt;&lt; fixed &lt;&lt; setprecision(p);</span>
-<span class="lineNum">     246 </span><span class="lineCov">          1 :                 }</span>
-<span class="lineNum">     247 </span>            :                 catch (...)
-<span class="lineNum">     248 </span>            :                 {
-<span class="lineNum">     249 </span><span class="lineNoCov">          0 :                     throw invalid_argument(&quot;invalid precision format for argument&quot;);</span>
-<span class="lineNum">     250 </span>            :                 }
-<span class="lineNum">     251 </span><span class="lineCov">          1 :             }</span>
-<span class="lineNum">     252 </span>            :             else
-<span class="lineNum">     253 </span>            :             {
-<span class="lineNum">     254 </span><span class="lineCov">          4 :                 out &lt;&lt; setprecision(9);</span>
-<span class="lineNum">     255 </span>            :             }
-<span class="lineNum">     256 </span><span class="lineCov">          3 :             break;</span>
-<span class="lineNum">     257 </span>            : 
-<span class="lineNum">     258 </span>            :         case 'X':
-<span class="lineNum">     259 </span><span class="lineCov">          2 :             out &lt;&lt; uppercase;</span>
-<span class="lineNum">     260 </span>            :         case 'x':
-<span class="lineNum">     261 </span><span class="lineCov">          3 :             out &lt;&lt; hex &lt;&lt; setfill('0');</span>
-<span class="lineNum">     262 </span><span class="lineCov">          1 :             if (arg.width == 0)</span>
-<span class="lineNum">     263 </span>            :             {
-<span class="lineNum">     264 </span><span class="lineCov">          2 :                 out &lt;&lt; setw(2);</span>
-<span class="lineNum">     265 </span><span class="lineCov">          1 :             }</span>
-<span class="lineNum">     266 </span><span class="lineCov">          1 :             break;</span>
-<span class="lineNum">     267 </span>            :         case 'o':
-<span class="lineNum">     268 </span><span class="lineNoCov">          0 :             out &lt;&lt; oct;</span>
-<span class="lineNum">     269 </span><span class="lineNoCov">          0 :             break;</span>
-<span class="lineNum">     270 </span>            :         }
-<a name="271"><span class="lineNum">     271 </span><span class="lineCov">         33 :     }</span></a>
-<span class="lineNum">     272 </span>            : 
-<span class="lineNum">     273 </span>            :     void format::end_manip(ostream &amp;out, const specifier &amp;arg)
-<span class="lineNum">     274 </span>            :     {
-<span class="lineNum">     275 </span>            :         // cleanup any stream manipulation
-<span class="lineNum">     276 </span>            : 
-<span class="lineNum">     277 </span><span class="lineCov">         34 :         switch (arg.type)</span>
-<span class="lineNum">     278 </span>            :         {
-<span class="lineNum">     279 </span>            :         case 'x':
-<span class="lineNum">     280 </span>            :         case 'X':
-<span class="lineNum">     281 </span><span class="lineCov">          1 :             out &lt;&lt; dec;</span>
-<span class="lineNum">     282 </span><span class="lineCov">          1 :             break;</span>
-<span class="lineNum">     283 </span>            :         case 'n':
-<span class="lineNum">     284 </span><span class="lineNoCov">          0 :             out &lt;&lt; endl;</span>
-<span class="lineNum">     285 </span><span class="lineNoCov">          0 :             break;</span>
-<span class="lineNum">     286 </span>            :         }
-<a name="287"><span class="lineNum">     287 </span><span class="lineCov">         33 :     }</span></a>
-<span class="lineNum">     288 </span>            : 
-<span class="lineNum">     289 </span>            :     void format::reset() throw (invalid_argument)
-<span class="lineNum">     290 </span>            :     {
-<span class="lineNum">     291 </span><span class="lineCov">          4 :         specifiers_.clear();</span>
-<span class="lineNum">     292 </span><span class="lineCov">          4 :         initialize();</span>
-<a name="293"><span class="lineNum">     293 </span><span class="lineCov">          4 :     }</span></a>
-<span class="lineNum">     294 </span>            : 
-<span class="lineNum">     295 </span>            :     void format::reset(const string &amp;value) throw (invalid_argument)
-<span class="lineNum">     296 </span>            :     {
-<span class="lineNum">     297 </span><span class="lineCov">          3 :         value_ = value;</span>
-<span class="lineNum">     298 </span><span class="lineCov">          3 :         reset();</span>
-<a name="299"><span class="lineNum">     299 </span><span class="lineCov">          3 :     }</span></a>
-<span class="lineNum">     300 </span>            : 
-<span class="lineNum">     301 </span>            :     string format::str()
-<span class="lineNum">     302 </span>            :     {
-<span class="lineNum">     303 </span>            : 
-<span class="lineNum">     304 </span><span class="lineCov">         22 :         ostringstream buf;</span>
+<span class="lineNum">     225 </span><span class="lineCov">         43 :         if (arg.width != 0)</span>
+<span class="lineNum">     226 </span>            :         {
+<span class="lineNum">     227 </span><span class="lineCov">          6 :             out &lt;&lt; setw(abs(arg.width));</span>
+<span class="lineNum">     228 </span><span class="lineCov">          3 :             if (arg.width &lt; 0)</span>
+<span class="lineNum">     229 </span>            :             {
+<span class="lineNum">     230 </span><span class="lineCov">          1 :                 out &lt;&lt; left;</span>
+<span class="lineNum">     231 </span><span class="lineCov">          1 :             }</span>
+<span class="lineNum">     232 </span><span class="lineCov">          3 :         }</span>
+<span class="lineNum">     233 </span>            : 
+<span class="lineNum">     234 </span>            :         // short circuit if specifier has no format string
+<span class="lineNum">     235 </span><span class="lineCov">         43 :         if (arg.type == '\0' )</span>
+<span class="lineNum">     236 </span>            :         {
+<span class="lineNum">     237 </span><span class="lineCov">         32 :             return;</span>
+<span class="lineNum">     238 </span>            :         }
+<span class="lineNum">     239 </span>            : 
+<span class="lineNum">     240 </span><span class="lineCov">         11 :         switch (arg.type)</span>
+<span class="lineNum">     241 </span>            :         {
+<span class="lineNum">     242 </span>            :             // printf styles
+<span class="lineNum">     243 </span>            :             // TODO: define formats
+<span class="lineNum">     244 </span>            :         case 'E':
+<span class="lineNum">     245 </span><span class="lineCov">          2 :             out &lt;&lt; uppercase;</span>
+<span class="lineNum">     246 </span>            :         case 'e':
+<span class="lineNum">     247 </span><span class="lineCov">          2 :             if (!arg.format.empty())</span>
+<span class="lineNum">     248 </span>            :             {
+<span class="lineNum">     249 </span>            :                 try
+<span class="lineNum">     250 </span>            :                 {
+<span class="lineNum">     251 </span><span class="lineCov">          2 :                     int p = stoi(arg.format);</span>
+<span class="lineNum">     252 </span><span class="lineCov">          2 :                     out &lt;&lt; setprecision(p);</span>
+<span class="lineNum">     253 </span><span class="lineCov">          1 :                 }</span>
+<span class="lineNum">     254 </span>            :                 catch (...)
+<span class="lineNum">     255 </span>            :                 {
+<span class="lineNum">     256 </span><span class="lineNoCov">          0 :                     throw invalid_argument(&quot;invalid precision format for argument&quot;);</span>
+<span class="lineNum">     257 </span>            :                 }
+<span class="lineNum">     258 </span><span class="lineCov">          1 :             }</span>
+<span class="lineNum">     259 </span>            :             else
+<span class="lineNum">     260 </span>            :             {
+<span class="lineNum">     261 </span><span class="lineCov">          2 :                 out &lt;&lt; setprecision(9);</span>
+<span class="lineNum">     262 </span>            :             }
+<span class="lineNum">     263 </span><span class="lineCov">          2 :             out &lt;&lt; scientific;</span>
+<span class="lineNum">     264 </span><span class="lineCov">          2 :             break;</span>
+<span class="lineNum">     265 </span>            :         case 'F':
+<span class="lineNum">     266 </span>            :         case 'f':
+<span class="lineNum">     267 </span><span class="lineCov">          6 :             if (!arg.format.empty())</span>
+<span class="lineNum">     268 </span>            :             {
+<span class="lineNum">     269 </span>            :                 try
+<span class="lineNum">     270 </span>            :                 {
+<span class="lineNum">     271 </span><span class="lineCov">          6 :                     int p = stoi(arg.format);</span>
+<span class="lineNum">     272 </span><span class="lineCov">          4 :                     out &lt;&lt; setprecision(p);</span>
+<span class="lineNum">     273 </span><span class="lineCov">          4 :                 }</span>
+<span class="lineNum">     274 </span>            :                 catch (...)
+<span class="lineNum">     275 </span>            :                 {
+<span class="lineNum">     276 </span><span class="lineCov">          4 :                     throw invalid_argument(&quot;invalid precision format for argument&quot;);</span>
+<span class="lineNum">     277 </span>            :                 }
+<span class="lineNum">     278 </span><span class="lineCov">          2 :             }</span>
+<span class="lineNum">     279 </span>            :             else
+<span class="lineNum">     280 </span>            :             {
+<span class="lineNum">     281 </span><span class="lineCov">          4 :                 out &lt;&lt; setprecision(9);</span>
+<span class="lineNum">     282 </span>            :             }
+<span class="lineNum">     283 </span><span class="lineCov">          4 :             out &lt;&lt; fixed;</span>
+<span class="lineNum">     284 </span><span class="lineCov">          4 :             break;</span>
+<span class="lineNum">     285 </span>            : 
+<span class="lineNum">     286 </span>            :         case 'X':
+<span class="lineNum">     287 </span><span class="lineCov">          2 :             out &lt;&lt; uppercase;</span>
+<span class="lineNum">     288 </span>            :         case 'x':
+<span class="lineNum">     289 </span><span class="lineCov">          3 :             out &lt;&lt; hex &lt;&lt; setfill('0');</span>
+<span class="lineNum">     290 </span><span class="lineCov">          1 :             if (arg.width == 0)</span>
+<span class="lineNum">     291 </span>            :             {
+<span class="lineNum">     292 </span><span class="lineCov">          2 :                 out &lt;&lt; setw(2);</span>
+<span class="lineNum">     293 </span><span class="lineCov">          1 :             }</span>
+<span class="lineNum">     294 </span><span class="lineCov">          1 :             break;</span>
+<span class="lineNum">     295 </span>            :         case 'O':
+<span class="lineNum">     296 </span>            :         case 'o':
+<span class="lineNum">     297 </span><span class="lineCov">          1 :             out &lt;&lt; oct;</span>
+<span class="lineNum">     298 </span><span class="lineCov">          1 :             break;</span>
+<span class="lineNum">     299 </span>            :         }
+<a name="300"><span class="lineNum">     300 </span><span class="lineCov">         51 :     }</span></a>
+<span class="lineNum">     301 </span>            : 
+<span class="lineNum">     302 </span>            :     void format::end_manip(ostream &amp;out, const specifier &amp;arg)
+<span class="lineNum">     303 </span>            :     {
+<span class="lineNum">     304 </span>            :         // cleanup any stream manipulation
 <span class="lineNum">     305 </span>            : 
-<span class="lineNum">     306 </span><span class="lineCov">         22 :         print(buf);</span>
-<span class="lineNum">     307 </span>            : 
-<span class="lineNum">     308 </span><span class="lineCov">         22 :         return buf.str();</span>
-<a name="309"><span class="lineNum">     309 </span><span class="lineCov">         22 :     }</span></a>
-<span class="lineNum">     310 </span>            : 
-<span class="lineNum">     311 </span>            :     void format::unescape(ostream &amp;buf, string::size_type start, string::size_type end)
-<span class="lineNum">     312 </span>            :     {
-<span class="lineNum">     313 </span>            : 
-<span class="lineNum">     314 </span><span class="lineCov">        454 :         for (auto i = start; i &lt; end; ++i)</span>
-<span class="lineNum">     315 </span>            :         {
-<span class="lineNum">     316 </span>            : 
-<span class="lineNum">     317 </span><span class="lineCov">        197 :             char tag = value_[i];</span>
-<span class="lineNum">     318 </span>            : 
-<span class="lineNum">     319 </span><span class="lineCov">        384 :             if (tag != s_open_tag &amp;&amp; tag != s_close_tag)</span>
-<span class="lineNum">     320 </span>            :             {
-<span class="lineNum">     321 </span><span class="lineCov">        177 :                 buf &lt;&lt; tag;</span>
-<span class="lineNum">     322 </span><span class="lineCov">        177 :                 continue;</span>
-<span class="lineNum">     323 </span>            :             }
-<span class="lineNum">     324 </span>            : 
-<span class="lineNum">     325 </span><span class="lineCov">         40 :             if (i + 1 &lt; end &amp;&amp; value_[i + 1] == tag)</span>
-<span class="lineNum">     326 </span>            :             {
-<span class="lineNum">     327 </span><span class="lineCov">          6 :                 i++;</span>
-<span class="lineNum">     328 </span><span class="lineCov">          6 :             }</span>
+<span class="lineNum">     306 </span><span class="lineCov">         43 :         switch (arg.type)</span>
+<span class="lineNum">     307 </span>            :         {
+<span class="lineNum">     308 </span>            :         case 'x':
+<span class="lineNum">     309 </span>            :         case 'X':
+<span class="lineNum">     310 </span><span class="lineCov">          1 :             out &lt;&lt; dec;</span>
+<span class="lineNum">     311 </span><span class="lineCov">          1 :             break;</span>
+<span class="lineNum">     312 </span>            :         case 'n':
+<span class="lineNum">     313 </span><span class="lineCov">          1 :             out &lt;&lt; endl;</span>
+<span class="lineNum">     314 </span><span class="lineCov">          1 :             break;</span>
+<span class="lineNum">     315 </span>            :         }
+<a name="316"><span class="lineNum">     316 </span><span class="lineCov">         41 :     }</span></a>
+<span class="lineNum">     317 </span>            : 
+<span class="lineNum">     318 </span>            :     void format::reset() throw (invalid_argument)
+<span class="lineNum">     319 </span>            :     {
+<span class="lineNum">     320 </span><span class="lineCov">         10 :         specifiers_.clear();</span>
+<span class="lineNum">     321 </span><span class="lineCov">         10 :         initialize();</span>
+<a name="322"><span class="lineNum">     322 </span><span class="lineCov">         10 :     }</span></a>
+<span class="lineNum">     323 </span>            : 
+<span class="lineNum">     324 </span>            :     void format::reset(const string &amp;value) throw (invalid_argument)
+<span class="lineNum">     325 </span>            :     {
+<span class="lineNum">     326 </span><span class="lineCov">          9 :         value_ = value;</span>
+<span class="lineNum">     327 </span><span class="lineCov">          9 :         reset();</span>
+<a name="328"><span class="lineNum">     328 </span><span class="lineCov">          9 :     }</span></a>
 <span class="lineNum">     329 </span>            : 
-<span class="lineNum">     330 </span><span class="lineCov">         20 :             buf &lt;&lt; tag;</span>
-<span class="lineNum">     331 </span><span class="lineCov">         20 :         }</span>
-<a name="332"><span class="lineNum">     332 </span><span class="lineCov">         30 :     }</span></a>
-<span class="lineNum">     333 </span>            : 
-<span class="lineNum">     334 </span>            :     void format::print(ostream &amp;buf)
-<span class="lineNum">     335 </span>            :     {
+<span class="lineNum">     330 </span>            :     string format::str()
+<span class="lineNum">     331 </span>            :     {
+<span class="lineNum">     332 </span>            : 
+<span class="lineNum">     333 </span><span class="lineCov">         31 :         ostringstream buf;</span>
+<span class="lineNum">     334 </span>            : 
+<span class="lineNum">     335 </span><span class="lineCov">         31 :         print(buf);</span>
 <span class="lineNum">     336 </span>            : 
-<span class="lineNum">     337 </span>            :         // short circuit if no specifiers
-<span class="lineNum">     338 </span><span class="lineCov">         24 :         if (specifiers_.size() == 0)</span>
-<span class="lineNum">     339 </span>            :         {
-<span class="lineNum">     340 </span><span class="lineCov">          2 :             unescape(buf, 0, value_.length());</span>
-<span class="lineNum">     341 </span><span class="lineCov">          2 :             return;</span>
-<a name="342"><span class="lineNum">     342 </span>            :         }</a>
-<span class="lineNum">     343 </span>            :         // sort based on position
-<span class="lineNum">     344 </span><span class="lineCov">         22 :         specifiers_.sort([&amp;](const specifier &amp; first, const specifier &amp; second)</span>
-<span class="lineNum">     345 </span>            :         {
-<span class="lineNum">     346 </span><span class="lineCov">         22 :             return first.prev &lt; second.prev;</span>
-<span class="lineNum">     347 </span>            :         });
-<span class="lineNum">     348 </span>            : 
-<span class="lineNum">     349 </span><span class="lineCov">         22 :         size_t last = 0;</span>
-<span class="lineNum">     350 </span>            : 
-<span class="lineNum">     351 </span>            :         // loop through all added arguments
-<span class="lineNum">     352 </span><span class="lineCov">        114 :         for (auto spec = specifiers_.begin(); spec != currentSpecifier_; ++spec )</span>
-<span class="lineNum">     353 </span>            :         {
-<span class="lineNum">     354 </span><span class="lineCov">         35 :             if (spec-&gt;prev != 0)</span>
+<span class="lineNum">     337 </span><span class="lineCov">         31 :         return buf.str();</span>
+<a name="338"><span class="lineNum">     338 </span><span class="lineCov">         31 :     }</span></a>
+<span class="lineNum">     339 </span>            : 
+<span class="lineNum">     340 </span>            :     void format::unescape(ostream &amp;buf, string::size_type start, string::size_type end)
+<span class="lineNum">     341 </span>            :     {
+<span class="lineNum">     342 </span>            : 
+<span class="lineNum">     343 </span><span class="lineCov">        542 :         for (auto i = start; i &lt; end; ++i)</span>
+<span class="lineNum">     344 </span>            :         {
+<span class="lineNum">     345 </span>            : 
+<span class="lineNum">     346 </span><span class="lineCov">        237 :             char tag = value_[i];</span>
+<span class="lineNum">     347 </span>            : 
+<span class="lineNum">     348 </span><span class="lineCov">        459 :             if (tag != s_open_tag &amp;&amp; tag != s_close_tag)</span>
+<span class="lineNum">     349 </span>            :             {
+<span class="lineNum">     350 </span><span class="lineCov">        206 :                 buf &lt;&lt; tag;</span>
+<span class="lineNum">     351 </span><span class="lineCov">        206 :                 continue;</span>
+<span class="lineNum">     352 </span>            :             }
+<span class="lineNum">     353 </span>            : 
+<span class="lineNum">     354 </span><span class="lineCov">         61 :             if (i + 1 &lt; end &amp;&amp; value_[i + 1] == tag)</span>
 <span class="lineNum">     355 </span>            :             {
-<span class="lineNum">     356 </span>            :                 // add filler between specifiers
-<span class="lineNum">     357 </span><span class="lineCov">         15 :                 unescape(buf, last, spec-&gt;prev);</span>
-<span class="lineNum">     358 </span><span class="lineCov">         15 :             }</span>
-<span class="lineNum">     359 </span>            : 
-<span class="lineNum">     360 </span>            :             // append replacement
-<span class="lineNum">     361 </span><span class="lineCov">         35 :             buf &lt;&lt; spec-&gt;replacement;</span>
+<span class="lineNum">     356 </span><span class="lineCov">          8 :                 i++;</span>
+<span class="lineNum">     357 </span><span class="lineCov">          8 :             }</span>
+<span class="lineNum">     358 </span>            : 
+<span class="lineNum">     359 </span><span class="lineCov">         31 :             buf &lt;&lt; tag;</span>
+<span class="lineNum">     360 </span><span class="lineCov">         31 :         }</span>
+<a name="361"><span class="lineNum">     361 </span><span class="lineCov">         34 :     }</span></a>
 <span class="lineNum">     362 </span>            : 
-<span class="lineNum">     363 </span><span class="lineCov">         35 :             last = spec-&gt;next;</span>
-<span class="lineNum">     364 </span><span class="lineCov">         35 :         }</span>
+<span class="lineNum">     363 </span>            :     void format::print(ostream &amp;buf)
+<span class="lineNum">     364 </span>            :     {
 <span class="lineNum">     365 </span>            : 
-<span class="lineNum">     366 </span>            :         // add ending
-<span class="lineNum">     367 </span><span class="lineCov">         22 :         if (last &lt; value_.length())</span>
+<span class="lineNum">     366 </span>            :         // short circuit if no specifiers
+<span class="lineNum">     367 </span><span class="lineCov">         33 :         if (specifiers_.size() == 0)</span>
 <span class="lineNum">     368 </span>            :         {
-<span class="lineNum">     369 </span><span class="lineCov">         13 :             unescape(buf, last, value_.length());</span>
-<span class="lineNum">     370 </span><span class="lineCov">         13 :         }</span>
-<a name="371"><span class="lineNum">     371 </span><span class="lineCov">         24 :     }</span></a>
-<span class="lineNum">     372 </span>            : 
-<span class="lineNum">     373 </span>            :     format::operator string() throw (invalid_argument)
-<span class="lineNum">     374 </span>            :     {
-<span class="lineNum">     375 </span><span class="lineCov">          2 :         return str();</span>
-<span class="lineNum">     376 </span><span class="lineNoCov">          0 :     }</span>
-<a name="377"><span class="lineNum">     377 </span>            : </a>
-<span class="lineNum">     378 </span>            : 
-<span class="lineNum">     379 </span>            :     ostream &amp;operator&lt;&lt;(ostream &amp;out, format &amp;f)
-<span class="lineNum">     380 </span>            :     {
-<span class="lineNum">     381 </span><span class="lineCov">          1 :         f.print(out);</span>
-<span class="lineNum">     382 </span><span class="lineCov">          1 :         return out;</span>
-<span class="lineNum">     383 </span>            :     }
-<span class="lineNum">     384 </span>            : 
-<span class="lineNum">     385 </span>            : }
+<span class="lineNum">     369 </span><span class="lineCov">          3 :             unescape(buf, 0, value_.length());</span>
+<span class="lineNum">     370 </span><span class="lineCov">          3 :             return;</span>
+<a name="371"><span class="lineNum">     371 </span>            :         }</a>
+<span class="lineNum">     372 </span>            :         // sort based on position
+<span class="lineNum">     373 </span><span class="lineCov">         30 :         specifiers_.sort([&amp;](const specifier &amp; first, const specifier &amp; second)</span>
+<span class="lineNum">     374 </span>            :         {
+<span class="lineNum">     375 </span><span class="lineCov">         26 :             return first.prev &lt; second.prev;</span>
+<span class="lineNum">     376 </span>            :         });
+<span class="lineNum">     377 </span>            : 
+<span class="lineNum">     378 </span><span class="lineCov">         30 :         size_t last = 0;</span>
+<span class="lineNum">     379 </span>            : 
+<span class="lineNum">     380 </span>            :         // loop through all added arguments
+<span class="lineNum">     381 </span><span class="lineCov">        146 :         for (auto spec = specifiers_.begin(); spec != currentSpecifier_; ++spec )</span>
+<span class="lineNum">     382 </span>            :         {
+<span class="lineNum">     383 </span><span class="lineCov">         43 :             if (spec-&gt;prev != 0)</span>
+<span class="lineNum">     384 </span>            :             {
+<span class="lineNum">     385 </span>            :                 // add filler between specifiers
+<span class="lineNum">     386 </span><span class="lineCov">         15 :                 unescape(buf, last, spec-&gt;prev);</span>
+<span class="lineNum">     387 </span><span class="lineCov">         15 :             }</span>
+<span class="lineNum">     388 </span>            : 
+<span class="lineNum">     389 </span>            :             // append replacement
+<span class="lineNum">     390 </span><span class="lineCov">         43 :             buf &lt;&lt; spec-&gt;replacement;</span>
+<span class="lineNum">     391 </span>            : 
+<span class="lineNum">     392 </span><span class="lineCov">         43 :             last = spec-&gt;next;</span>
+<span class="lineNum">     393 </span><span class="lineCov">         43 :         }</span>
+<span class="lineNum">     394 </span>            : 
+<span class="lineNum">     395 </span>            :         // add ending
+<span class="lineNum">     396 </span><span class="lineCov">         30 :         if (last &lt; value_.length())</span>
+<span class="lineNum">     397 </span>            :         {
+<span class="lineNum">     398 </span><span class="lineCov">         16 :             unescape(buf, last, value_.length());</span>
+<span class="lineNum">     399 </span><span class="lineCov">         16 :         }</span>
+<a name="400"><span class="lineNum">     400 </span><span class="lineCov">         33 :     }</span></a>
+<span class="lineNum">     401 </span>            : 
+<span class="lineNum">     402 </span>            :     format::operator string() throw (invalid_argument)
+<span class="lineNum">     403 </span>            :     {
+<span class="lineNum">     404 </span><span class="lineCov">          2 :         return str();</span>
+<span class="lineNum">     405 </span><span class="lineNoCov">          0 :     }</span>
+<a name="406"><span class="lineNum">     406 </span>            : </a>
+<span class="lineNum">     407 </span>            : 
+<span class="lineNum">     408 </span>            :     ostream &amp;operator&lt;&lt;(ostream &amp;out, format &amp;f)
+<span class="lineNum">     409 </span>            :     {
+<span class="lineNum">     410 </span><span class="lineCov">          1 :         f.print(out);</span>
+<span class="lineNum">     411 </span><span class="lineCov">          1 :         return out;</span>
+<span class="lineNum">     412 </span>            :     }
+<span class="lineNum">     413 </span>            : 
+<span class="lineNum">     414 </span>            : }
 </pre>
       </td>
     </tr>
