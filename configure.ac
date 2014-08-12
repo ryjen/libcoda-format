@@ -1,7 +1,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.69])
+AC_PREREQ([2.68])
 AC_INIT([arg3fmt], [0.2], [c0der78@gmail.com])
 AC_CONFIG_SRCDIR([src/format.cpp])
 AC_CONFIG_HEADERS([src/config.h])
