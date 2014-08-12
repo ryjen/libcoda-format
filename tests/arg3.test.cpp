@@ -1,9 +1,9 @@
 
-#include <igloo/igloo.h>
+#include <bandit/bandit.h>
 
-using namespace igloo;
+using namespace bandit;
 
-int main()
+int main(int argc, char *argv[])
 {
-    return TestRunner::RunAllTests();
+    return bandit::run(argc, argv);
 }

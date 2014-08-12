@@ -1,0 +1,3 @@
+[submodule "tests/vendor/bandit"]
+	path = tests/vendor/bandit
+	url = https://github.com/joakimkarlsson/bandit.git

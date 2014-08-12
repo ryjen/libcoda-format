@@ -6,10 +6,10 @@
  * http://igloo-testing.org
  */
 
-#include <igloo/igloo.h>
+#include <bandit/bandit.h>
 #include "format.h"
 
-using namespace igloo;
+using namespace bandit;
 
 using namespace arg3;
 
@@ -32,334 +32,350 @@ ostream &operator<<(ostream &out, const OStreamClass &obj)
     return out;
 }
 
-Context(FormatTest)
+go_bandit([]()
 {
 
-    Spec(knownNumberOfSpecifiers)
-    {
-        format f("this is a {0}");
-
-        Assert::That(f.specifiers(), Equals(1));
-
-        format f2("{0} is a {1}, {2} eh?");
-
-        Assert::That(f2.specifiers(), Equals(3));
-
-    }
-
-    Spec(multiArgConstructor)
-    {
-        // construct and replace with arguments
-        format f("{1} is a {0}, {2} eh?", "test", "this", "cool");
-
-        // all specifiers replaced
-        Assert::That(f.specifiers(), Equals(0));
-
-        Assert::That(f.str(), Equals("this is a test, cool eh?"));
-    }
-
-    Spec(CopyConstructor)
-    {
-        format f1("{0} is a {1}, {2} eh?");
-
-        format f2(f1);
-
-        Assert::That(f2.specifiers(), Equals(3));
-
-        f2 << "this";
-
-        format f3(f2);
-
-        Assert::That(f2.specifiers(), Equals(2));
-
-        Assert::That(f2.str(), Equals("this is a {1}, {2} eh?"));
-    }
-    Spec(MoveConstructor)
-    {
-        format f1("{0} is a {1}, {2} eh?");
-
-        format f2(std::move(f1));
-
-        Assert::That(f2.specifiers(), Equals(3));
-
-        f2 << "this";
-
-        format f3(std::move(f2));
-
-        Assert::That(f2.specifiers(), Equals(0));
-
-        Assert::That(f3.str(), Equals("this is a {1}, {2} eh?"));
-    }
-    Spec(AssignmentOperator)
+    describe("a formatter", []()
     {
 
-        format f1("{0} is a {1}, {2} eh?");
+        it("should know the number of argument specifiers", []()
+        {
+            format f("this is a {0}");
 
-        format f2 = f1;
+            Assert::That(f.specifiers(), Equals(1));
 
-        Assert::That(f2.specifiers(), Equals(3));
+            format f2("{0} is a {1}, {2} eh?");
 
-        f2 << "this";
+            Assert::That(f2.specifiers(), Equals(3));
 
-        format f3("test");
+        });
 
-        f3 = f2;
+        it("should be able to pass arguments in the constructor", []()
+        {
+            // construct and replace with arguments
+            format f("{1} is a {0}, {2} eh?", "test", "this", "cool");
 
-        Assert::That(f2.specifiers(), Equals(2));
+            // all specifiers replaced
+            Assert::That(f.specifiers(), Equals(0));
 
-        Assert::That(f2.str(), Equals("this is a {1}, {2} eh?"));
+            Assert::That(f.str(), Equals("this is a test, cool eh?"));
+        });
 
-    }
-    Spec(MoveAssignmentOperator)
-    {
+        it("should be copyable", []()
+        {
+            format f1("{0} is a {1}, {2} eh?");
 
-        format f1("{0} is a {1}, {2} eh?");
+            format f2(f1);
 
-        format f2 = std::move(f1);
+            Assert::That(f2.specifiers(), Equals(3));
 
-        Assert::That(f2.specifiers(), Equals(3));
+            f2 << "this";
 
-        f2 << "this";
+            format f3(f2);
 
-        format f3("test");
+            Assert::That(f2.specifiers(), Equals(2));
 
-        f3 = std::move(f2);
+            Assert::That(f2.str(), Equals("this is a {1}, {2} eh?"));
+        });
 
-        Assert::That(f2.specifiers(), Equals(0));
+        it("should be movable", []()
+        {
+            format f1("{0} is a {1}, {2} eh?");
 
-        Assert::That(f3.str(), Equals("this is a {1}, {2} eh?"));
+            format f2(std::move(f1));
 
-    }
-    Spec(handleNoConversion)
-    {
-        format f("this has no specifiers");
+            Assert::That(f2.specifiers(), Equals(3));
 
-        Assert::That(f.str(), Equals("this has no specifiers"));
-    }
+            f2 << "this";
 
-    Spec(addingArguments)
-    {
+            format f3(std::move(f2));
 
-        format f("{0} is a {1}, {2} eh?");
+            Assert::That(f2.specifiers(), Equals(0));
 
-        f.arg("this");
+            Assert::That(f3.str(), Equals("this is a {1}, {2} eh?"));
+        });
 
-        Assert::That(f.specifiers(), Equals(2));
+        it("can be copy assigned", []()
+        {
 
-        Assert::That(f.str(), Equals("this is a {1}, {2} eh?"));
+            format f1("{0} is a {1}, {2} eh?");
 
-        f.arg("test");
+            format f2 = f1;
 
-        Assert::That(f.specifiers(), Equals(1));
+            Assert::That(f2.specifiers(), Equals(3));
 
-        Assert::That(f.str(), Equals("this is a test, {2} eh?"));
+            f2 << "this";
 
-        f.arg("cool");
+            format f3("test");
 
-        Assert::That(f.specifiers(), Equals(0));
+            f3 = f2;
 
-        Assert::That(f.str(), Equals("this is a test, cool eh?"));
+            Assert::That(f2.specifiers(), Equals(2));
 
-    }
+            Assert::That(f2.str(), Equals("this is a {1}, {2} eh?"));
 
-    Spec(addingMultipleArguments)
-    {
-        format f("{0} is a {1}, {2} eh?");
+        });
 
-        f.arg("this", "test", "cool");
+        it("can be move assigned", []()
+        {
 
-        Assert::That(f.specifiers(), Equals(0));
+            format f1("{0} is a {1}, {2} eh?");
 
-        Assert::That(f.str(), Equals("this is a test, cool eh?"));
-    }
+            format f2 = std::move(f1);
 
-    Spec(stringCastOperator)
-    {
-        string str = format("cast to a {0}", "string");
+            Assert::That(f2.specifiers(), Equals(3));
 
-        Assert::That(str, Equals("cast to a string"));
-    }
+            f2 << "this";
 
-    Spec(leftShiftOperator)
-    {
+            format f3("test");
 
-        format f("{0} {1}");
+            f3 = std::move(f2);
 
-        f << "test" << "one";
+            Assert::That(f2.specifiers(), Equals(0));
 
-        Assert::That(f.str(), Equals("test one"));
+            Assert::That(f3.str(), Equals("this is a {1}, {2} eh?"));
 
-        format f2 = (format("something {0}") << "else");
+        });
 
-        Assert::That(f2.str(), Equals("something else"));
-    }
+        it("can handle no conversion", []()
+        {
+            format f("this has no specifiers");
 
-    Spec(hasExceptions)
-    {
-        AssertThrows(invalid_argument, format("{0} {2}"));
+            Assert::That(f.str(), Equals("this has no specifiers"));
+        });
 
-        AssertThrows(invalid_argument, format("{0} {2"));
+        it("can add arguments", []()
+        {
 
-        AssertThrows(invalid_argument, (format("{0}") << "test" << "two"));
+            format f("{0} is a {1}, {2} eh?");
 
-        AssertThrows(invalid_argument, format("{0:} {1,asdfasdf}"))
-    }
+            f.arg("this");
 
-    Spec(argumentsFollowSpecifierOrder)
-    {
+            Assert::That(f.specifiers(), Equals(2));
 
-        format f("{2} and {1} and {0}", 1, 2, 3);
+            Assert::That(f.str(), Equals("this is a {1}, {2} eh?"));
 
-        Assert::That(f.str(), Equals("3 and 2 and 1"));
-    }
+            f.arg("test");
 
-    Spec(floatingPointSpecialization)
-    {
+            Assert::That(f.specifiers(), Equals(1));
 
-        format f("{0:f2}", 1243.4533889798);
+            Assert::That(f.str(), Equals("this is a test, {2} eh?"));
 
-        Assert::That(f.str(), Equals("1243.45"));
+            f.arg("cool");
 
-        f.reset("{0:Fasdfasdf}");
+            Assert::That(f.specifiers(), Equals(0));
 
-        AssertThrows(invalid_argument, f.arg("1123.123123"));
+            Assert::That(f.str(), Equals("this is a test, cool eh?"));
 
-    }
-    Spec(scientificSpecialization)
-    {
+        });
 
-        format f("{0:e5}", 3.1415926534);
+        it("can add multiple arguments", []()
+        {
+            format f("{0} is a {1}, {2} eh?");
 
-        Assert::That(f.str(), Equals("3.14159e+00"));
+            f.arg("this", "test", "cool");
 
-        f.reset("{0:E}");
+            Assert::That(f.specifiers(), Equals(0));
 
-        f.arg(1.0e-10);
+            Assert::That(f.str(), Equals("this is a test, cool eh?"));
+        });
 
-        Assert::That(f.str(), Equals("1.000000000E-10"));
+        it("can cast to a string", []()
+        {
+            string str = format("cast to a {0}", "string");
 
-        f.reset("{0:Fasdfasdf}");
+            Assert::That(str, Equals("cast to a string"));
+        });
 
-        AssertThrows(invalid_argument, f.arg("123.123-10"));
+        it("can left shift arguments", []()
+        {
 
-    }
-    Spec(hexidecimalSpecialization)
-    {
-        format f("{0:X}", 10);
+            format f("{0} {1}");
 
-        Assert::That(f.str(), Equals("0A"));
-    }
-    Spec(octalSpecialization)
-    {
-        format f("{0:O}", 10);
+            f << "test" << "one";
 
-        Assert::That(f.str(), Equals("12"));
-    }
-    Spec(canResetFormat)
-    {
-        format f("{0:f}", 123.56789);
+            Assert::That(f.str(), Equals("test one"));
 
-        Assert::That(f.str(), Equals("123.567890000"));
+            format f2 = (format("something {0}") << "else");
 
-        f.reset();
+            Assert::That(f2.str(), Equals("something else"));
+        });
 
-        Assert::That(f.specifiers(), Equals(1));
+        it("throws exceptions", []()
+        {
+            AssertThrows(invalid_argument, format("{0} {2}"));
 
-        f.arg("test");
+            AssertThrows(invalid_argument, format("{0} {2"));
 
-        Assert::That(f.specifiers(), Equals(0));
+            AssertThrows(invalid_argument, (format("{0}") << "test" << "two"));
 
-        Assert::That(f.str(), Equals("test"));
+            AssertThrows(invalid_argument, format("{0:} {1,asdfasdf}"))
+        });
 
-        f.reset("{0}, {1}!");
+        it("can arrange arguments", []()
+        {
 
-        f.arg("Hello", "World");
+            format f("{2} and {1} and {0}", 1, 2, 3);
 
-        Assert::That(f.str(), Equals("Hello, World!"));
-    }
+            Assert::That(f.str(), Equals("3 and 2 and 1"));
+        });
 
-    Spec(customArgumentTypes)
-    {
+        it("can format floating point numbers", []()
+        {
 
-        OStreamClass test("custom", 42);
+            format f("{0:f2}", 1243.4533889798);
 
-        format f("{0}", test);
+            Assert::That(f.str(), Equals("1243.45"));
 
-        Assert::That(f.str(), Equals("custom:42"));
+            f.reset("{0:Fasdfasdf}");
 
-    }
+            AssertThrows(invalid_argument, f.arg("1123.123123"));
 
-    Spec(printingToSuppliedStream)
-    {
+        });
 
-        stringstream buf;
+        it("can format scientific numbers", []()
+        {
 
-        format f("{0} is so {1}!", "format", "cool");
+            format f("{0:e5}", 3.1415926534);
 
-        f.print(buf);
+            Assert::That(f.str(), Equals("3.14159e+00"));
 
-        Assert::That(buf.str(), Equals("format is so cool!"));
-    }
+            f.reset("{0:E}");
 
-    Spec(leftShiftingToStream)
-    {
+            f.arg(1.0e-10);
 
-        format f("{0} is so {1}!", "format", "cool");
+            Assert::That(f.str(), Equals("1.000000000E-10"));
 
-        stringstream buf;
+            f.reset("{0:Fasdfasdf}");
 
-        buf << f;
+            AssertThrows(invalid_argument, f.arg("123.123-10"));
 
-        Assert::That(buf.str(), Equals("format is so cool!"));
-    }
+        });
 
-    Spec(canEscapeSpecifierTags)
-    {
+        it("can format hex numbers", []()
+        {
+            format f("{0:X}", 10);
 
-        format f("{0} is {{0}}", "this");
+            Assert::That(f.str(), Equals("0A"));
+        });
 
-        Assert::That(f.str(), Equals("this is {0}"));
+        it("can format octal numbers", []()
+        {
+            format f("{0:O}", 10);
 
-        f.reset("{{{{0}}}}");
+            Assert::That(f.str(), Equals("12"));
+        });
 
-        Assert::That(f.specifiers(), Equals(0));
+        it("can reset its arguments", []()
+        {
+            format f("{0:f}", 123.56789);
 
-        Assert::That(f.str(), Equals("{{0}}"));
+            Assert::That(f.str(), Equals("123.567890000"));
 
-        f.reset("{0}}}");
-        f.arg("yup");
+            f.reset();
 
-        Assert::That(f.str(), Equals("yup}"));
+            Assert::That(f.specifiers(), Equals(1));
 
-        f.reset("{{0}");
+            f.arg("test");
 
-        Assert::That(f.str(), Equals("{0}"));
+            Assert::That(f.specifiers(), Equals(0));
 
-    }
+            Assert::That(f.str(), Equals("test"));
 
-    Spec(canFormatWidth)
-    {
-        format f("{0,-12} one", "test");
+            f.reset("{0}, {1}!");
 
-        Assert::That(f.str(), Equals("test         one"));
+            f.arg("Hello", "World");
 
-        f.reset("{0,12} one");
+            Assert::That(f.str(), Equals("Hello, World!"));
+        });
 
-        f << "test";
+        it("can handle custom argument types", []()
+        {
 
-        Assert::That(f.str(), Equals("        test one"));
+            OStreamClass test("custom", 42);
 
-        f.reset("{0:f2,12}");
+            format f("{0}", test);
 
-        f << 123.1234123;
+            Assert::That(f.str(), Equals("custom:42"));
 
-        Assert::That(f.str(), Equals("      123.12"));
-    }
+        });
 
-    Spec(easterEggTest)
-    {
-        format f("{0:n}", "hello");
+        it("can print to a stream", []()
+        {
 
-        Assert::That(f.str(), Equals("hello\n"));
-    }
-};
+            stringstream buf;
+
+            format f("{0} is so {1}!", "format", "cool");
+
+            f.print(buf);
+
+            Assert::That(buf.str(), Equals("format is so cool!"));
+        });
+
+        it("can left shift to a stream", []()
+        {
+
+            format f("{0} is so {1}!", "format", "cool");
+
+            stringstream buf;
+
+            buf << f;
+
+            Assert::That(buf.str(), Equals("format is so cool!"));
+        });
+
+        it("can escape specifier tags", []()
+        {
+
+            format f("{0} is {{0}}", "this");
+
+            Assert::That(f.str(), Equals("this is {0}"));
+
+            f.reset("{{{{0}}}}");
+
+            Assert::That(f.specifiers(), Equals(0));
+
+            Assert::That(f.str(), Equals("{{0}}"));
+
+            f.reset("{0}}}");
+            f.arg("yup");
+
+            Assert::That(f.str(), Equals("yup}"));
+
+            f.reset("{{0}");
+
+            Assert::That(f.str(), Equals("{0}"));
+
+        });
+
+        it("can format argument width", []()
+        {
+            format f("{0,-12} one", "test");
+
+            Assert::That(f.str(), Equals("test         one"));
+
+            f.reset("{0,12} one");
+
+            f << "test";
+
+            Assert::That(f.str(), Equals("        test one"));
+
+            f.reset("{0:f2,12}");
+
+            f << 123.1234123;
+
+            Assert::That(f.str(), Equals("      123.12"));
+        });
+
+        it("can add a new line", []()
+        {
+            format f("{0:n}", "hello");
+
+            Assert::That(f.str(), Equals("hello\n"));
+        });
+
+    });
+
+
+});
+
