@@ -34,7 +34,6 @@ AC_SUBST(COVERAGE_LDFLAGS)
 # Checks for header files.
 
 # Checks for typedefs, structures, and compiler characteristics.
-AC_CHECK_HEADER_STDBOOL
 AC_C_INLINE
 AC_TYPE_INT8_T
 AC_TYPE_SIZE_T

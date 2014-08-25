@@ -32,3 +32,5 @@ config.h
 arg3fmt_test
 coverage.info
 *.gcno
+*~
+
