@@ -31,7 +31,7 @@ namespace arg3
          * @throws invalid_argument if there is no specifier for the argument
          */
         template<typename T>
-        format &arg(const T &value) throw (invalid_argument)
+        format &arg(const T &value)
         {
 
             // check if there isn't a specifier
@@ -59,7 +59,7 @@ namespace arg3
          * @throws invalid_argument if there is no specifier for an argument
          */
         template<typename T, typename... Args>
-        format &arg(const T &value, const Args &... args) throw (invalid_argument)
+        format &arg(const T &value, const Args &... args)
         {
             arg(value); // add argument
             arg(args...); // add remaining arguments (recursive)
@@ -73,7 +73,7 @@ namespace arg3
          * @throws invalid_argument if there isn't a specifier for an argument
          */
         template<typename T, typename... Args>
-        format(const string &str, const T &value, const Args &... args) throw (invalid_argument) : format(str)
+        format(const string &str, const T &value, const Args &... args) : format(str)
         {
             arg(value); // add argument
             arg(args...); // add remaining arguments
@@ -83,7 +83,7 @@ namespace arg3
          * single form of the variadic template constructor
          */
         template<typename T>
-        format(const string &str, const T &value) throw (invalid_argument) : format(str)
+        format(const string &str, const T &value) : format(str)
         {
             arg(value); // add argument
         }
@@ -119,16 +119,15 @@ namespace arg3
          * @throws invalid_argument if there was a formatting error
          * @see str
          */
-        operator string() throw (invalid_argument);
+        operator string();
 
         /*!
          * adds an argument to the format
          * @throws invalid_argument if there is no specifier for the value
          */
         template<typename T>
-        format &operator<< (const T &value) throw (invalid_argument)
+        format &operator<< (const T &value)
         {
-
             return arg(value);
         }
 
@@ -147,12 +146,12 @@ namespace arg3
         /*!
          * reset using the format string
          */
-        void reset(const string &value) throw (invalid_argument);
+        void reset(const string &value);
 
         /*!
          * resets the specifiers to build a new string
          */
-        void reset() throw (invalid_argument);
+        void reset();
 
         void print(ostream &out);
     private:
@@ -181,9 +180,9 @@ namespace arg3
          * creates the specifier list from the format string
          * @throws invalid_argument if the format string is invalid
          */
-        void initialize() throw (invalid_argument);
-        void add_specifier(string::size_type start, string::size_type end) throw (invalid_argument);
-        void begin_manip(ostream &out, const specifier &arg) const throw (invalid_argument);
+        void initialize();
+        void add_specifier(string::size_type start, string::size_type end);
+        void begin_manip(ostream &out, const specifier &arg) const;
         void end_manip(ostream &out, const specifier &arg);
         void unescape(ostream &buf, string::size_type start, string::size_type end);
 

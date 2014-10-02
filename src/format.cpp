@@ -4,6 +4,7 @@
  */
 
 #include <iomanip>
+#include <stdexcept>
 #include "format.h"
 
 namespace arg3
@@ -89,7 +90,7 @@ namespace arg3
      * adds a specifier to the list
      * @throws invalid_argument if specifier does not contain an index
      */
-    void format::add_specifier(string::size_type start, string::size_type end) throw (invalid_argument)
+    void format::add_specifier(string::size_type start, string::size_type end)
     {
 
         // get the string inside the delimiters
@@ -158,13 +159,13 @@ namespace arg3
     }
 
 
-    void format::initialize() throw (invalid_argument)
+    void format::initialize() 
     {
 
         auto len = value_.length();
 
         // find each open tag
-        for (auto pos = 0; pos < len; pos++)
+        for (size_t pos = 0; pos < len; pos++)
         {
 
             if (value_[pos] != s_open_tag)
@@ -219,7 +220,7 @@ namespace arg3
         }
     }
 
-    void format::begin_manip(ostream &out, const specifier &arg) const throw (invalid_argument)
+    void format::begin_manip(ostream &out, const specifier &arg) const
     {
 
         if (arg.width != 0)
@@ -315,13 +316,13 @@ namespace arg3
         }
     }
 
-    void format::reset() throw (invalid_argument)
+    void format::reset()
     {
         specifiers_.clear();
         initialize();
     }
 
-    void format::reset(const string &value) throw (invalid_argument)
+    void format::reset(const string &value)
     {
         value_ = value;
         reset();
@@ -399,7 +400,7 @@ namespace arg3
         }
     }
 
-    format::operator string() throw (invalid_argument)
+    format::operator string()
     {
         return str();
     }

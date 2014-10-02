@@ -15940,7 +15940,7 @@ if test "x$CXX" = "xclang++"; then
 	AM_CPPFLAGS="-std=c++11 -stdlib=libc++ -Wall -Werror"
 
 else
-	AM_CPPFLAGS="-std=c++0x -Wall -Werror"
+	AM_CPPFLAGS="-std=c++11 -Wall -Werror"
 
 fi
 

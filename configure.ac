@@ -19,7 +19,7 @@ AC_PROG_CC
 if test "x$CXX" = "xclang++"; then
 	AC_SUBST([AM_CPPFLAGS], ["-std=c++11 -stdlib=libc++ -Wall -Werror"])
 else
-	AC_SUBST([AM_CPPFLAGS], ["-std=c++0x -Wall -Werror"])
+	AC_SUBST([AM_CPPFLAGS], ["-std=c++11 -Wall -Werror"])
 fi
 
 # coverage

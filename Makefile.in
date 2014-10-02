@@ -804,7 +804,7 @@ uninstall-am:
 
 @HAVE_GCOV_TRUE@generate-coverage-html:
 @HAVE_GCOV_TRUE@	@echo Collecting coverage data
-@HAVE_GCOV_TRUE@	$(LCOV) --directory $(top_builddir) --capture --output-file coverage.info --no-checksum --compat-libtool --gcov-tool /usr/local/bin/gcov-4.2 --no-external
+@HAVE_GCOV_TRUE@	$(LCOV) --directory $(top_builddir) --capture --output-file coverage.info --no-checksum --compat-libtool --no-external
 @HAVE_GCOV_TRUE@	$(GENHTML) --output-directory coverage --title "Code Coverage" --legend --show-details coverage.info
 
 @HAVE_GCOV_TRUE@clean-coverage-html: clean-gcda
@@ -812,6 +812,8 @@ uninstall-am:
 @HAVE_GCOV_TRUE@	-rm -rf coverage.info
 
 @HAVE_GCOV_TRUE@clean-local: clean-coverage-html
+
+test: check
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
