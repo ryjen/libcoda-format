@@ -1,5 +1,5 @@
 
-noinst_PROGRAMS = arg3fmt_test
+check_PROGRAMS = arg3fmt_test
 
 arg3fmt_test_SOURCES = arg3.test.cpp format.test.cpp
 
