@@ -2,7 +2,7 @@ language: cpp
 before_install: 
     - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
     - sudo apt-get update -qq
-before_script: autoreconf -i
+before_script: autoreconf -if
 install:
   - sudo apt-get install -qq gcc-4.8 g++-4.8 
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 90
