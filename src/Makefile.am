@@ -1,8 +1,7 @@
 
-
 lib_LTLIBRARIES = libarg3fmt.la
 
-libarg3format_la_LDFLAGS = -version-info 0:0:0
+libarg3fmt_la_LDFLAGS = -version-info 0:0:0
 
 libarg3fmt_la_SOURCES = format.cpp
 
