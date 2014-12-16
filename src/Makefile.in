@@ -132,8 +132,8 @@ am__v_lt_0 = --silent
 am__v_lt_1 = 
 libarg3fmt_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
-	$(libarg3fmt_la_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
-	-o $@
+	$(libarg3fmt_la_CXXFLAGS) $(CXXFLAGS) $(libarg3fmt_la_LDFLAGS) \
+	$(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -325,7 +325,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 lib_LTLIBRARIES = libarg3fmt.la
-libarg3format_la_LDFLAGS = -version-info 0:0:0
+libarg3fmt_la_LDFLAGS = -version-info 0:0:0
 libarg3fmt_la_SOURCES = format.cpp
 libarg3fmt_la_CXXFLAGS = $(LIBARG3FMT_LA_CXXFLAGS) $(COVERAGE_CFLAGS)
 pkginclude_HEADERS = format.h
