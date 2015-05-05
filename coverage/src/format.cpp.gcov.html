@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2014-10-18 13:45:15</td>
+            <td class="headerValue">2015-05-04 23:07:18</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">24</td>
@@ -94,7 +94,7 @@
 <span class="lineNum">      24 </span><span class="lineCov">          4 :     {</span>
 <span class="lineNum">      25 </span>            : 
 <span class="lineNum">      26 </span>            :         // copy specifiers
-<span class="lineNum">      27 </span><span class="lineCov">         72 :         for (auto s : other.specifiers_)</span>
+<span class="lineNum">      27 </span><span class="lineCov">         82 :         for (auto s : other.specifiers_)</span>
 <span class="lineNum">      28 </span>            :         {
 <span class="lineNum">      29 </span><span class="lineCov">         10 :             specifiers_.push_back(s);</span>
 <span class="lineNum">      30 </span><span class="lineCov">         10 :         }</span>
@@ -120,7 +120,7 @@
 <span class="lineNum">      50 </span><span class="lineCov">          1 :         specifiers_.clear(); // clear any specifiers already set</span>
 <span class="lineNum">      51 </span>            : 
 <span class="lineNum">      52 </span>            :         // copy other specifiers
-<span class="lineNum">      53 </span><span class="lineCov">         11 :         for (auto s : rhs.specifiers_)</span>
+<span class="lineNum">      53 </span><span class="lineCov">         14 :         for (auto s : rhs.specifiers_)</span>
 <span class="lineNum">      54 </span>            :         {
 <span class="lineNum">      55 </span><span class="lineCov">          3 :             specifiers_.push_back(s);</span>
 <span class="lineNum">      56 </span><span class="lineCov">          3 :         }</span>
@@ -281,7 +281,7 @@
 <span class="lineNum">     211 </span><span class="lineCov">         34 :         size_t index = 0;</span>
 <span class="lineNum">     212 </span>            : 
 <span class="lineNum">     213 </span>            :         // check if specifier indexes follow an incremental order
-<span class="lineNum">     214 </span><span class="lineCov">        237 :         for (auto spec : specifiers_)</span>
+<span class="lineNum">     214 </span><span class="lineCov">        293 :         for (auto spec : specifiers_)</span>
 <span class="lineNum">     215 </span>            :         {
 <span class="lineNum">     216 </span><span class="lineCov">         57 :             if (spec.index != index++)</span>
 <span class="lineNum">     217 </span>            :             {

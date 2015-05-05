@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.58])
-AC_INIT([arg3fmt], [0.2], [c0der78@gmail.com])
+AC_INIT([arg3fmt], [0.2.0], [c0der78@gmail.com])
 AC_CONFIG_SRCDIR([src/format.cpp])
 AC_CONFIG_HEADERS([src/config.h])
 
@@ -48,5 +48,5 @@ AC_TYPE_SIZE_T
 
 # Checks for library functions.
 
-AC_CONFIG_FILES([Makefile src/Makefile tests/Makefile])
+AC_CONFIG_FILES([arg3fmt.pc Makefile src/Makefile tests/Makefile])
 AC_OUTPUT
