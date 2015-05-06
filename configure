@@ -593,7 +593,7 @@ PACKAGE_TARNAME='arg3fmt'
 PACKAGE_VERSION='0.2.0'
 PACKAGE_STRING='arg3fmt 0.2.0'
 PACKAGE_BUGREPORT='c0der78@gmail.com'
-PACKAGE_URL=''
+PACKAGE_URL='http://github.com/c0der78/arg3format/archive/0.2.0.tar.gz'
 
 ac_unique_file="src/format.cpp"
 # Factoring default headers for most tests.
@@ -1464,6 +1464,7 @@ Use these variables to override the choices made by `configure' or to help
 it to find libraries and programs with nonstandard names/locations.
 
 Report bugs to <c0der78@gmail.com>.
+arg3fmt home page: <http://github.com/c0der78/arg3format/archive/0.2.0.tar.gz>.
 _ACEOF
 ac_status=$?
 fi
@@ -17537,7 +17538,8 @@ $config_headers
 Configuration commands:
 $config_commands
 
-Report bugs to <c0der78@gmail.com>."
+Report bugs to <c0der78@gmail.com>.
+arg3fmt home page: <http://github.com/c0der78/arg3format/archive/0.2.0.tar.gz>."
 
 _ACEOF
 cat >>$CONFIG_STATUS <<_ACEOF || ac_write_fail=1

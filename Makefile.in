@@ -193,8 +193,8 @@ CSCOPE = cscope
 DIST_SUBDIRS = $(SUBDIRS)
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/arg3fmt.pc.in \
 	$(top_srcdir)/Makefile.am.coverage AUTHORS COPYING ChangeLog \
-	INSTALL NEWS README compile config.guess config.sub install-sh \
-	ltmain.sh missing
+	INSTALL NEWS README compile config.guess config.sub depcomp \
+	install-sh ltmain.sh missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -368,6 +368,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUBDIRS = src tests
 ACLOCAL_AMFLAGS = -I m4
+EXTRA_DIST = bootstrap
 pkgconfigdir = $(libdir)/pkgconfig
 nodist_pkgconfig_DATA = arg3fmt.pc
 all: all-recursive

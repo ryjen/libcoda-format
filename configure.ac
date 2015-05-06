@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.58])
-AC_INIT([arg3fmt], [0.2.0], [c0der78@gmail.com])
+AC_INIT([arg3fmt], [0.2.0], [c0der78@gmail.com], [arg3fmt], [http://github.com/c0der78/arg3format/archive/0.2.0.tar.gz])
 AC_CONFIG_SRCDIR([src/format.cpp])
 AC_CONFIG_HEADERS([src/config.h])
 
