@@ -1,18 +1,17 @@
+sudo: false
 language: cpp
-before_install: 
-    - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-    - sudo apt-get update -qq
 before_script: 
   - git submodule update --init --recursive
   - autoreconf -if
-install:
-  - sudo apt-get install -qq gcc-4.8 g++-4.8 valgrind
-  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 90
-  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 90
-  - sudo update-alternatives --config gcc
-  - sudo update-alternatives --config g++
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
+      - valgrind
 script:
-  - ./configure
+  - CXX=g++-4.8 ./configure
   - make test
   - valgrind --leak-check=full --error-exitcode=5 ./tests/arg3fmt_test
  
