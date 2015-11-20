@@ -1,3 +1,6 @@
 [submodule "tests/vendor/bandit"]
 	path = tests/vendor/bandit
 	url = http://github.com/deadcoda/bandit.git
+[submodule "cmake"]
+	path = cmake
+	url = http://github.com/deadcoda/cmake.git
