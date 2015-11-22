@@ -1,3 +1,3 @@
-add_library(arg3format format.cpp)
+add_library(${PROJECT_NAME} format.cpp)
 
 
