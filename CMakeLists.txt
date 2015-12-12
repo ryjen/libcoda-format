@@ -6,28 +6,18 @@ option(CODE_COVERAGE "Enable code coverage testing." OFF)
 option(MEMORY_CHECK "Enable testing for memory leaks." OFF)
 
 # define project name
-project (arg3format VERSION 0.2.0)
+project (arg3format VERSION 0.1.0)
 
 # set path to custom modules
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
-# add directories
-add_subdirectory(src)
-add_subdirectory(tests)
-
-# create package config
+# create the package config install
 include(CreatePackage)
-create_package("c++ string formating util")
+create_package("a string formatting library")
 
-# Setup testing
-enable_testing()
-
-if (MEMORY_CHECK)
-	include(MemCheckTest)
-	add_memcheck_test(${PROJECT_NAME}-test ${PROJECT_BINARY_DIR}/tests/${PROJECT_NAME}_test)
-else ()
-	add_test(${PROJECT_NAME}-test ${PROJECT_BINARY_DIR}/tests/${PROJECT_NAME}_test)
-endif()
+# create config header
+include(CreateConfigHeader)
+create_config_header()
 
 # add target for code coverage
 if(CODE_COVERAGE)
@@ -36,3 +26,16 @@ if(CODE_COVERAGE)
 	setup_target_for_coverage(${PROJECT_NAME}-coverage ${PROJECT_BINARY_DIR}/tests/${PROJECT_NAME}_test ${PROJECT_SOURCE_DIR}/coverage)
 endif()
 
+# add directories
+add_subdirectory(src)
+add_subdirectory(tests)
+
+# Setup testing
+enable_testing()
+
+if (MEMORY_CHECK)
+	include(MemCheckTest)
+	add_memcheck_test(${PROJECT_NAME}-test ${PROJECT_BINARY_DIR}/tests/${PROJECT_NAME}_test "--suppressions=suppression.map")
+else ()
+	add_test(${PROJECT_NAME}-test ${PROJECT_BINARY_DIR}/tests/${PROJECT_NAME}_test)
+endif()
