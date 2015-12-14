@@ -31,7 +31,7 @@ script:
   - make
   - make arg3format-coverage-clean
   - make test
-  - make arg3variant-coverage-info
+  - make arg3format-coverage-info
 after_success:
   - coveralls-lcov $TRAVIS_BUILD_DIR/coverage.info
  
