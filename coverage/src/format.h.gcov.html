@@ -4,7 +4,7 @@
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <title>LCOV - Code Coverage - src/format.h</title>
+  <title>LCOV - coverage.info - src/format.h</title>
   <link rel="stylesheet" type="text/css" href="../gcov.css">
 </head>
 
@@ -28,29 +28,21 @@
           </tr>
           <tr>
             <td class="headerItem">Test:</td>
-            <td class="headerValue">Code Coverage</td>
+            <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">1</td>
-            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">21</td>
+            <td class="headerCovTableEntry">21</td>
             <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2015-05-04 23:07:18</td>
+            <td class="headerValue">2015-12-13 17:13:38</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">6</td>
-            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntry">31</td>
+            <td class="headerCovTableEntry">31</td>
             <td class="headerCovTableEntryHi">100.0 %</td>
-          </tr>
-          <tr>
-            <td class="headerItem">Legend:</td>
-            <td class="headerValueLeg">            Lines:
-            <span class="coverLegendCov">hit</span>
-            <span class="coverLegendNoCov">not hit</span>
-</td>
-            <td></td>
           </tr>
           <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -99,41 +91,41 @@
 <span class="lineNum">      29 </span>            :          * adds an argument for the next specifier
 <span class="lineNum">      30 </span>            :          * singlular form of the varaidic override
 <span class="lineNum">      31 </span>            :          * @throws invalid_argument if there is no specifier for the argument
-<span class="lineNum">      32 </span>            :          */
+<a name="32"><span class="lineNum">      32 </span>            :          */</a>
 <span class="lineNum">      33 </span>            :         template&lt;typename T&gt;
 <span class="lineNum">      34 </span>            :         format &amp;arg(const T &amp;value)
 <span class="lineNum">      35 </span>            :         {
 <span class="lineNum">      36 </span>            : 
 <span class="lineNum">      37 </span>            :             // check if there isn't a specifier
-<span class="lineNum">      38 </span>            :             if (currentSpecifier_ == specifiers_.end())
+<span class="lineNum">      38 </span><span class="lineCov">         44 :             if (currentSpecifier_ == specifiers_.end())</span>
 <span class="lineNum">      39 </span>            :             {
-<span class="lineNum">      40 </span>            :                 throw invalid_argument(&quot;no specifier for argument&quot;);
+<span class="lineNum">      40 </span><span class="lineCov">          4 :                 throw invalid_argument(&quot;no specifier for argument&quot;);</span>
 <span class="lineNum">      41 </span>            :             }
 <span class="lineNum">      42 </span>            : 
-<span class="lineNum">      43 </span>            :             specifier &amp;arg = *currentSpecifier_++; // get specifier and advance
+<span class="lineNum">      43 </span><span class="lineCov">         43 :             specifier &amp;arg = *currentSpecifier_++; // get specifier and advance</span>
 <span class="lineNum">      44 </span>            : 
 <span class="lineNum">      45 </span>            :             // get the argument value as a string
-<span class="lineNum">      46 </span>            :             ostringstream buf;
+<span class="lineNum">      46 </span><span class="lineCov">         43 :             ostringstream buf;</span>
 <span class="lineNum">      47 </span>            : 
-<span class="lineNum">      48 </span>            :             begin_manip(buf, arg); // set stream flags for arg
-<span class="lineNum">      49 </span>            :             buf &lt;&lt; value; // append value
-<span class="lineNum">      50 </span>            :             end_manip(buf, arg); // cleanup stream from arg
+<span class="lineNum">      48 </span><span class="lineCov">         43 :             begin_manip(buf, arg); // set stream flags for arg</span>
+<span class="lineNum">      49 </span><span class="lineCov">         41 :             buf &lt;&lt; value; // append value</span>
+<span class="lineNum">      50 </span><span class="lineCov">         41 :             end_manip(buf, arg); // cleanup stream from arg</span>
 <span class="lineNum">      51 </span>            : 
-<span class="lineNum">      52 </span>            :             arg.replacement = buf.str();
+<span class="lineNum">      52 </span><span class="lineCov">         82 :             arg.replacement = buf.str();</span>
 <span class="lineNum">      53 </span>            : 
 <span class="lineNum">      54 </span>            :             return *this;
-<span class="lineNum">      55 </span>            :         }
+<span class="lineNum">      55 </span><span class="lineCov">         43 :         }</span>
 <span class="lineNum">      56 </span>            : 
 <span class="lineNum">      57 </span>            :         /*!
 <span class="lineNum">      58 </span>            :          * adds a list of arguments to replace specifiers
 <span class="lineNum">      59 </span>            :          * @throws invalid_argument if there is no specifier for an argument
-<span class="lineNum">      60 </span>            :          */
+<a name="60"><span class="lineNum">      60 </span>            :          */</a>
 <span class="lineNum">      61 </span>            :         template&lt;typename T, typename... Args&gt;
 <span class="lineNum">      62 </span>            :         format &amp;arg(const T &amp;value, const Args &amp;... args)
 <span class="lineNum">      63 </span>            :         {
-<span class="lineNum">      64 </span>            :             arg(value); // add argument
-<span class="lineNum">      65 </span>            :             arg(args...); // add remaining arguments (recursive)
-<span class="lineNum">      66 </span>            :             return *this;
+<span class="lineNum">      64 </span><span class="lineCov">          5 :             arg(value); // add argument</span>
+<span class="lineNum">      65 </span><span class="lineCov">          5 :             arg(args...); // add remaining arguments (recursive)</span>
+<span class="lineNum">      66 </span><span class="lineCov">          5 :             return *this;</span>
 <span class="lineNum">      67 </span>            :         }
 <span class="lineNum">      68 </span>            : 
 <span class="lineNum">      69 </span>            :         // template constructors
@@ -141,22 +133,22 @@
 <span class="lineNum">      71 </span>            :         /*!
 <span class="lineNum">      72 </span>            :          * constructor to create a specifiers from a format string and add arguments
 <span class="lineNum">      73 </span>            :          * @throws invalid_argument if there isn't a specifier for an argument
-<span class="lineNum">      74 </span>            :          */
+<a name="74"><span class="lineNum">      74 </span>            :          */</a>
 <span class="lineNum">      75 </span>            :         template&lt;typename T, typename... Args&gt;
-<span class="lineNum">      76 </span>            :         format(const string &amp;str, const T &amp;value, const Args &amp;... args) : format(str)
+<span class="lineNum">      76 </span><span class="lineCov">          4 :         format(const string &amp;str, const T &amp;value, const Args &amp;... args) : format(str)</span>
 <span class="lineNum">      77 </span>            :         {
-<span class="lineNum">      78 </span>            :             arg(value); // add argument
-<span class="lineNum">      79 </span>            :             arg(args...); // add remaining arguments
-<span class="lineNum">      80 </span>            :         }
+<span class="lineNum">      78 </span><span class="lineCov">          4 :             arg(value); // add argument</span>
+<span class="lineNum">      79 </span><span class="lineCov">          4 :             arg(args...); // add remaining arguments</span>
+<span class="lineNum">      80 </span><span class="lineCov">          4 :         }</span>
 <span class="lineNum">      81 </span>            : 
 <span class="lineNum">      82 </span>            :         /*!
 <span class="lineNum">      83 </span>            :          * single form of the variadic template constructor
-<span class="lineNum">      84 </span>            :          */
+<a name="84"><span class="lineNum">      84 </span>            :          */</a>
 <span class="lineNum">      85 </span>            :         template&lt;typename T&gt;
-<span class="lineNum">      86 </span>            :         format(const string &amp;str, const T &amp;value) : format(str)
+<span class="lineNum">      86 </span><span class="lineCov">         10 :         format(const string &amp;str, const T &amp;value) : format(str)</span>
 <span class="lineNum">      87 </span>            :         {
-<span class="lineNum">      88 </span>            :             arg(value); // add argument
-<span class="lineNum">      89 </span>            :         }
+<span class="lineNum">      88 </span><span class="lineCov">         10 :             arg(value); // add argument</span>
+<span class="lineNum">      89 </span><span class="lineCov">         10 :         }</span>
 <span class="lineNum">      90 </span>            : 
 <span class="lineNum">      91 </span>            :         // constructors
 <span class="lineNum">      92 </span>            : 
@@ -194,11 +186,11 @@
 <span class="lineNum">     124 </span>            :         /*!
 <span class="lineNum">     125 </span>            :          * adds an argument to the format
 <span class="lineNum">     126 </span>            :          * @throws invalid_argument if there is no specifier for the value
-<span class="lineNum">     127 </span>            :          */
+<a name="127"><span class="lineNum">     127 </span>            :          */</a>
 <span class="lineNum">     128 </span>            :         template&lt;typename T&gt;
 <span class="lineNum">     129 </span>            :         format &amp;operator&lt;&lt; (const T &amp;value)
 <span class="lineNum">     130 </span>            :         {
-<span class="lineNum">     131 </span>            :             return arg(value);
+<span class="lineNum">     131 </span><span class="lineCov">         11 :             return arg(value);</span>
 <span class="lineNum">     132 </span>            :         }
 <span class="lineNum">     133 </span>            : 
 <span class="lineNum">     134 </span>            :         // methods
@@ -278,7 +270,7 @@
 
   <table width="100%" border=0 cellspacing=0 cellpadding=0>
     <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
-    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.11</a></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.12</a></td></tr>
   </table>
   <br>
 

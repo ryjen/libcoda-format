@@ -4,7 +4,7 @@
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <title>LCOV - Code Coverage - src/format.cpp</title>
+  <title>LCOV - coverage.info - src/format.cpp</title>
   <link rel="stylesheet" type="text/css" href="../gcov.css">
 </head>
 
@@ -28,29 +28,21 @@
           </tr>
           <tr>
             <td class="headerItem">Test:</td>
-            <td class="headerValue">Code Coverage</td>
+            <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">170</td>
-            <td class="headerCovTableEntry">172</td>
-            <td class="headerCovTableEntryHi">98.8 %</td>
+            <td class="headerCovTableEntry">173</td>
+            <td class="headerCovTableEntry">175</td>
+            <td class="headerCovTableEntryHi">98.9 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2015-05-04 23:07:18</td>
+            <td class="headerValue">2015-12-13 17:13:38</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">24</td>
             <td class="headerCovTableEntry">25</td>
             <td class="headerCovTableEntryHi">96.0 %</td>
-          </tr>
-          <tr>
-            <td class="headerItem">Legend:</td>
-            <td class="headerValueLeg">            Lines:
-            <span class="coverLegendCov">hit</span>
-            <span class="coverLegendNoCov">not hit</span>
-</td>
-            <td></td>
           </tr>
           <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -81,7 +73,7 @@
 <a name="11"><span class="lineNum">      11 </span>            : {</a>
 <span class="lineNum">      12 </span>            : 
 <span class="lineNum">      13 </span><span class="lineCov">         31 :     format::format(const string &amp;str) : value_(str), specifiers_(), currentSpecifier_(specifiers_.begin())</span>
-<span class="lineNum">      14 </span><span class="lineCov">         31 :     {</span>
+<span class="lineNum">      14 </span><span class="lineCov">         62 :     {</span>
 <span class="lineNum">      15 </span><span class="lineCov">         31 :         initialize();</span>
 <a name="16"><span class="lineNum">      16 </span><span class="lineCov">         65 :     }</span></a>
 <span class="lineNum">      17 </span>            : 
@@ -91,7 +83,7 @@
 <a name="21"><span class="lineNum">      21 </span><span class="lineCov">         70 :     }</span></a>
 <span class="lineNum">      22 </span>            : 
 <span class="lineNum">      23 </span><span class="lineCov">          4 :     format::format(const format &amp;other) : value_(other.value_), specifiers_(), currentSpecifier_(specifiers_.begin())</span>
-<span class="lineNum">      24 </span><span class="lineCov">          4 :     {</span>
+<span class="lineNum">      24 </span><span class="lineCov">          8 :     {</span>
 <span class="lineNum">      25 </span>            : 
 <span class="lineNum">      26 </span>            :         // copy specifiers
 <span class="lineNum">      27 </span><span class="lineCov">         82 :         for (auto s : other.specifiers_)</span>
@@ -106,9 +98,9 @@
 <span class="lineNum">      36 </span><span class="lineCov">          8 :         advance(currentSpecifier_, distance(other.specifiers_.begin(), SpecifierList::const_iterator(other.currentSpecifier_)));</span>
 <a name="37"><span class="lineNum">      37 </span><span class="lineCov">          8 :     }</span></a>
 <span class="lineNum">      38 </span>            : 
-<span class="lineNum">      39 </span><span class="lineCov">          6 :     format::format(format &amp;&amp;other) : value_(std::move(other.value_)), specifiers_(std::move(other.specifiers_)),</span>
+<span class="lineNum">      39 </span><span class="lineCov">          3 :     format::format(format &amp;&amp;other) : value_(std::move(other.value_)), specifiers_(std::move(other.specifiers_)),</span>
 <span class="lineNum">      40 </span><span class="lineCov">          3 :         currentSpecifier_(std::move(other.currentSpecifier_))</span>
-<span class="lineNum">      41 </span><span class="lineCov">          9 :     {</span>
+<span class="lineNum">      41 </span><span class="lineCov">          6 :     {</span>
 <span class="lineNum">      42 </span><span class="lineCov">          3 :         other.specifiers_.clear();</span>
 <span class="lineNum">      43 </span><span class="lineCov">          3 :         other.currentSpecifier_ = other.specifiers_.begin();</span>
 <a name="44"><span class="lineNum">      44 </span><span class="lineCov">          6 :     }</span></a>
@@ -201,7 +193,7 @@
 <span class="lineNum">     131 </span>            :                 }
 <span class="lineNum">     132 </span>            : 
 <span class="lineNum">     133 </span><span class="lineCov">         22 :                 temp = temp.substr(0, divider);</span>
-<span class="lineNum">     134 </span><span class="lineCov">         11 :             }</span>
+<span class="lineNum">     134 </span><span class="lineCov">         12 :             }</span>
 <span class="lineNum">     135 </span>            :             else
 <span class="lineNum">     136 </span>            :             {
 <span class="lineNum">     137 </span>            :                 // look for {0,-10}
@@ -222,11 +214,11 @@
 <span class="lineNum">     152 </span>            :         catch ( ... )
 <span class="lineNum">     153 </span>            :         {
 <span class="lineNum">     154 </span><span class="lineCov">          2 :             throw invalid_argument(&quot;invalid specifier format&quot;);</span>
-<span class="lineNum">     155 </span>            :         }
+<span class="lineNum">     155 </span><span class="lineCov">          2 :         }</span>
 <span class="lineNum">     156 </span>            : 
 <span class="lineNum">     157 </span><span class="lineCov">         58 :         specifiers_.push_back( spec );</span>
 <span class="lineNum">     158 </span>            : 
-<span class="lineNum">     159 </span><span class="lineCov">         65 :     }</span>
+<span class="lineNum">     159 </span><span class="lineCov">         62 :     }</span>
 <a name="160"><span class="lineNum">     160 </span>            : </a>
 <span class="lineNum">     161 </span>            : 
 <span class="lineNum">     162 </span>            :     void format::initialize() 
@@ -256,7 +248,7 @@
 <span class="lineNum">     186 </span>            : 
 <span class="lineNum">     187 </span><span class="lineCov">         60 :             if (end == string::npos)</span>
 <span class="lineNum">     188 </span>            :             {
-<span class="lineNum">     189 </span><span class="lineCov">          2 :                 throw invalid_argument(&quot;no specifier closing tag&quot;);</span>
+<span class="lineNum">     189 </span><span class="lineCov">          3 :                 throw invalid_argument(&quot;no specifier closing tag&quot;);</span>
 <span class="lineNum">     190 </span>            :             }
 <span class="lineNum">     191 </span>            : 
 <span class="lineNum">     192 </span>            :             // add the specifier
@@ -287,8 +279,8 @@
 <span class="lineNum">     217 </span>            :             {
 <span class="lineNum">     218 </span><span class="lineCov">          2 :                 throw invalid_argument(&quot;specifier index not ordered&quot;);</span>
 <span class="lineNum">     219 </span>            :             }
-<span class="lineNum">     220 </span><span class="lineCov">         56 :         }</span>
-<a name="221"><span class="lineNum">     221 </span><span class="lineCov">         41 :     }</span></a>
+<span class="lineNum">     220 </span><span class="lineCov">         57 :         }</span>
+<a name="221"><span class="lineNum">     221 </span><span class="lineCov">         39 :     }</span></a>
 <span class="lineNum">     222 </span>            : 
 <span class="lineNum">     223 </span>            :     void format::begin_manip(ostream &amp;out, const specifier &amp;arg) const
 <span class="lineNum">     224 </span>            :     {
@@ -325,7 +317,7 @@
 <span class="lineNum">     255 </span>            :                 catch (...)
 <span class="lineNum">     256 </span>            :                 {
 <span class="lineNum">     257 </span><span class="lineNoCov">          0 :                     throw invalid_argument(&quot;invalid precision format for argument&quot;);</span>
-<span class="lineNum">     258 </span>            :                 }
+<span class="lineNum">     258 </span><span class="lineCov">          2 :                 }</span>
 <span class="lineNum">     259 </span><span class="lineCov">          1 :             }</span>
 <span class="lineNum">     260 </span>            :             else
 <span class="lineNum">     261 </span>            :             {
@@ -345,7 +337,7 @@
 <span class="lineNum">     275 </span>            :                 catch (...)
 <span class="lineNum">     276 </span>            :                 {
 <span class="lineNum">     277 </span><span class="lineCov">          4 :                     throw invalid_argument(&quot;invalid precision format for argument&quot;);</span>
-<span class="lineNum">     278 </span>            :                 }
+<span class="lineNum">     278 </span><span class="lineCov">          4 :                 }</span>
 <span class="lineNum">     279 </span><span class="lineCov">          2 :             }</span>
 <span class="lineNum">     280 </span>            :             else
 <span class="lineNum">     281 </span>            :             {
@@ -368,7 +360,7 @@
 <span class="lineNum">     298 </span><span class="lineCov">          1 :             out &lt;&lt; oct;</span>
 <span class="lineNum">     299 </span><span class="lineCov">          1 :             break;</span>
 <span class="lineNum">     300 </span>            :         }
-<a name="301"><span class="lineNum">     301 </span><span class="lineCov">         51 :     }</span></a>
+<a name="301"><span class="lineNum">     301 </span><span class="lineCov">         45 :     }</span></a>
 <span class="lineNum">     302 </span>            : 
 <span class="lineNum">     303 </span>            :     void format::end_manip(ostream &amp;out, const specifier &amp;arg)
 <span class="lineNum">     304 </span>            :     {
@@ -491,7 +483,7 @@
 
   <table width="100%" border=0 cellspacing=0 cellpadding=0>
     <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
-    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.11</a></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.12</a></td></tr>
   </table>
   <br>
 
