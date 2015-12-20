@@ -4,7 +4,6 @@ libarg3format
 [![Build Status](http://img.shields.io/travis/deadcoda/arg3format.svg)](https://travis-ci.org/deadcoda/arg3format)
 [![Coverage Status](https://coveralls.io/repos/deadcoda/arg3format/badge.svg?branch=master&service=github)](https://coveralls.io/github/deadcoda/arg3format?branch=master)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://deadcoda.mit-license.org)
-[![Codacy Badge](https://api.codacy.com/project/badge/grade/ed19129c666a4e22a84500f4ccb4025c)](https://www.codacy.com/app/c0der78/arg3format)
 
 A c++11 class for formatting strings.
 
@@ -88,7 +87,7 @@ make test
 a homebrew release example:
 ```bash
 mkdir release; cd release
-cmake -DCMAKE_BUILD_TYPE=Release $(brew diy --version=0.2.0)
+cmake -DCMAKE_BUILD_TYPE=Release $(cd ..;brew diy --version=0.2.0)
 make
 make install
 brew link arg3json
