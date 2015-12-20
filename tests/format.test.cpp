@@ -16,13 +16,14 @@ using namespace arg3;
 class OStreamClass
 {
     friend ostream &operator<<(ostream &out, const OStreamClass &obj);
-private:
+
+   private:
     int data;
     string name;
-public:
+
+   public:
     OStreamClass(const string &name, int data) : data(data), name(name)
     {
-
     }
 };
 
@@ -32,14 +33,11 @@ ostream &operator<<(ostream &out, const OStreamClass &obj)
     return out;
 }
 
-go_bandit([]()
-{
+go_bandit([]() {
 
-    describe("a formatter", []()
-    {
+    describe("a formatter", []() {
 
-        it("should know the number of argument specifiers", []()
-        {
+        it("should know the number of argument specifiers", []() {
             format f("this is a {0}");
 
             Assert::That(f.specifiers(), Equals(1));
@@ -50,8 +48,7 @@ go_bandit([]()
 
         });
 
-        it("should be able to pass arguments in the constructor", []()
-        {
+        it("should be able to pass arguments in the constructor", []() {
             // construct and replace with arguments
             format f("{1} is a {0}, {2} eh?", "test", "this", "cool");
 
@@ -61,8 +58,7 @@ go_bandit([]()
             Assert::That(f.str(), Equals("this is a test, cool eh?"));
         });
 
-        it("should be copyable", []()
-        {
+        it("should be copyable", []() {
             format f1("{0} is a {1}, {2} eh?");
 
             format f2(f1);
@@ -78,8 +74,7 @@ go_bandit([]()
             Assert::That(f2.str(), Equals("this is a {1}, {2} eh?"));
         });
 
-        it("should be movable", []()
-        {
+        it("should be movable", []() {
             format f1("{0} is a {1}, {2} eh?");
 
             format f2(std::move(f1));
@@ -95,8 +90,7 @@ go_bandit([]()
             Assert::That(f3.str(), Equals("this is a {1}, {2} eh?"));
         });
 
-        it("can be copy assigned", []()
-        {
+        it("can be copy assigned", []() {
 
             format f1("{0} is a {1}, {2} eh?");
 
@@ -116,8 +110,7 @@ go_bandit([]()
 
         });
 
-        it("can be move assigned", []()
-        {
+        it("can be move assigned", []() {
 
             format f1("{0} is a {1}, {2} eh?");
 
@@ -137,31 +130,29 @@ go_bandit([]()
 
         });
 
-        it("can handle no conversion", []()
-        {
+        it("can handle no conversion", []() {
             format f("this has no specifiers");
 
             Assert::That(f.str(), Equals("this has no specifiers"));
         });
 
-        it("can add arguments", []()
-        {
+        it("can add arguments", []() {
 
             format f("{0} is a {1}, {2} eh?");
 
-            f.arg("this");
+            f.args("this");
 
             Assert::That(f.specifiers(), Equals(2));
 
             Assert::That(f.str(), Equals("this is a {1}, {2} eh?"));
 
-            f.arg("test");
+            f.args("test");
 
             Assert::That(f.specifiers(), Equals(1));
 
             Assert::That(f.str(), Equals("this is a test, {2} eh?"));
 
-            f.arg("cool");
+            f.args("cool");
 
             Assert::That(f.specifiers(), Equals(0));
 
@@ -169,30 +160,28 @@ go_bandit([]()
 
         });
 
-        it("can add multiple arguments", []()
-        {
+        it("can add multiple arguments", []() {
             format f("{0} is a {1}, {2} eh?");
 
-            f.arg("this", "test", "cool");
+            f.args("this", "test", "cool");
 
             Assert::That(f.specifiers(), Equals(0));
 
             Assert::That(f.str(), Equals("this is a test, cool eh?"));
         });
 
-        it("can cast to a string", []()
-        {
+        it("can cast to a string", []() {
             string str = format("cast to a {0}", "string");
 
             Assert::That(str, Equals("cast to a string"));
         });
 
-        it("can left shift arguments", []()
-        {
+        it("can left shift arguments", []() {
 
             format f("{0} {1}");
 
-            f << "test" << "one";
+            f << "test"
+              << "one";
 
             Assert::That(f.str(), Equals("test one"));
 
@@ -201,27 +190,25 @@ go_bandit([]()
             Assert::That(f2.str(), Equals("something else"));
         });
 
-        it("throws exceptions", []()
-        {
+        it("throws exceptions", []() {
             AssertThrows(invalid_argument, format("{0} {2}"));
 
             AssertThrows(invalid_argument, format("{0} {2"));
 
-            AssertThrows(invalid_argument, (format("{0}") << "test" << "two"));
+            AssertThrows(invalid_argument, (format("{0}") << "test"
+                                                          << "two"));
 
             AssertThrows(invalid_argument, format("{0:} {1,asdfasdf}"))
         });
 
-        it("can arrange arguments", []()
-        {
+        it("can arrange arguments", []() {
 
             format f("{2} and {1} and {0}", 1, 2, 3);
 
             Assert::That(f.str(), Equals("3 and 2 and 1"));
         });
 
-        it("can format floating point numbers", []()
-        {
+        it("can format floating point numbers", []() {
 
             format f("{0:f2}", 1243.4533889798);
 
@@ -229,12 +216,11 @@ go_bandit([]()
 
             f.reset("{0:Fasdfasdf}");
 
-            AssertThrows(invalid_argument, f.arg("1123.123123"));
+            AssertThrows(invalid_argument, f.args("1123.123123"));
 
         });
 
-        it("can format scientific numbers", []()
-        {
+        it("can format scientific numbers", []() {
 
             format f("{0:e5}", 3.1415926534);
 
@@ -242,32 +228,29 @@ go_bandit([]()
 
             f.reset("{0:E}");
 
-            f.arg(1.0e-10);
+            f.args(1.0e-10);
 
             Assert::That(f.str(), Equals("1.000000000E-10"));
 
             f.reset("{0:Fasdfasdf}");
 
-            AssertThrows(invalid_argument, f.arg("123.123-10"));
+            AssertThrows(invalid_argument, f.args("123.123-10"));
 
         });
 
-        it("can format hex numbers", []()
-        {
+        it("can format hex numbers", []() {
             format f("{0:X}", 10);
 
             Assert::That(f.str(), Equals("0A"));
         });
 
-        it("can format octal numbers", []()
-        {
+        it("can format octal numbers", []() {
             format f("{0:O}", 10);
 
             Assert::That(f.str(), Equals("12"));
         });
 
-        it("can reset its arguments", []()
-        {
+        it("can reset its arguments", []() {
             format f("{0:f}", 123.56789);
 
             Assert::That(f.str(), Equals("123.567890000"));
@@ -276,7 +259,7 @@ go_bandit([]()
 
             Assert::That(f.specifiers(), Equals(1));
 
-            f.arg("test");
+            f.args("test");
 
             Assert::That(f.specifiers(), Equals(0));
 
@@ -284,13 +267,12 @@ go_bandit([]()
 
             f.reset("{0}, {1}!");
 
-            f.arg("Hello", "World");
+            f.args("Hello", "World");
 
             Assert::That(f.str(), Equals("Hello, World!"));
         });
 
-        it("can handle custom argument types", []()
-        {
+        it("can handle custom argument types", []() {
 
             OStreamClass test("custom", 42);
 
@@ -300,8 +282,7 @@ go_bandit([]()
 
         });
 
-        it("can print to a stream", []()
-        {
+        it("can print to a stream", []() {
 
             stringstream buf;
 
@@ -312,8 +293,7 @@ go_bandit([]()
             Assert::That(buf.str(), Equals("format is so cool!"));
         });
 
-        it("can left shift to a stream", []()
-        {
+        it("can left shift to a stream", []() {
 
             format f("{0} is so {1}!", "format", "cool");
 
@@ -324,8 +304,7 @@ go_bandit([]()
             Assert::That(buf.str(), Equals("format is so cool!"));
         });
 
-        it("can escape specifier tags", []()
-        {
+        it("can escape specifier tags", []() {
 
             format f("{0} is {{0}}", "this");
 
@@ -338,7 +317,7 @@ go_bandit([]()
             Assert::That(f.str(), Equals("{{0}}"));
 
             f.reset("{0}}}");
-            f.arg("yup");
+            f.args("yup");
 
             Assert::That(f.str(), Equals("yup}"));
 
@@ -348,8 +327,7 @@ go_bandit([]()
 
         });
 
-        it("can format argument width", []()
-        {
+        it("can format argument width", []() {
             format f("{0,-12} one", "test");
 
             Assert::That(f.str(), Equals("test         one"));
@@ -367,8 +345,7 @@ go_bandit([]()
             Assert::That(f.str(), Equals("      123.12"));
         });
 
-        it("can add a new line", []()
-        {
+        it("can add a new line", []() {
             format f("{0:n}", "hello");
 
             Assert::That(f.str(), Equals("hello\n"));
@@ -378,4 +355,3 @@ go_bandit([]()
 
 
 });
-

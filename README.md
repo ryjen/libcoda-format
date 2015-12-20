@@ -1,14 +1,15 @@
 libarg3format
 =============
 
-[![Build Status](https://travis-ci.org/c0der78/arg3format.svg?branch=master)](https://travis-ci.org/c0der78/arg3format)
+[![Build Status](http://img.shields.io/travis/deadcoda/arg3format.svg)](https://travis-ci.org/deadcoda/arg3format)
+[![Coverage Status](https://coveralls.io/repos/deadcoda/arg3format/badge.svg?branch=master&service=github)](https://coveralls.io/github/deadcoda/arg3format?branch=master)
+[![License](http://img.shields.io/:license-mit-blue.svg)](http://deadcoda.mit-license.org)
+[![Codacy Badge](https://api.codacy.com/project/badge/grade/ed19129c666a4e22a84500f4ccb4025c)](https://www.codacy.com/app/c0der78/arg3format)
 
 A c++11 class for formatting strings.
 
-[View Testing Code Coverage](http://htmlpreview.github.com/?https://github.com/c0der78/arg3format/blob/master/coverage/index.html)
-
 Examples
-========
+--------
 
 ```c++
 
@@ -21,9 +22,9 @@ using argument methods in different order
 ```c++
 format f("{2} saw {0} {1}!");
 
-f.arg(20, "eagles"); // inserts {0} and {1}
+f.args(20, "eagles"); // inserts {0} and {1}
 
-f.arg("A bear"); // inserts {2}
+f.args("A bear"); // inserts {2}
 
 string str = f; // will equal "A bear saw 20 eagles!"
 ```
@@ -66,18 +67,41 @@ format f("{0}", "test", "two"); // throws an exception. missing specifier
 ```
 
 Building
-========
+--------
 
-I use [autotools](http://en.wikipedia.org/wiki/GNU_build_system).
+After cloning run the following command to initialize submodules:
 
 ```bash
-./configure --prefix=/usr/local
 
-make
+git submodule update --init --recursive
 ```
 
+you can use [cmake](https://cmake.org) to generate for the build system of your choice.
+
+```bash
+mkdir debug; cd debug; 
+cmake -DCMAKE_BUILD_TYPE=Debug ..
+make
+make test
+```
+
+a homebrew release example:
+```bash
+mkdir release; cd release
+cmake -DCMAKE_BUILD_TYPE=Release $(brew diy --version=0.2.0)
+make
+make install
+brew link arg3json
+```
+
+options supported are:
+
+    -DCODE_COVERAGE=ON   :   enable code coverage using lcov
+    -DMEMORY_CHECK=ON    :   enable valgrind memory checking on tests
+
+
 Coding Style
-============
+------------
 
 - class/struct/method names are all lower case with underscores separating words
 - non public members are camel case with and underscore at end of the name
@@ -86,30 +110,27 @@ Coding Style
 
 
 formatting
-==========
+----------
 
 I borrowed the feel of [composite formating](http://msdn.microsoft.com/en-us/library/txafckwd.aspx) from c#.
 
 basic structure I use here is:
 
-```
+    +------------------> opening tag
+    |    +-------------> width seperator
+    |    |    +--------> format seperator
+    |    |    |
+    {  0 , -8 : F 2 } -> closing tag
 
-+------------------> opening tag
-|    +-------------> width seperator
-|    |    +--------> format seperator
-|    |    |
-{  0 , -8 : F 2 } -> closing tag
+       |   |    | |
+       |   |    | +----> formating argument, variable length, reserved for future use
+       |   |    +------> type of formating, see below
+       |   +-----------> width of argument, integer, optional negative sign indicating left align
+       +---------------> argument index, integer
 
-   |   |    | |
-   |   |    | +----> formating argument, variable length, reserved for future use
-   |   |    +------> type of formating, see below
-   |   +-----------> width of argument, integer, optional negative sign indicating left align
-   +---------------> argument index, integer
-
-```
 
 format types
-============
+------------
 
 - **x**: lower case hexidecimal
 - **X**: upper case hexidecimal
