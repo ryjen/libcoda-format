@@ -84,28 +84,10 @@ make
 make test
 ```
 
-a homebrew release example:
-```bash
-mkdir release; cd release
-cmake -DCMAKE_BUILD_TYPE=Release $(cd ..;brew diy --version=0.2.0)
-make
-make install
-brew link arg3json
-```
-
 options supported are:
 
     -DCODE_COVERAGE=ON   :   enable code coverage using lcov
     -DMEMORY_CHECK=ON    :   enable valgrind memory checking on tests
-
-
-Coding Style
-------------
-
-- class/struct/method names are all lower case with underscores separating words
-- non public members are camel case with and underscore at end of the name
-- macros, enums and constants are all upper case with underscores seperating words
-- braces on a new line
 
 
 formatting
@@ -146,3 +128,13 @@ some examples are:
 {2:E}   // scientific floating point
 ```
 
+Alternatives
+------------
+
+[cppformat](https://github.com/cppformat/cppformat)
+
+[boost format](http://www.boost.org/doc/libs/1_59_0/libs/format/)
+
+[fast format](http://www.fastformat.org)
+
+[tiny format](https://github.com/c42f/tinyformat)
