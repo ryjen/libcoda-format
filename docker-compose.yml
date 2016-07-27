@@ -1,0 +1,19 @@
+version: '2'
+services:
+  test:
+    image: rj_format_test
+    build:
+      context: .
+      args:
+          CMAKE_DEFINES: -DCMAKE_BUILD_TYPE=Release -DMEMORY_CHECK=ON
+    environment:
+      - TRAVIS_JOB_ID
+    working_dir: /usr/src/build
+    command: make test ARGS=-V
+  coverage:
+    extends: test
+    image: rj_format_coverage
+    build:
+      args:
+          CMAKE_DEFINES: -DCMAKE_BUILD_TYPE=Debug -DCODE_COVERAGE=ON
+    command: make rj_format_coverage_coveralls

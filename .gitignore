@@ -1,4 +1,4 @@
-format_test
+
 *.orig
 *.dSYM
 doc
@@ -29,12 +29,9 @@ stamp-h1
 .libs
 *.status
 config.h
-arg3fmt_test
 coverage.info
 *.gcno
 *~
-
-arg3fmt.pc
 *.tar.gz
 build
 debug

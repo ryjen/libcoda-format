@@ -1,6 +1,6 @@
 /*!
  * implementation of the format class
- * @copyright ryan jennings (arg3.com), 2012 under LGPL
+ * @copyright ryan jennings (ryan-jennings.net), 2012 under LGPL
  *
  * requires the Igloo C++ Unit Testing Library
  * http://igloo-testing.org
@@ -11,7 +11,7 @@
 
 using namespace bandit;
 
-using namespace arg3;
+using namespace rj;
 
 class OStreamClass
 {

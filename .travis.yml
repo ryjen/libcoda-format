@@ -1,37 +1,17 @@
-sudo: false
-language: cpp
-compiler: 
-  - clang
-  - gcc
-before_script: 
-  - git submodule update --init --recursive
-  - mkdir build
-  - gem install coveralls-lcov
-install:
-  - if [ "$CXX" == "clang++" ]; then export CXX="clang++-3.7"; fi
-  - if [ "$CXX" == "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9" GCOV="gcov-4.9"; fi
-  - wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.12.orig.tar.gz
-  - tar xf lcov_1.12.orig.tar.gz
-  - export PATH=$TRAVIS_BUILD_DIR/lcov-1.12/bin:$PATH  
-addons:
-  apt:
-    sources:
-      - george-edison55-precise-backports
-      - llvm-toolchain-precise-3.7
-      - ubuntu-toolchain-r-test
-    packages:
-      - g++-4.9
-      - clang-3.7
-      - valgrind
-      - cmake-data
-      - cmake
+sudo: required
+dist: trusty
+services:
+  - docker
+env:
+  DOCKER_COMPOSE_VERSION: 1.7.1
+before_install:
+  - sudo curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - sudo chmod +x docker-compose
+  - sudo mv -f docker-compose /usr/local/bin
+  - sudo apt-get update
+  - sudo apt-get -o Dpkg::Options::="--force-confnew" install -y docker-engine
 script:
-  - cd build
-  - cmake -DCMAKE_BUILD_TYPE=Debug -DCODE_COVERAGE=ON -DMEMORY_CHECK=ON ..
-  - make
-  - make arg3format-coverage-clean
-  - make test
-  - make arg3format-coverage-info
-after_success:
-  - coveralls-lcov $TRAVIS_BUILD_DIR/coverage.info
- 
+  - docker-compose build test
+  - docker-compose run test
+  - docker-compose build coverage
+  - docker-compose run coverage

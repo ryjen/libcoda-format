@@ -1,18 +1,18 @@
 /*!
  * implementation of the format class
- * @copyright ryan jennings (arg3.com), 2012 under LGPL
+ * @copyright ryan jennings (ryan-jennings.net), 2012 under LGPL
  */
 
-#ifndef ARG3_FORMAT_H
-#define ARG3_FORMAT_H
+#ifndef RJ_FORMAT_H
+#define RJ_FORMAT_H
 
-#include <string>
 #include <list>
 #include <sstream>
+#include <string>
 
 using namespace std;
 
-namespace arg3
+namespace rj
 {
     /*!
      * class to handle printf style formating using a format string containing specifiers that
@@ -69,8 +69,7 @@ namespace arg3
          * @throws invalid_argument if there isn't a specifier for an argument
          */
         template <typename T, typename... Args>
-        format(const string &str, const T &value, const Args &... argv)
-            : format(str)
+        format(const string &str, const T &value, const Args &... argv) : format(str)
         {
             args(value);    // add argument
             args(argv...);  // add remaining arguments
@@ -80,8 +79,7 @@ namespace arg3
          * single form of the variadic template constructor
          */
         template <typename T>
-        format(const string &str, const T &value)
-            : format(str)
+        format(const string &str, const T &value) : format(str)
         {
             args(value);  // add argument
         }
