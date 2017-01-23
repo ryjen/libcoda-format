@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.1)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 
 # add options for testing
 option(ENABLE_COVERAGE "Enable code coverage testing." OFF)
@@ -11,6 +11,8 @@ project (rj_format VERSION 0.1.0)
 
 # set path to custom modules
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+
+set(TEST_PROJECT_NAME ${PROJECT_NAME}_test)
 
 # create the package config install
 include(CreatePackage)
@@ -32,5 +34,5 @@ enable_testing()
 
 include(ValgrindTest)
 
-add_valgrind_profile_test(MEMCHECK ${ENABLE_MEMCHECK} PROFILING ${ENABLE_PROFILING} TARGET ${PROJECT_NAME}_test)
+add_valgrind_profile_test(MEMCHECK ${ENABLE_MEMCHECK} PROFILING ${ENABLE_PROFILING} TARGET ${TEST_PROJECT_NAME})
 
