@@ -2,8 +2,9 @@ cmake_minimum_required (VERSION 3.1)
 set(CMAKE_CXX_STANDARD 11)
 
 # add options for testing
-option(CODE_COVERAGE "Enable code coverage testing." OFF)
-option(MEMORY_CHECK "Enable testing for memory leaks." OFF)
+option(ENABLE_COVERAGE "Enable code coverage testing." OFF)
+option(ENABLE_MEMCHECK "Enable testing for memory leaks." OFF)
+option(ENABLE_PROFILING "Enable profiling code usage." OFF)
 
 # define project name
 project (rj_format VERSION 0.1.0)
@@ -15,15 +16,11 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 include(CreatePackage)
 create_package("a string formatting library")
 
-# create config header
-include(CreateConfigHeader)
-create_config_header()
-
 # add target for code coverage
-if(CODE_COVERAGE)
+if(ENABLE_COVERAGE)
 	include(CodeCoverage)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_COVERAGE}")
-	setup_target_for_coverage(${PROJECT_NAME}_coverage ${PROJECT_SOURCE_DIR}/coverage)
+	setup_target_for_coverage(TARGET ${PROJECT_NAME}_coverage OUTPUT ${PROJECT_BINARY_DIR}/coverage)
 endif()
 
 # add directories
@@ -35,5 +32,5 @@ enable_testing()
 
 include(ValgrindTest)
 
-add_opt_valgrind_test(MEMORY_CHECK ${PROJECT_NAME}_test ${PROJECT_BINARY_DIR}/tests/${PROJECT_NAME}_test)
+add_valgrind_profile_test(MEMCHECK ${ENABLE_MEMCHECK} PROFILING ${ENABLE_PROFILING} TARGET ${PROJECT_NAME}_test)
 

@@ -5,7 +5,7 @@ services:
     build:
       context: .
       args:
-          CMAKE_DEFINES: -DCMAKE_BUILD_TYPE=Release -DMEMORY_CHECK=ON
+          CMAKE_DEFINES: -DCMAKE_BUILD_TYPE=Release -DENABLE_MEMCHECK=ON -DCMAKE_CXX_COMPILER=g++
     environment:
       - TRAVIS_JOB_ID
     working_dir: /usr/src/build
@@ -15,5 +15,5 @@ services:
     image: rj_format_coverage
     build:
       args:
-          CMAKE_DEFINES: -DCMAKE_BUILD_TYPE=Debug -DCODE_COVERAGE=ON
+          CMAKE_DEFINES: -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON -DCMAKE_CXX_COMPILER=g++
     command: make rj_format_coverage_coveralls

@@ -86,8 +86,8 @@ make test
 
 options supported are:
 
-    -DCODE_COVERAGE=ON   :   enable code coverage using lcov
-    -DMEMORY_CHECK=ON    :   enable valgrind memory checking on tests
+    -DENABLE_COVERAGE=ON   :   enable code coverage using lcov
+    -DENABLE_MEMCHECK=ON    :   enable valgrind memory checking on tests
 
 
 formatting
