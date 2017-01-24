@@ -16,7 +16,7 @@ set(TEST_PROJECT_NAME ${PROJECT_NAME}_test)
 
 # create the package config install
 include(CreatePackage)
-create_package("a string formatting library")
+create_package(DESCRIPTION "a string formatting library")
 
 # add target for code coverage
 if(ENABLE_COVERAGE)
