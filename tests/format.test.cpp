@@ -5,6 +5,7 @@
  * requires the Igloo C++ Unit Testing Library
  * http://igloo-testing.org
  */
+#include <string>
 
 #include <bandit/bandit.h>
 #include "format.h"
@@ -12,6 +13,8 @@
 using namespace bandit;
 
 using namespace rj;
+
+using namespace snowhouse;
 
 class OStreamClass
 {
@@ -198,7 +201,7 @@ go_bandit([]() {
             AssertThrows(invalid_argument, (format("{0}") << "test"
                                                           << "two"));
 
-            AssertThrows(invalid_argument, format("{0:} {1,asdfasdf}"))
+            AssertThrows(invalid_argument, format("{0:} {1,asdfasdf}"));
         });
 
         it("can arrange arguments", []() {

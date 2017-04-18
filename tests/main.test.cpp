@@ -1,3 +1,4 @@
+#include <string>
 
 #include <bandit/bandit.h>
 
