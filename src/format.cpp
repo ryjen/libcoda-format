@@ -7,7 +7,7 @@
 #include <iomanip>
 #include <stdexcept>
 
-namespace rj
+namespace coda
 {
     format::format(const string &str) : value_(str), specifiers_(), currentSpecifier_(specifiers_.begin())
     {

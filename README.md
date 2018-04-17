@@ -1,11 +1,11 @@
-rj_format
+coda_format
 =========
 
 [![Build Status](http://img.shields.io/travis/ryjen/format.svg)](https://travis-ci.org/ryjen/format)
 [![Coverage Status](https://coveralls.io/repos/ryjen/format/badge.svg?branch=master&service=github)](https://coveralls.io/github/ryjen/format?branch=master)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://ryjen.mit-license.org)
 
-A c++11 class for formatting strings.
+A c++17 class for formatting strings.
 
 Examples
 --------

@@ -1,7 +1,7 @@
 version: '2'
 services:
   test:
-    image: rj_format_test
+    image: coda_format_test
     build:
       context: .
       args:
@@ -12,8 +12,8 @@ services:
     command: make test ARGS=-V
   coverage:
     extends: test
-    image: rj_format_coverage
+    image: coda_format_coverage
     build:
       args:
           CMAKE_DEFINES: -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON -DCMAKE_CXX_COMPILER=g++
-    command: make rj_format_coverage_coveralls
+    command: make coda_format_coverage_coveralls

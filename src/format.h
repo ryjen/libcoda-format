@@ -3,8 +3,8 @@
  * @copyright ryan jennings (ryan-jennings.net), 2012 under LGPL
  */
 
-#ifndef RJ_FORMAT_H
-#define RJ_FORMAT_H
+#ifndef CODA_FORMAT_H
+#define CODA_FORMAT_H
 
 #include <list>
 #include <sstream>
@@ -12,7 +12,7 @@
 
 using namespace std;
 
-namespace rj
+namespace coda
 {
     /*!
      * class to handle printf style formating using a format string containing specifiers that
