@@ -1,0 +1,16 @@
+{
+  "author": {
+    "email": "ryan@coda.life",
+    "web": "https://coda.life",
+    "name": "Ryan Jennings"
+  },
+  "build_system": [
+    "cmake",
+    "make"
+  ],
+  "dependencies": [
+  ],
+  "name": "coda_format",
+  "version": "0.1.1"
+}
+

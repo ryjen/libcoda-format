@@ -7,7 +7,7 @@ option(ENABLE_MEMCHECK "Enable testing for memory leaks." OFF)
 option(ENABLE_PROFILING "Enable profiling code usage." OFF)
 
 # define project name
-project (coda_format VERSION 0.1.0)
+project (coda_format VERSION 0.1.1)
 
 # set path to custom modules
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
