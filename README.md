@@ -58,7 +58,7 @@ the class will throw *invalid_argument* exception on errors:
 
 ```c++
 
-format f("{2} arg"); // throws an exception. no 0 or 1 specifier
+format f("{2} blah"); // throws an exception. no 0 or 1 specifier
 
 
 format f("{0}", "test", "two"); // throws an exception. missing specifier

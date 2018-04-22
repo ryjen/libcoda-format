@@ -1,6 +1,6 @@
 /*!
  * implementation of the format class
- * @copyright ryan jennings (ryan-jennings.net), 2012 under LGPL
+ * @copyright ryan jennings (coda.life), 2012 under LGPL
  *
  * requires the Igloo C++ Unit Testing Library
  * http://igloo-testing.org
