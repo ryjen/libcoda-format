@@ -8,7 +8,7 @@ services:
           CMAKE_DEFINES: -DCMAKE_BUILD_TYPE=Release -DENABLE_MEMCHECK=ON -DCMAKE_CXX_COMPILER=g++
     environment:
       - TRAVIS_JOB_ID
-    working_dir: /usr/src/build
+    working_dir: /usr/src/docker-build
     command: make test ARGS=-V
   coverage:
     extends: test

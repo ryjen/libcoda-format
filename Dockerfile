@@ -7,9 +7,9 @@ ENV BUILD_SRC /usr/src
 
 COPY . ${BUILD_SRC}
 
-RUN mkdir -p ${BUILD_SRC}/build
+RUN mkdir -p ${BUILD_SRC}/docker-build
 
-WORKDIR ${BUILD_SRC}/build
+WORKDIR ${BUILD_SRC}/docker-build
 
 RUN cmake ${CMAKE_DEFINES} ..
 
