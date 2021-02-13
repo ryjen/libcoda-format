@@ -1,6 +1,7 @@
 coda_format
 =========
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/ed19129c666a4e22a84500f4ccb4025c)](https://www.codacy.com/app/ryjen/rj_format?utm_source=github.com&utm_medium=referral&utm_content=ryjen/format&utm_campaign=badger)
 [![Build Status](http://img.shields.io/travis/ryjen/format.svg)](https://travis-ci.org/ryjen/format)
 [![Coverage Status](https://coveralls.io/repos/ryjen/format/badge.svg?branch=master&service=github)](https://coveralls.io/github/ryjen/format?branch=master)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://ryjen.mit-license.org)
