@@ -6,14 +6,14 @@ The harness is deterministic and side-effect free. Inputs are truncated to 4096 
 
 ## Build with AFL++
 
-Install AFL++ so `afl-clang-fast`, `afl-clang-fast++`, and `afl-fuzz` are available, then configure and build:
+Install AFL++ so `afl-cc`, `afl-c++`, and `afl-fuzz` are available, then configure and build:
 
 ```bash
 cmake --preset afl
 cmake --build --preset afl --target coda_format_afl
 ```
 
-The preset disables the Bandit test tree and enables only the fuzz target in addition to the library.
+The preset selects AFL++ LLVM instrumentation through `AFL_CC_COMPILER=LLVM`, disables the Bandit test tree, and enables the fuzz target in addition to the library.
 
 ## Run a campaign
 
@@ -26,7 +26,7 @@ afl-fuzz \
   -- build/afl/fuzz/coda_format_afl
 ```
 
-For a bounded local smoke campaign, AFL++ supports a time limit such as:
+For a bounded local smoke campaign:
 
 ```bash
 afl-fuzz -V 10 \
@@ -36,7 +36,7 @@ afl-fuzz -V 10 \
   -- build/afl/fuzz/coda_format_afl
 ```
 
-Long-running campaigns should write findings outside source-controlled directories and should not block the normal build/test workflow.
+Long-running campaigns should write findings outside source-controlled directories and should not block the normal build/test workflow. AFL++ supports an explicit `-m` memory limit; tune it against the seed corpus before unattended campaigns rather than choosing a repository-wide arbitrary value.
 
 ## AddressSanitizer
 
@@ -74,3 +74,7 @@ build/afl-asan/fuzz/coda_format_afl < path/to/crash-input
 ## Corpus policy
 
 Keep checked-in seeds small and grammar-focused. Add a reproducer to the corpus only after the underlying behavior is understood and the input provides durable regression value. Do not commit AFL++ queue/findings directories.
+
+## Next optimization step
+
+This first harness uses the conventional AFL++ forkserver path because it is simple and reviewable. If campaign throughput becomes the limiting factor, evaluate an `LLVMFuzzerTestOneInput`/persistent-mode harness as a separate change rather than mixing lifecycle optimization into the initial correctness slice.
