@@ -27,6 +27,32 @@
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
         "CODA_BUILD_TESTS": "OFF"
       }
+    },
+    {
+      "name": "afl",
+      "displayName": "AFL++",
+      "description": "AFL++ instrumented formatter fuzz target.",
+      "binaryDir": "${sourceDir}/build/afl",
+      "environment": {
+        "CC": "afl-clang-fast",
+        "CXX": "afl-clang-fast++"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CODA_BUILD_TESTS": "OFF",
+        "CODA_BUILD_FUZZERS": "ON"
+      }
+    },
+    {
+      "name": "afl-asan",
+      "inherits": "afl",
+      "displayName": "AFL++ with ASAN",
+      "description": "AFL++ formatter fuzz target with AddressSanitizer instrumentation.",
+      "binaryDir": "${sourceDir}/build/afl-asan",
+      "environment": {
+        "AFL_USE_ASAN": "1"
+      }
     }
   ],
   "buildPresets": [
@@ -37,6 +63,14 @@
     {
       "name": "release",
       "configurePreset": "release"
+    },
+    {
+      "name": "afl",
+      "configurePreset": "afl"
+    },
+    {
+      "name": "afl-asan",
+      "configurePreset": "afl-asan"
     }
   ],
   "testPresets": [
