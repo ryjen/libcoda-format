@@ -11,7 +11,7 @@ target_include_directories(${PROJECT_NAME}
 
 install(
     FILES "${PROJECT_SOURCE_DIR}/include/coda/format/format.h"
-    DESTINATION "${CMAKE_INSTALL_PREFIX}/include/coda/format"
+    DESTINATION include/coda/format
 )
 
 install(
