@@ -7,6 +7,19 @@ coda_format
 
 A c++17 class for formatting strings.
 
+Public API
+----------
+
+New code should use the canonical namespaced include:
+
+```c++
+#include <coda/format/format.h>
+```
+
+The historical `#include <format.h>` path remains supported during modernization for source and installed-target compatibility.
+
+See [the architecture notes](docs/architecture.md) for responsibility boundaries and compatibility policy, [the grammar](docs/format-grammar.md) for parser behavior, and [the fuzzing guide](fuzz/README.md) for the deterministic AFL++ harness.
+
 Examples
 --------
 
@@ -89,7 +102,7 @@ cmake --preset release
 cmake --build --preset release
 ```
 
-New build scripts should use `CODA_BUILD_TESTS`, `CODA_ENABLE_COVERAGE`, `CODA_ENABLE_MEMCHECK`, and `CODA_ENABLE_PROFILING`. The legacy `ENABLE_*` options remain accepted during migration.
+New build scripts should use `CODA_BUILD_TESTS`, `CODA_BUILD_FUZZERS`, `CODA_ENABLE_COVERAGE`, `CODA_ENABLE_MEMCHECK`, and `CODA_ENABLE_PROFILING`. The legacy `ENABLE_*` options remain accepted during migration.
 
 formatting
 ----------
