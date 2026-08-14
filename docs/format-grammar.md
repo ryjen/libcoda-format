@@ -21,9 +21,9 @@ Examples:
 ```
 
 - `index` is a non-negative decimal integer.
-- `width` is a signed decimal integer. A negative width requests left alignment.
+- `width` is a signed decimal integer. A negative width requests left alignment. The current implementation stores width as `int8_t`, so accepted widths are `-128` through `127`.
 - `type` is a single formatting character such as `f`, `e`, `x`, `X`, `o`, `O`, or `n`.
-- `argument` is type-specific. Numeric precision arguments must be complete decimal integers; trailing characters are invalid.
+- `argument` is type-specific. Numeric precision arguments must be complete non-negative decimal integers; trailing characters are invalid.
 
 Specifier indexes may appear out of textual order, but the set of indexes must be contiguous starting at zero.
 
