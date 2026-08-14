@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.21)
 project(coda_format VERSION 0.1.1 LANGUAGES CXX)
 
 option(CODA_BUILD_TESTS "Build libcoda-format tests." ON)
+option(CODA_BUILD_FUZZERS "Build deterministic fuzzing targets." OFF)
 option(CODA_ENABLE_COVERAGE "Enable code coverage testing." OFF)
 option(CODA_ENABLE_MEMCHECK "Enable Valgrind memory checking." OFF)
 option(CODA_ENABLE_PROFILING "Enable Valgrind profiling." OFF)
@@ -50,6 +51,10 @@ if(CODA_ENABLE_COVERAGE)
 endif()
 
 add_subdirectory(src)
+
+if(CODA_BUILD_FUZZERS)
+    add_subdirectory(fuzz)
+endif()
 
 if(CODA_BUILD_TESTS)
     enable_testing()

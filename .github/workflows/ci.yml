@@ -86,3 +86,67 @@ jobs:
           ASAN_OPTIONS: detect_leaks=1:strict_string_checks=1
           UBSAN_OPTIONS: print_stacktrace=1:halt_on_error=1
         run: ctest --test-dir build-sanitizers --output-on-failure
+
+  fuzz-harness-smoke:
+    name: Fuzz harness smoke
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+          persist-credentials: false
+
+      - name: Configure fuzz target
+        run: |
+          cmake -S . -B build-fuzz-smoke \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCODA_BUILD_TESTS=OFF \
+            -DCODA_BUILD_FUZZERS=ON
+
+      - name: Build fuzz target
+        run: cmake --build build-fuzz-smoke --parallel 2 --target coda_format_afl
+
+      - name: Replay seed corpus
+        run: |
+          for input in fuzz/corpora/format/*; do
+            build-fuzz-smoke/fuzz/coda_format_afl < "$input"
+          done
+
+  afl-smoke:
+    name: AFL++ bounded smoke
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+          persist-credentials: false
+
+      - name: Install AFL++
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes afl++
+
+      - name: Configure AFL++ target
+        run: cmake --preset afl
+
+      - name: Build AFL++ target
+        run: cmake --build --preset afl --parallel 2 --target coda_format_afl
+
+      - name: Verify AFL++ instrumentation
+        run: afl-showmap -q -o /dev/null -- build/afl/fuzz/coda_format_afl < fuzz/corpora/format/canonical.txt
+
+      - name: Run bounded AFL++ campaign
+        env:
+          AFL_NO_UI: "1"
+          AFL_SKIP_CPUFREQ: "1"
+          AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES: "1"
+        run: |
+          afl-fuzz -V 5 \
+            -i fuzz/corpora/format \
+            -o build/afl/smoke-findings \
+            -x fuzz/dictionaries/format.dict \
+            -- build/afl/fuzz/coda_format_afl
