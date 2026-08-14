@@ -52,6 +52,24 @@ jobs:
       - name: Test
         run: ctest --test-dir build --output-on-failure
 
+      - name: Verify installed public headers
+        if: matrix.compiler == 'gcc'
+        run: |
+          cmake --install build --prefix "$PWD/stage"
+
+          cat > /tmp/canonical.cpp <<'EOF'
+          #include <coda/format/format.h>
+          int main() { coda::format value("{0}", "canonical"); return value.specifiers(); }
+          EOF
+
+          cat > /tmp/legacy.cpp <<'EOF'
+          #include <format.h>
+          int main() { coda::format value("{0}", "legacy"); return value.specifiers(); }
+          EOF
+
+          g++ -std=c++17 -I"$PWD/stage/include" -c /tmp/canonical.cpp -o /tmp/canonical.o
+          g++ -std=c++17 -I"$PWD/stage/include/coda/format" -c /tmp/legacy.cpp -o /tmp/legacy.o
+
   sanitizers:
     name: ASAN and UBSAN
     runs-on: ubuntu-latest
