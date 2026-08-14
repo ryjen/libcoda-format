@@ -16,6 +16,11 @@ using namespace coda;
 
 using namespace snowhouse;
 
+using std::invalid_argument;
+using std::ostream;
+using std::string;
+using std::stringstream;
+
 class OStreamClass
 {
     friend ostream &operator<<(ostream &out, const OStreamClass &obj);
