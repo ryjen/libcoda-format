@@ -6,11 +6,13 @@
 #ifndef CODA_FORMAT_H
 #define CODA_FORMAT_H
 
+#include <cstddef>
+#include <cstdint>
 #include <list>
+#include <ostream>
 #include <sstream>
+#include <stdexcept>
 #include <string>
-
-using namespace std;
 
 namespace coda
 {
@@ -33,13 +35,13 @@ namespace coda
         {
             // check if there isn't a specifier
             if (currentSpecifier_ == specifiers_.end()) {
-                throw invalid_argument("no specifier for argument");
+                throw std::invalid_argument("no specifier for argument");
             }
 
             specifier &arg = *currentSpecifier_++;  // get specifier and advance
 
             // get the argument value as a string
-            ostringstream buf;
+            std::ostringstream buf;
 
             begin_manip(buf, arg);  // set stream flags for arg
             buf << value;           // append value
@@ -69,7 +71,7 @@ namespace coda
          * @throws invalid_argument if there isn't a specifier for an argument
          */
         template <typename T, typename... Args>
-        format(const string &str, const T &value, const Args &... argv) : format(str)
+        format(const std::string &str, const T &value, const Args &... argv) : format(str)
         {
             args(value);    // add argument
             args(argv...);  // add remaining arguments
@@ -79,7 +81,7 @@ namespace coda
          * single form of the variadic template constructor
          */
         template <typename T>
-        format(const string &str, const T &value) : format(str)
+        format(const std::string &str, const T &value) : format(str)
         {
             args(value);  // add argument
         }
@@ -96,10 +98,9 @@ namespace coda
         /*!
          * default constructor needs a format string
          */
-        format(const string &str);
+        format(const std::string &str);
 
         virtual ~format();
-
 
         // operators
 
@@ -115,7 +116,7 @@ namespace coda
          * @throws invalid_argument if there was a formatting error
          * @see str
          */
-        operator string();
+        operator std::string();
 
         /*!
          * adds an argument to the format
@@ -132,24 +133,24 @@ namespace coda
         /*!
          * converts the format with the given args and returns the string
          */
-        string str();
+        std::string str();
 
         /*!
          * @return the number of specifiers in the format
          */
-        size_t specifiers() const;
+        std::size_t specifiers() const;
 
         /*!
          * reset using the format string
          */
-        void reset(const string &value);
+        void reset(const std::string &value);
 
         /*!
          * resets the specifiers to build a new string
          */
         void reset();
 
-        void print(ostream &out);
+        void print(std::ostream &out);
 
        private:
         // private constants
@@ -158,17 +159,16 @@ namespace coda
 
         // struct for a single specifier in the format
         typedef struct {
-            string::size_type prev;  // the prev position in format string
-            string::size_type next;  // the next position in format string
-            size_t index;            // the argument index
-            string format;           // the format
-            char type;               // the specifier
-            int8_t width;            // width of the replacement
-            string replacement;      // the replacement value
+            std::string::size_type prev;  // the prev position in format string
+            std::string::size_type next;  // the next position in format string
+            std::size_t index;            // the argument index
+            std::string format;           // the format
+            char type;                    // the specifier
+            std::int8_t width;            // width of the replacement
+            std::string replacement;      // the replacement value
         } specifier;
 
-        typedef list<specifier> SpecifierList;  // for sorting
-
+        typedef std::list<specifier> SpecifierList;  // for sorting
 
         // private methods
 
@@ -177,20 +177,20 @@ namespace coda
          * @throws invalid_argument if the format string is invalid
          */
         void initialize();
-        void add_specifier(string::size_type start, string::size_type end);
-        void begin_manip(ostream &out, const specifier &arg) const;
-        void end_manip(ostream &out, const specifier &arg);
-        void unescape(ostream &buf, string::size_type start, string::size_type end);
+        void add_specifier(std::string::size_type start, std::string::size_type end);
+        void begin_manip(std::ostream &out, const specifier &arg) const;
+        void end_manip(std::ostream &out, const specifier &arg);
+        void unescape(std::ostream &buf, std::string::size_type start, std::string::size_type end);
 
         // private member variables
-        string value_;                              // the format
+        std::string value_;                         // the format
         SpecifierList specifiers_;                  // the list of specifiers in the format
         SpecifierList::iterator currentSpecifier_;  // the current specifier
 
-        friend ostream &operator<<(ostream &out, format &f);
+        friend std::ostream &operator<<(std::ostream &out, format &f);
     };
 
-    ostream &operator<<(ostream &out, format &f);
+    std::ostream &operator<<(std::ostream &out, format &f);
 }
 
 #endif
