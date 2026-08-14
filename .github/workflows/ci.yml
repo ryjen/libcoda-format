@@ -168,3 +168,17 @@ jobs:
             -o build/afl/smoke-findings \
             -x fuzz/dictionaries/format.dict \
             -- build/afl/fuzz/coda_format_afl
+
+      - name: Configure AFL++ ASAN target
+        run: cmake --preset afl-asan
+
+      - name: Build AFL++ ASAN target
+        run: cmake --build --preset afl-asan --parallel 2 --target coda_format_afl
+
+      - name: Replay corpus with AFL++ ASAN target
+        env:
+          ASAN_OPTIONS: detect_leaks=1:abort_on_error=1
+        run: |
+          for input in fuzz/corpora/format/*; do
+            build/afl-asan/fuzz/coda_format_afl < "$input"
+          done
