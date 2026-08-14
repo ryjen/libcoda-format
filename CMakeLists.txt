@@ -39,8 +39,8 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 set(TEST_PROJECT_NAME ${PROJECT_NAME}_test)
 
-include(CreatePackage)
-create_package(DESCRIPTION "a string formatting library")
+include(CreatePackageConfig)
+create_package_config(DESCRIPTION "a string formatting library")
 
 # Coverage still uses the legacy helper's global flags. Migrating that helper
 # to target-local compile/link options is tracked with the aggregate CMake work.
