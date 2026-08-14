@@ -8,7 +8,61 @@
 #include <cstdlib>
 #include <iomanip>
 #include <iterator>
+#include <limits>
 #include <utility>
+
+namespace
+{
+    int parse_integer_token(const std::string &token, const char *error)
+    {
+        if (token.empty()) {
+            throw std::invalid_argument(error);
+        }
+
+        std::size_t consumed = 0;
+        int value = 0;
+
+        try {
+            value = std::stoi(token, &consumed);
+        } catch (...) {
+            throw std::invalid_argument(error);
+        }
+
+        if (consumed != token.size()) {
+            throw std::invalid_argument(error);
+        }
+
+        return value;
+    }
+
+    std::size_t parse_index_token(const std::string &token)
+    {
+        const int value = parse_integer_token(token, "invalid specifier format");
+        if (value < 0) {
+            throw std::invalid_argument("invalid specifier format");
+        }
+        return static_cast<std::size_t>(value);
+    }
+
+    std::int8_t parse_width_token(const std::string &token)
+    {
+        const int value = parse_integer_token(token, "invalid specifier format");
+        if (value < std::numeric_limits<std::int8_t>::min() ||
+            value > std::numeric_limits<std::int8_t>::max()) {
+            throw std::invalid_argument("invalid specifier format");
+        }
+        return static_cast<std::int8_t>(value);
+    }
+
+    int parse_precision_token(const std::string &token)
+    {
+        const int value = parse_integer_token(token, "invalid precision format for argument");
+        if (value < 0) {
+            throw std::invalid_argument("invalid precision format for argument");
+        }
+        return value;
+    }
+}
 
 namespace coda
 {
@@ -97,10 +151,8 @@ namespace coda
      */
     void format::add_specifier(std::string::size_type start, std::string::size_type end)
     {
-        // get the string inside the delimiters
-        std::string temp = value_.substr(start, end - start);
+        const std::string token = value_.substr(start, end - start);
 
-        // the specifier to create
         specifier spec;
         spec.index = 0;
         spec.prev = start - 1;  // exclude start tag
@@ -108,42 +160,62 @@ namespace coda
         spec.width = 0;
         spec.type = '\0';
 
-        try {
-            // look for {0,10:f2}
-            auto divider = temp.find(':');
+        std::string index_and_width = token;
+        std::string format_token;
 
-            if (divider != std::string::npos) {
-                std::string format = temp.substr(divider + 1);
-
-                spec.type = format[0];
-
-                auto comma = temp.find(',', divider);
-
-                if (comma != std::string::npos) {
-                    spec.format = format.substr(1, comma);
-
-                    spec.width = std::stoi(temp.substr(comma + 1));
-
-                } else {
-                    spec.format = format.substr(1, format.length() - 1);
-                }
-
-                temp = temp.substr(0, divider);
-            } else {
-                // look for {0,-10}
-                divider = temp.find(',');
-
-                if (divider != std::string::npos) {
-                    spec.width = std::stoi(temp.substr(divider + 1));
-
-                    temp = temp.substr(0, divider);
-                }
+        const auto colon = token.find(':');
+        if (colon != std::string::npos) {
+            if (token.find(':', colon + 1) != std::string::npos) {
+                throw std::invalid_argument("invalid specifier format");
             }
 
-            spec.index = std::stoi(temp);
+            index_and_width = token.substr(0, colon);
+            format_token = token.substr(colon + 1);
+            if (format_token.empty()) {
+                throw std::invalid_argument("invalid specifier format");
+            }
+        }
 
-        } catch (...) {
-            throw std::invalid_argument("invalid specifier format");
+        std::string index_token = index_and_width;
+        std::string width_token;
+        bool has_width = false;
+
+        const auto canonical_comma = index_and_width.find(',');
+        if (canonical_comma != std::string::npos) {
+            if (index_and_width.find(',', canonical_comma + 1) != std::string::npos) {
+                throw std::invalid_argument("invalid specifier format");
+            }
+
+            index_token = index_and_width.substr(0, canonical_comma);
+            width_token = index_and_width.substr(canonical_comma + 1);
+            has_width = true;
+        }
+
+        if (!format_token.empty()) {
+            const auto compatibility_comma = format_token.find(',');
+            if (compatibility_comma != std::string::npos) {
+                if (format_token.find(',', compatibility_comma + 1) != std::string::npos || has_width) {
+                    throw std::invalid_argument("invalid specifier format");
+                }
+
+                width_token = format_token.substr(compatibility_comma + 1);
+                format_token = format_token.substr(0, compatibility_comma);
+                has_width = true;
+
+                if (format_token.empty()) {
+                    throw std::invalid_argument("invalid specifier format");
+                }
+            }
+        }
+
+        spec.index = parse_index_token(index_token);
+        if (has_width) {
+            spec.width = parse_width_token(width_token);
+        }
+
+        if (!format_token.empty()) {
+            spec.type = format_token[0];
+            spec.format = format_token.substr(1);
         }
 
         specifiers_.push_back(spec);
@@ -219,12 +291,7 @@ namespace coda
                 out << std::uppercase;
             case 'e':
                 if (!arg.format.empty()) {
-                    try {
-                        int p = std::stoi(arg.format);
-                        out << std::setprecision(p);
-                    } catch (...) {
-                        throw std::invalid_argument("invalid precision format for argument");
-                    }
+                    out << std::setprecision(parse_precision_token(arg.format));
                 } else {
                     out << std::setprecision(9);
                 }
@@ -233,12 +300,7 @@ namespace coda
             case 'F':
             case 'f':
                 if (!arg.format.empty()) {
-                    try {
-                        int p = std::stoi(arg.format);
-                        out << std::setprecision(p);
-                    } catch (...) {
-                        throw std::invalid_argument("invalid precision format for argument");
-                    }
+                    out << std::setprecision(parse_precision_token(arg.format));
                 } else {
                     out << std::setprecision(9);
                 }
