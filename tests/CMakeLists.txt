@@ -17,7 +17,11 @@ if (NOT DEFINED BANDIT_DIR)
     set(BANDIT_DIR ${SOURCE_DIR})
 endif()
 
-add_executable(${TEST_PROJECT_NAME} main.test.cpp format.test.cpp)
+add_executable(${TEST_PROJECT_NAME}
+    main.test.cpp
+    format.test.cpp
+    parser.test.cpp
+)
 
 target_include_directories(${TEST_PROJECT_NAME} SYSTEM PUBLIC ${BANDIT_DIR} SYSTEM PUBLIC ${PROJECT_SOURCE_DIR}/src)
 

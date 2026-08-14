@@ -8,7 +8,65 @@
 #include <cstdlib>
 #include <iomanip>
 #include <iterator>
+#include <limits>
 #include <utility>
+
+namespace
+{
+    int parse_decimal_token(const std::string &token, bool allow_negative, const char *error)
+    {
+        if (token.empty()) {
+            throw std::invalid_argument(error);
+        }
+
+        std::size_t position = 0;
+        bool negative = false;
+        if (token[0] == '-') {
+            if (!allow_negative || token.size() == 1) {
+                throw std::invalid_argument(error);
+            }
+            negative = true;
+            position = 1;
+        }
+
+        int value = 0;
+        for (; position < token.size(); ++position) {
+            const char ch = token[position];
+            if (ch < '0' || ch > '9') {
+                throw std::invalid_argument(error);
+            }
+
+            const int digit = ch - '0';
+            if (value > (std::numeric_limits<int>::max() - digit) / 10) {
+                throw std::invalid_argument(error);
+            }
+            value = value * 10 + digit;
+        }
+
+        return negative ? -value : value;
+    }
+
+    std::size_t parse_index_token(const std::string &token)
+    {
+        return static_cast<std::size_t>(
+            parse_decimal_token(token, false, "invalid specifier format"));
+    }
+
+    std::int8_t parse_width_token(const std::string &token)
+    {
+        const int value = parse_decimal_token(token, true, "invalid specifier format");
+        if (value < std::numeric_limits<std::int8_t>::min() ||
+            value > std::numeric_limits<std::int8_t>::max()) {
+            throw std::invalid_argument("invalid specifier format");
+        }
+        return static_cast<std::int8_t>(value);
+    }
+
+    int parse_precision_token(const std::string &token)
+    {
+        return parse_decimal_token(token, false, "invalid precision format for argument");
+    }
+}
 
 namespace coda
 {
@@ -24,15 +82,11 @@ namespace coda
 
     format::format(const format &other) : value_(other.value_), specifiers_(), currentSpecifier_(specifiers_.begin())
     {
-        // copy specifiers
         for (auto s : other.specifiers_) {
             specifiers_.push_back(s);
         }
 
-        // set current position to begining
         currentSpecifier_ = specifiers_.begin();
-
-        // advance current position according to the other position
         std::advance(currentSpecifier_,
                      std::distance(other.specifiers_.begin(), SpecifierList::const_iterator(other.currentSpecifier_)));
     }
@@ -48,18 +102,14 @@ namespace coda
 
     format &format::operator=(const format &rhs)
     {
-        value_ = rhs.value_;  // copy the format
+        value_ = rhs.value_;
+        specifiers_.clear();
 
-        specifiers_.clear();  // clear any specifiers already set
-
-        // copy other specifiers
         for (auto s : rhs.specifiers_) {
             specifiers_.push_back(s);
         }
 
-        // set current position to begining
         currentSpecifier_ = specifiers_.begin();
-        // advance current position according to the other position
         std::advance(currentSpecifier_,
                      std::distance(rhs.specifiers_.begin(), SpecifierList::const_iterator(rhs.currentSpecifier_)));
 
@@ -68,11 +118,8 @@ namespace coda
 
     format &format::operator=(format &&rhs)
     {
-        value_ = std::move(rhs.value_);  // copy the format
-
+        value_ = std::move(rhs.value_);
         specifiers_ = std::move(rhs.specifiers_);
-
-        // set current position to begining
         currentSpecifier_ = std::move(rhs.currentSpecifier_);
 
         rhs.specifiers_.clear();
@@ -81,69 +128,79 @@ namespace coda
         return *this;
     }
 
-    /*!
-     * returns the number of specifiers in the format string
-     */
     std::size_t format::specifiers() const
     {
-        // the size of the specifier list minus any specifier arguments already added
         return specifiers_.size() -
                std::distance(specifiers_.begin(), SpecifierList::const_iterator(currentSpecifier_));
     }
 
-    /*!
-     * adds a specifier to the list
-     * @throws invalid_argument if specifier does not contain an index
-     */
     void format::add_specifier(std::string::size_type start, std::string::size_type end)
     {
-        // get the string inside the delimiters
-        std::string temp = value_.substr(start, end - start);
+        const std::string token = value_.substr(start, end - start);
 
-        // the specifier to create
         specifier spec;
         spec.index = 0;
-        spec.prev = start - 1;  // exclude start tag
-        spec.next = end + 1;    // exclude end tag
+        spec.prev = start - 1;
+        spec.next = end + 1;
         spec.width = 0;
         spec.type = '\0';
 
-        try {
-            // look for {0,10:f2}
-            auto divider = temp.find(':');
+        std::string index_and_width = token;
+        std::string format_token;
 
-            if (divider != std::string::npos) {
-                std::string format = temp.substr(divider + 1);
-
-                spec.type = format[0];
-
-                auto comma = temp.find(',', divider);
-
-                if (comma != std::string::npos) {
-                    spec.format = format.substr(1, comma);
-
-                    spec.width = std::stoi(temp.substr(comma + 1));
-
-                } else {
-                    spec.format = format.substr(1, format.length() - 1);
-                }
-
-                temp = temp.substr(0, divider);
-            } else {
-                // look for {0,-10}
-                divider = temp.find(',');
-
-                if (divider != std::string::npos) {
-                    spec.width = std::stoi(temp.substr(divider + 1));
-
-                    temp = temp.substr(0, divider);
-                }
+        const auto colon = token.find(':');
+        if (colon != std::string::npos) {
+            if (token.find(':', colon + 1) != std::string::npos) {
+                throw std::invalid_argument("invalid specifier format");
             }
 
-            spec.index = std::stoi(temp);
+            index_and_width = token.substr(0, colon);
+            format_token = token.substr(colon + 1);
+            if (format_token.empty()) {
+                throw std::invalid_argument("invalid specifier format");
+            }
+        }
 
-        } catch (...) {
-            throw std::invalid_argument("invalid specifier format");
+        std::string index_token = index_and_width;
+        std::string width_token;
+        bool has_width = false;
+
+        const auto canonical_comma = index_and_width.find(',');
+        if (canonical_comma != std::string::npos) {
+            if (index_and_width.find(',', canonical_comma + 1) != std::string::npos) {
+                throw std::invalid_argument("invalid specifier format");
+            }
+
+            index_token = index_and_width.substr(0, canonical_comma);
+            width_token = index_and_width.substr(canonical_comma + 1);
+            has_width = true;
+        }
+
+        if (!format_token.empty()) {
+            const auto compatibility_comma = format_token.find(',');
+            if (compatibility_comma != std::string::npos) {
+                if (format_token.find(',', compatibility_comma + 1) != std::string::npos || has_width) {
+                    throw std::invalid_argument("invalid specifier format");
+                }
+
+                width_token = format_token.substr(compatibility_comma + 1);
+                format_token = format_token.substr(0, compatibility_comma);
+                has_width = true;
+
+                if (format_token.empty()) {
+                    throw std::invalid_argument("invalid specifier format");
+                }
+            }
+        }
+
+        spec.index = parse_index_token(index_token);
+        if (has_width) {
+            spec.width = parse_width_token(width_token);
+        }
+
+        if (!format_token.empty()) {
+            spec.type = format_token[0];
+            spec.format = format_token.substr(1);
         }
 
         specifiers_.push_back(spec);
@@ -153,7 +210,6 @@ namespace coda
     {
         auto len = value_.length();
 
-        // find each open tag
         for (std::size_t pos = 0; pos < len; pos++) {
             if (value_[pos] != s_open_tag) {
                 continue;
@@ -161,36 +217,26 @@ namespace coda
 
             if (++pos >= len) break;
 
-            // check if its an escape tag, ie  {{
             if (pos < len && value_[pos] == s_open_tag) {
                 continue;
             }
 
-            // get the closing tag
             auto end = value_.find(s_close_tag, pos);
-
             if (end == std::string::npos) {
                 throw std::invalid_argument("no specifier closing tag");
             }
 
-            // add the specifier
             add_specifier(pos, end);
         }
 
-        // short circuit if no specifiers found
-        if (specifiers_.size() == 0) {
+        if (specifiers_.empty()) {
             return;
         }
 
-        // sort specifiers based on index
         specifiers_.sort([&](const specifier &first, const specifier &second) { return first.index < second.index; });
-
-        // set the current position (note this is *after* sorting)
         currentSpecifier_ = specifiers_.begin();
 
         std::size_t index = 0;
-
-        // check if specifier indexes follow an incremental order
         for (auto spec : specifiers_) {
             if (spec.index != index++) {
                 throw std::invalid_argument("specifier index not ordered");
@@ -207,24 +253,16 @@ namespace coda
             }
         }
 
-        // short circuit if specifier has no format string
         if (arg.type == '\0') {
             return;
         }
 
         switch (arg.type) {
-            // printf styles
-            // TODO: define formats
             case 'E':
                 out << std::uppercase;
             case 'e':
                 if (!arg.format.empty()) {
-                    try {
-                        int p = std::stoi(arg.format);
-                        out << std::setprecision(p);
-                    } catch (...) {
-                        throw std::invalid_argument("invalid precision format for argument");
-                    }
+                    out << std::setprecision(parse_precision_token(arg.format));
                 } else {
                     out << std::setprecision(9);
                 }
@@ -233,18 +271,12 @@ namespace coda
             case 'F':
             case 'f':
                 if (!arg.format.empty()) {
-                    try {
-                        int p = std::stoi(arg.format);
-                        out << std::setprecision(p);
-                    } catch (...) {
-                        throw std::invalid_argument("invalid precision format for argument");
-                    }
+                    out << std::setprecision(parse_precision_token(arg.format));
                 } else {
                     out << std::setprecision(9);
                 }
                 out << std::fixed;
                 break;
-
             case 'X':
                 out << std::uppercase;
             case 'x':
@@ -262,8 +294,6 @@ namespace coda
 
     void format::end_manip(std::ostream &out, const specifier &arg)
     {
-        // cleanup any stream manipulation
-
         switch (arg.type) {
             case 'x':
             case 'X':
@@ -290,9 +320,7 @@ namespace coda
     std::string format::str()
     {
         std::ostringstream buf;
-
         print(buf);
-
         return buf.str();
     }
 
@@ -316,30 +344,23 @@ namespace coda
 
     void format::print(std::ostream &buf)
     {
-        // short circuit if no specifiers
-        if (specifiers_.size() == 0) {
+        if (specifiers_.empty()) {
             unescape(buf, 0, value_.length());
             return;
         }
-        // sort based on position
+
         specifiers_.sort([&](const specifier &first, const specifier &second) { return first.prev < second.prev; });
 
         std::size_t last = 0;
-
-        // loop through all added arguments
         for (auto spec = specifiers_.begin(); spec != currentSpecifier_; ++spec) {
             if (spec->prev != 0) {
-                // add filler between specifiers
                 unescape(buf, last, spec->prev);
             }
 
-            // append replacement
             buf << spec->replacement;
-
             last = spec->next;
         }
 
-        // add ending
         if (last < value_.length()) {
             unescape(buf, last, value_.length());
         }
