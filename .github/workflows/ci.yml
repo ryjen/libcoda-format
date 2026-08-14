@@ -105,6 +105,38 @@ jobs:
           UBSAN_OPTIONS: print_stacktrace=1:halt_on_error=1
         run: ctest --test-dir build-sanitizers --output-on-failure
 
+  coverage:
+    name: Target-local coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+          persist-credentials: false
+
+      - name: Install coverage tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes lcov
+
+      - name: Configure coverage
+        run: |
+          cmake -S . -B build-coverage \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCODA_ENABLE_COVERAGE=ON \
+            -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+
+      - name: Build coverage targets
+        run: cmake --build build-coverage --parallel 2
+
+      - name: Generate coverage report
+        run: cmake --build build-coverage --target coda_format_coverage
+
+      - name: Verify coverage report
+        run: test -f build-coverage/coverage/index.html
+
   fuzz-harness-smoke:
     name: Fuzz harness smoke
     runs-on: ubuntu-latest
