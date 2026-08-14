@@ -1,7 +1,7 @@
 coda_format
 =========
 
-[![Build Status](http://img.shields.io/travis/ryjen/format.svg)](https://travis-ci.org/ryjen/format)
+[![CI](https://github.com/ryjen/libcoda-format/actions/workflows/ci.yml/badge.svg)](https://github.com/ryjen/libcoda-format/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/ryjen/format/badge.svg?branch=master&service=github)](https://coveralls.io/github/ryjen/format?branch=master)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://ryjen.mit-license.org)
 
@@ -68,27 +68,28 @@ format f("{0}", "test", "two"); // throws an exception. missing specifier
 Building
 --------
 
-After cloning run the following command to initialize submodules:
+After cloning, initialize submodules:
 
 ```bash
-
 git submodule update --init --recursive
 ```
 
-you can use [cmake](https://cmake.org) to generate for the build system of your choice.
+The preferred CMake workflow uses the checked-in presets:
 
 ```bash
-mkdir debug; cd debug; 
-cmake -DCMAKE_BUILD_TYPE=Debug ..
-make
-make test
+cmake --preset dev
+cmake --build --preset dev
+ctest --preset dev
 ```
 
-options supported are:
+For a release build without tests:
 
-    -DENABLE_COVERAGE=ON   :   enable code coverage using lcov
-    -DENABLE_MEMCHECK=ON    :   enable valgrind memory checking on tests
+```bash
+cmake --preset release
+cmake --build --preset release
+```
 
+New build scripts should use `CODA_BUILD_TESTS`, `CODA_ENABLE_COVERAGE`, `CODA_ENABLE_MEMCHECK`, and `CODA_ENABLE_PROFILING`. The legacy `ENABLE_*` options remain accepted during migration.
 
 formatting
 ----------
