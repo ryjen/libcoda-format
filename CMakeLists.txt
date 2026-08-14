@@ -42,14 +42,6 @@ set(TEST_PROJECT_NAME ${PROJECT_NAME}_test)
 include(CreatePackageConfig)
 create_package_config(DESCRIPTION "a string formatting library")
 
-# Coverage still uses the legacy helper's global flags. Migrating that helper
-# to target-local compile/link options is tracked with the aggregate CMake work.
-if(CODA_ENABLE_COVERAGE)
-    include(CodeCoverage)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_COVERAGE}")
-    setup_target_for_coverage(TARGET ${PROJECT_NAME}_coverage OUTPUT ${PROJECT_BINARY_DIR}/coverage)
-endif()
-
 add_subdirectory(src)
 
 if(CODA_BUILD_FUZZERS)
@@ -59,6 +51,16 @@ endif()
 if(CODA_BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)
+
+    if(CODA_ENABLE_COVERAGE)
+        include(CodaCoverage)
+        coda_enable_target_coverage(TARGET ${PROJECT_NAME})
+        coda_enable_target_coverage(TARGET ${TEST_PROJECT_NAME})
+        setup_target_for_coverage(
+            TARGET ${PROJECT_NAME}_coverage
+            OUTPUT ${PROJECT_BINARY_DIR}/coverage
+        )
+    endif()
 
     include(ValgrindTest)
     add_valgrind_profile_test(
