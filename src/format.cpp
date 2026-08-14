@@ -4,12 +4,15 @@
  */
 
 #include "format.h"
+
+#include <cstdlib>
 #include <iomanip>
-#include <stdexcept>
+#include <iterator>
+#include <utility>
 
 namespace coda
 {
-    format::format(const string &str) : value_(str), specifiers_(), currentSpecifier_(specifiers_.begin())
+    format::format(const std::string &str) : value_(str), specifiers_(), currentSpecifier_(specifiers_.begin())
     {
         initialize();
     }
@@ -30,11 +33,14 @@ namespace coda
         currentSpecifier_ = specifiers_.begin();
 
         // advance current position according to the other position
-        advance(currentSpecifier_, distance(other.specifiers_.begin(), SpecifierList::const_iterator(other.currentSpecifier_)));
+        std::advance(currentSpecifier_,
+                     std::distance(other.specifiers_.begin(), SpecifierList::const_iterator(other.currentSpecifier_)));
     }
 
     format::format(format &&other)
-        : value_(std::move(other.value_)), specifiers_(std::move(other.specifiers_)), currentSpecifier_(std::move(other.currentSpecifier_))
+        : value_(std::move(other.value_)),
+          specifiers_(std::move(other.specifiers_)),
+          currentSpecifier_(std::move(other.currentSpecifier_))
     {
         other.specifiers_.clear();
         other.currentSpecifier_ = other.specifiers_.begin();
@@ -54,7 +60,8 @@ namespace coda
         // set current position to begining
         currentSpecifier_ = specifiers_.begin();
         // advance current position according to the other position
-        advance(currentSpecifier_, distance(rhs.specifiers_.begin(), SpecifierList::const_iterator(rhs.currentSpecifier_)));
+        std::advance(currentSpecifier_,
+                     std::distance(rhs.specifiers_.begin(), SpecifierList::const_iterator(rhs.currentSpecifier_)));
 
         return *this;
     }
@@ -73,23 +80,25 @@ namespace coda
 
         return *this;
     }
+
     /*!
      * returns the number of specifiers in the format string
      */
-    size_t format::specifiers() const
+    std::size_t format::specifiers() const
     {
         // the size of the specifier list minus any specifier arguments already added
-        return specifiers_.size() - distance(specifiers_.begin(), SpecifierList::const_iterator(currentSpecifier_));
+        return specifiers_.size() -
+               std::distance(specifiers_.begin(), SpecifierList::const_iterator(currentSpecifier_));
     }
 
     /*!
      * adds a specifier to the list
      * @throws invalid_argument if specifier does not contain an index
      */
-    void format::add_specifier(string::size_type start, string::size_type end)
+    void format::add_specifier(std::string::size_type start, std::string::size_type end)
     {
         // get the string inside the delimiters
-        string temp = value_.substr(start, end - start);
+        std::string temp = value_.substr(start, end - start);
 
         // the specifier to create
         specifier spec;
@@ -103,17 +112,17 @@ namespace coda
             // look for {0,10:f2}
             auto divider = temp.find(':');
 
-            if (divider != string::npos) {
-                string format = temp.substr(divider + 1);
+            if (divider != std::string::npos) {
+                std::string format = temp.substr(divider + 1);
 
                 spec.type = format[0];
 
                 auto comma = temp.find(',', divider);
 
-                if (comma != string::npos) {
+                if (comma != std::string::npos) {
                     spec.format = format.substr(1, comma);
 
-                    spec.width = stoi(temp.substr(comma + 1));
+                    spec.width = std::stoi(temp.substr(comma + 1));
 
                 } else {
                     spec.format = format.substr(1, format.length() - 1);
@@ -124,30 +133,28 @@ namespace coda
                 // look for {0,-10}
                 divider = temp.find(',');
 
-                if (divider != string::npos) {
-                    spec.width = stoi(temp.substr(divider + 1));
+                if (divider != std::string::npos) {
+                    spec.width = std::stoi(temp.substr(divider + 1));
 
                     temp = temp.substr(0, divider);
                 }
             }
 
-
-            spec.index = stoi(temp);
+            spec.index = std::stoi(temp);
 
         } catch (...) {
-            throw invalid_argument("invalid specifier format");
+            throw std::invalid_argument("invalid specifier format");
         }
 
         specifiers_.push_back(spec);
     }
-
 
     void format::initialize()
     {
         auto len = value_.length();
 
         // find each open tag
-        for (size_t pos = 0; pos < len; pos++) {
+        for (std::size_t pos = 0; pos < len; pos++) {
             if (value_[pos] != s_open_tag) {
                 continue;
             }
@@ -162,8 +169,8 @@ namespace coda
             // get the closing tag
             auto end = value_.find(s_close_tag, pos);
 
-            if (end == string::npos) {
-                throw invalid_argument("no specifier closing tag");
+            if (end == std::string::npos) {
+                throw std::invalid_argument("no specifier closing tag");
             }
 
             // add the specifier
@@ -181,22 +188,22 @@ namespace coda
         // set the current position (note this is *after* sorting)
         currentSpecifier_ = specifiers_.begin();
 
-        size_t index = 0;
+        std::size_t index = 0;
 
         // check if specifier indexes follow an incremental order
         for (auto spec : specifiers_) {
             if (spec.index != index++) {
-                throw invalid_argument("specifier index not ordered");
+                throw std::invalid_argument("specifier index not ordered");
             }
         }
     }
 
-    void format::begin_manip(ostream &out, const specifier &arg) const
+    void format::begin_manip(std::ostream &out, const specifier &arg) const
     {
         if (arg.width != 0) {
-            out << setw(abs(arg.width));
+            out << std::setw(std::abs(arg.width));
             if (arg.width < 0) {
-                out << left;
+                out << std::left;
             }
         }
 
@@ -209,61 +216,61 @@ namespace coda
             // printf styles
             // TODO: define formats
             case 'E':
-                out << uppercase;
+                out << std::uppercase;
             case 'e':
                 if (!arg.format.empty()) {
                     try {
-                        int p = stoi(arg.format);
-                        out << setprecision(p);
+                        int p = std::stoi(arg.format);
+                        out << std::setprecision(p);
                     } catch (...) {
-                        throw invalid_argument("invalid precision format for argument");
+                        throw std::invalid_argument("invalid precision format for argument");
                     }
                 } else {
-                    out << setprecision(9);
+                    out << std::setprecision(9);
                 }
-                out << scientific;
+                out << std::scientific;
                 break;
             case 'F':
             case 'f':
                 if (!arg.format.empty()) {
                     try {
-                        int p = stoi(arg.format);
-                        out << setprecision(p);
+                        int p = std::stoi(arg.format);
+                        out << std::setprecision(p);
                     } catch (...) {
-                        throw invalid_argument("invalid precision format for argument");
+                        throw std::invalid_argument("invalid precision format for argument");
                     }
                 } else {
-                    out << setprecision(9);
+                    out << std::setprecision(9);
                 }
-                out << fixed;
+                out << std::fixed;
                 break;
 
             case 'X':
-                out << uppercase;
+                out << std::uppercase;
             case 'x':
-                out << hex << setfill('0');
+                out << std::hex << std::setfill('0');
                 if (arg.width == 0) {
-                    out << setw(2);
+                    out << std::setw(2);
                 }
                 break;
             case 'O':
             case 'o':
-                out << oct;
+                out << std::oct;
                 break;
         }
     }
 
-    void format::end_manip(ostream &out, const specifier &arg)
+    void format::end_manip(std::ostream &out, const specifier &arg)
     {
         // cleanup any stream manipulation
 
         switch (arg.type) {
             case 'x':
             case 'X':
-                out << dec;
+                out << std::dec;
                 break;
             case 'n':
-                out << endl;
+                out << std::endl;
                 break;
         }
     }
@@ -274,22 +281,22 @@ namespace coda
         initialize();
     }
 
-    void format::reset(const string &value)
+    void format::reset(const std::string &value)
     {
         value_ = value;
         reset();
     }
 
-    string format::str()
+    std::string format::str()
     {
-        ostringstream buf;
+        std::ostringstream buf;
 
         print(buf);
 
         return buf.str();
     }
 
-    void format::unescape(ostream &buf, string::size_type start, string::size_type end)
+    void format::unescape(std::ostream &buf, std::string::size_type start, std::string::size_type end)
     {
         for (auto i = start; i < end; ++i) {
             char tag = value_[i];
@@ -307,7 +314,7 @@ namespace coda
         }
     }
 
-    void format::print(ostream &buf)
+    void format::print(std::ostream &buf)
     {
         // short circuit if no specifiers
         if (specifiers_.size() == 0) {
@@ -317,7 +324,7 @@ namespace coda
         // sort based on position
         specifiers_.sort([&](const specifier &first, const specifier &second) { return first.prev < second.prev; });
 
-        size_t last = 0;
+        std::size_t last = 0;
 
         // loop through all added arguments
         for (auto spec = specifiers_.begin(); spec != currentSpecifier_; ++spec) {
@@ -338,13 +345,12 @@ namespace coda
         }
     }
 
-    format::operator string()
+    format::operator std::string()
     {
         return str();
     }
 
-
-    ostream &operator<<(ostream &out, format &f)
+    std::ostream &operator<<(std::ostream &out, format &f)
     {
         f.print(out);
         return out;
