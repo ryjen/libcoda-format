@@ -1,3 +1,6 @@
+> [!NOTE]
+> **Seamwork transition — ARCHIVE.** This repository is no longer an active standalone product. Formatting behavior, fuzzing, sanitizer, and parser-testing work are retained as historical evidence. New C++23 code should prefer `std::format` unless a focused Seamwork study demonstrates a specific gap. See [Seamwork](https://github.com/ryjen/seamwork) for current C++23 interface and architecture refinement work.
+
 coda_format
 =========
 
