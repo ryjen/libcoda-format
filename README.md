@@ -1,11 +1,11 @@
 > [!NOTE]
 > **Seamwork transition — ARCHIVE.** This repository is no longer an active standalone product. Formatting behavior, fuzzing, sanitizer, and parser-testing work are retained as historical evidence. New C++23 code should prefer `std::format` unless a focused Seamwork study demonstrates a specific gap. See [Seamwork](https://github.com/ryjen/seamwork) for current C++23 interface and architecture refinement work.
+> [Migration decisions and pinned provenance](MIGRATION.md). The historical API and build instructions below are not a supported Seamwork release.
 
 coda_format
 =========
 
 [![CI](https://github.com/ryjen/libcoda-format/actions/workflows/ci.yml/badge.svg)](https://github.com/ryjen/libcoda-format/actions/workflows/ci.yml)
-[![Coverage Status](https://coveralls.io/repos/ryjen/format/badge.svg?branch=master&service=github)](https://coveralls.io/github/ryjen/format?branch=master)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://ryjen.mit-license.org)
 
 A c++17 class for formatting strings.
