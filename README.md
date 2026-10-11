@@ -5,7 +5,6 @@
 coda_format
 =========
 
-[![CI](https://github.com/ryjen/libcoda-format/actions/workflows/ci.yml/badge.svg)](https://github.com/ryjen/libcoda-format/actions/workflows/ci.yml)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://ryjen.mit-license.org)
 
 A c++17 class for formatting strings.
